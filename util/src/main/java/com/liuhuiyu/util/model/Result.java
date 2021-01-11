@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author LiuHuiYu
@@ -85,4 +86,21 @@ public class Result<T> implements Serializable {
         return new Result<>(null, OK, "");
     }
 
+    private static String FLAG_KEY = "flag";
+    private static String MSG_KEY = "msg";
+    private static String DATA_KEY = "data";
+
+    public static <T> @NotNull Result<T> ofMap(Map<String, Object> map) {
+        Result<T> result = new Result<>();
+        if (map.containsKey(FLAG_KEY)) {
+            result.setFlag((int) map.get(FLAG_KEY));
+        }
+        if (map.containsKey(MSG_KEY)) {
+            result.setMsg(map.get(MSG_KEY).toString());
+        }
+        if (map.containsKey(DATA_KEY)) {
+            result.setData((T) map.get(MSG_KEY));
+        }
+        return result;
+    }
 }

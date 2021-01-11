@@ -8,6 +8,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,6 +42,7 @@ public class OkHttpUtil {
      * @param url 地址
      * @return OkHttpUtil
      */
+    @Deprecated
     public OkHttpUtil addUrl(String url) {
         this.builder.url(url);
         return this;
@@ -85,24 +87,32 @@ public class OkHttpUtil {
     }
 
     //region post申请
-    public Response executePost() {
+
+    /**
+     * 执行 post
+     *
+     * @param url 地址
+     * @return Response
+     */
+    public Response executePost(String url) {
         try {
+            this.builder.url(url);
             return client.newCall(this.builder.post(body.build()).build()).execute();
         } catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
 
-    public String executePostToString() {
+    public String executePostToString(String url) {
         try {
-            return Objects.requireNonNull(this.executePost().body()).string();
+            return Objects.requireNonNull(this.executePost(url).body()).string();
         } catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
 
-    public Map<String, Object> executePostToMap() {
-        String strJson = this.executePostToString();
+    public Map<String, Object> executePostToMap(String url) {
+        String strJson = this.executePostToString(url);
         try {
             Gson gson = new Gson();
             return gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
@@ -114,32 +124,71 @@ public class OkHttpUtil {
     //endregion
 
     //region get申请
-    public Response executeGet() {
+
+    /**
+     * @param url 地址
+     * @return Response
+     */
+    public Response executeGet(String url) {
         try {
+            this.builder.url(url);
             return client.newCall(this.builder.get().build()).execute();
         } catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
 
-    public String executeGetToString() {
+    public String executeGetToString(String url) {
         try {
-            return Objects.requireNonNull(this.executeGet().body()).string();
+            return Objects.requireNonNull(this.executeGet(url).body()).string();
         } catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
 
-    public Map<String, Object> executeGetToMap() {
-        String strJson = this.executeGetToString();
+    public Map<String, Object> executeGetToMap(String url) {
+        String strJson = this.executeGetToString(url);
         try {
             Gson gson = new Gson();
-            return gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
+            Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
             }.getType());
+            mapDoubleToInt(resultMap);
+            return resultMap;
         } catch (JsonSyntaxException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
     //endregion
+
+    private static void mapDoubleToInt(Map<String, Object> resultMap) {
+        for (String key : resultMap.keySet()) {
+            if (resultMap.get(key) instanceof Double) {
+                Double value = (Double) resultMap.get(key);
+                if (value.intValue() == value) {
+                    resultMap.put(key, ((Double) resultMap.get(key)).intValue());
+                }
+            } else if (resultMap.get(key) instanceof List<?>) {
+                listDoubleToInt((List<Object>) resultMap.get(key));
+            } else if (resultMap.get(key) instanceof Map<?, ?>) {
+                mapDoubleToInt((Map<String, Object>) resultMap.get(key));
+            }
+        }
+    }
+
+    private static void listDoubleToInt(List<Object> list) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) instanceof Double) {
+                Double value = (Double) list.get(i);
+                if (value.intValue() == value) {
+                    Object v = value.intValue();
+                    list.set(i, v);
+                }
+            } else if (list.get(i) instanceof Map<?, ?>) {
+                mapDoubleToInt((Map<String, Object>) list.get(i));
+            } else if (list.get(i) instanceof List<?>) {
+                listDoubleToInt((List<Object>) list.get(i));
+            }
+        }
+    }
 
 }
