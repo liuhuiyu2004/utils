@@ -5,8 +5,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -92,20 +90,26 @@ public class Result<T> implements Serializable {
     private static String MSG_KEY = "msg";
     private static String DATA_KEY = "data";
 
-    public static <T> @NotNull Result<T> ofMap(Map<String, Object> map) {
+    public static <T> @NotNull Result<T> ofMap(Map<String, Object> map, Class<T> clazz) {
         Result<T> result = new Result<>();
         if (map.containsKey(FLAG_KEY)) {
             result.setFlag(((Number) map.get(FLAG_KEY)).intValue());
+        } else {
+            throw new RuntimeException("缺少关键字" + FLAG_KEY);
         }
         if (map.containsKey(MSG_KEY)) {
             result.setMsg(map.get(MSG_KEY).toString());
+        } else {
+            throw new RuntimeException("缺少关键字" + MSG_KEY);
         }
         if (map.containsKey(DATA_KEY)) {
-            try {
-                result.setData((T) map.get(MSG_KEY));
-            } catch (Exception ex) {
-                throw new RuntimeException("Map 关键字‘" + MSG_KEY + "’无法转换为当前类型。");
+            if (clazz.isInstance(map.get(DATA_KEY))) {
+                result.setData(clazz.cast(map.get(DATA_KEY)));
+            } else {
+                throw new RuntimeException("Map 关键字‘" + DATA_KEY + "’无法转换为当前类型。");
             }
+        } else {
+            throw new RuntimeException("缺少关键字" + DATA_KEY);
         }
         return result;
     }
