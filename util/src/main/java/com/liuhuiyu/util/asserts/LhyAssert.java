@@ -13,7 +13,7 @@ public class LhyAssert {
 
     public static void assertTrue(boolean value, String message) {
         if (!value) {
-            throw new LhyException(message, ResultEnum.CUSTOM_ERROR);
+            throw new RuntimeException(message);
         }
     }
 

@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -93,13 +95,17 @@ public class Result<T> implements Serializable {
     public static <T> @NotNull Result<T> ofMap(Map<String, Object> map) {
         Result<T> result = new Result<>();
         if (map.containsKey(FLAG_KEY)) {
-            result.setFlag((int) map.get(FLAG_KEY));
+            result.setFlag(((Number) map.get(FLAG_KEY)).intValue());
         }
         if (map.containsKey(MSG_KEY)) {
             result.setMsg(map.get(MSG_KEY).toString());
         }
         if (map.containsKey(DATA_KEY)) {
-            result.setData((T) map.get(MSG_KEY));
+            try {
+                result.setData((T) map.get(MSG_KEY));
+            } catch (Exception ex) {
+                throw new RuntimeException("Map 关键字‘" + MSG_KEY + "’无法转换为当前类型。");
+            }
         }
         return result;
     }
