@@ -10,7 +10,13 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class HttpUtilTest extends TestCase {
-    public void testA1(){
-       log.info("Run OK");
+    public void testA1() {
+        log.info("Run OK");
+    }
+
+    public void testStringToInt() {
+        String s = "123s";
+        Integer i = Integer.getInteger(s, 101);
+        log.info("i = {}", i);
     }
 }
