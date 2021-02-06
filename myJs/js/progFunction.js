@@ -78,10 +78,11 @@ progFunction = {
         let obj = target;
         if (typeof target != 'object' || typeof sources != 'object') {
             return sources; // 如果其中一个不是对象 就返回sources
-        }
-        for (let key in sources) {
-            // 如果target也存在 那就再次合并
-            obj[key] = target.hasOwnProperty(key) ? progFunction.assignObj(target[key], sources[key]) : sources[key];
+        }else{
+            for (let key in sources) {
+                // 如果target也存在 那就再次合并
+                obj[key] = target.hasOwnProperty(key) ? progFunction.assignObj(target[key], sources[key]) : sources[key];
+            }
         }
         return obj;
     }
