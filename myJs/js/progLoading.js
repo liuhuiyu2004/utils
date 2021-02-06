@@ -4,8 +4,15 @@
 
 /**
  * 数据加载蒙版
+ * @author liuhuiyu
+ * @date 2021-02-06
  * @param property
  * @constructor
+ * @eg
+ let a=new ProgLoading();
+ a.show();
+ a.show({info:{content:'我修改文字了'}})
+ b.show({info:{content:'<span style="color:#FFF">我修改里面的内容了。</span>'}});a.close()
  */
 function ProgLoading(property) {
     let baseProperty = {

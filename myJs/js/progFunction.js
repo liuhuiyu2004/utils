@@ -1,4 +1,6 @@
 /**
+ * @author liuhuiyu
+ * @date 2021-02-06
  * 程序通用函数
  * @type {{assignObj: (function(*=, *=): *), exitFullScreen: progFunction.exitFullScreen, isFullScreen: (function(): boolean), getMaxZIndex: (function(): any), fullScreen: progFunction.fullScreen}}
  */
