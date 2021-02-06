@@ -97,6 +97,10 @@ public class OkHttpUtil {
         return this.addHeader("Authorization", "Basic " + base64AppMsg);
     }
 
+    public OkHttpUtil headerAuthorizationByBearerToken(String token){
+        return this.addHeader("Authorization", "Bearer " + token);
+    }
+
     //region post申请
 
     /**

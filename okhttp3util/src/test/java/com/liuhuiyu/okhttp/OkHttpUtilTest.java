@@ -1,5 +1,6 @@
 package com.liuhuiyu.okhttp;
 
+import jdk.nashorn.internal.runtime.logging.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,5 +39,29 @@ public class OkHttpUtilTest {
         m1.put("m1_3", 1.1);
         Map<String, Object> map = OkHttpUtil.mapDoubleToInt(m1);
 
+    }
+
+    @Test
+    public void testHeadGet(){
+        String token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiWkhfQWRtaW4iLCJleHAiOjE2MTI2MzM4MzAsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjIuNzo4MDA2IiwiYXVkIjoiaHR0cDovLzE5Mi4xNjguMi43OjgwMDYifQ.E6R3ei7UyUK3UnLAKbbLj9vIO9frdUtekT1UD4hHB6A";
+        String url="http://192.168.2.7:8006/U_SYSTREE/GetUserTreeStr";
+        Map<String, Object> map=OkHttpUtil.create().headerAuthorizationByBearerToken(token).addQueryParameter("dc","ZH").executeGetToMap(url);
+        if(Integer.parseInt(map.get("code").toString())==200){
+            System.out.println(map.get("data"));
+        }else{
+            System.out.println(map);
+        }
+        /*
+        [
+                { "isexpand": "false", "text": "特别防护期管理", "name": "特别防护期管理", "children":
+                    [
+                            {  "urls": "/DemoAIHtml/CSWH/TBFH_CSWH_List.html", "text": "措施管理", "name": "措施管理", "id": "2.0.1.1" },
+                            {  "urls": "/DemoAIHtml/CSGL/TBFH_CSGL_List.html", "text": "防护期管理", "name": "防护期管理", "id": "2.0.1.2" },
+                            {  "urls": "/DemoAIHtml/JCSC/TBFH_JCSC_List.html", "text": "进厂人员申请", "name": "进厂人员申请", "id": "2.0.1.3" },
+                            {  "urls": "/DemoAIHtml/SCWZ/TBFH_SCWZ_List_Data.html", "text": "生产物资保障数据源", "name": "生产物资保障数据源", "id": "2.0.1.7" }
+                    ]
+                }
+        ]
+         */
     }
 }
