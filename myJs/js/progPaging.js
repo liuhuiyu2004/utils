@@ -73,15 +73,15 @@ function progPaging(property) {
     }
 
     /**
-    * 功能描述
-    * @author LiuHuiYu
-    * Created DateTime 2021-02-07 10:15
+     * 功能描述
+     * @author LiuHuiYu
+     * Created DateTime 2021-02-07 10:15
      * @param countPageNum 总页数
      * @param nowPageIndex 当前页索引（0开始）
      * @param showPageNum 显示页面数量(最少显示3页)
      * @param property 更新设定参数
      * @return
-    */
+     */
     this.showPage = function page(countPageNum, nowPageIndex, showPageNum, property) {
         Object.assign(baseProperty, property);
 
