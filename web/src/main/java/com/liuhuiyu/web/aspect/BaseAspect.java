@@ -17,11 +17,8 @@ import java.lang.reflect.Method;
  * Created DateTime 2018-06-28 16:49
  */
 public abstract class BaseAspect {
-    /**
-     * 是否要求 ResponseBody 结构
-     * @param pjp ProceedingJoinPoint
-     * @return 是否要求 ResponseBody 结构
-     */
+
+
     protected Boolean isResponseBody (ProceedingJoinPoint pjp){
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
         Method method = methodSignature.getMethod();

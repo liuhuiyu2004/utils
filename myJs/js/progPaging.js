@@ -1,8 +1,10 @@
-
 /**
- * 分页
- * @param property
- */
+* 功能描述
+* @author LiuHuiYu
+* Created DateTime 2021-02-07 10:09
+* @param property {showFirstPage,showLastPage,parentDiv,outerDiv,outPage,goPageEvent}
+* @return
+*/
 function progPaging(property) {
     let baseProperty = {
         /**
@@ -32,23 +34,33 @@ function progPaging(property) {
         goPageEvent: goPage,
     };
 
-    function setPage(index, nowPage, first, last) {
+    /**
+     * 设置更新分页页面
+     * @param index 当前索引
+     * @param isNowPage 是否是当前页面
+     * @param isFirst 是否是第一页
+     * @param isLast  是否是最后一页
+     */
+    function setPage(index, isNowPage, isFirst, isLast) {
         let li = document.createElement("li");
-        if (!nowPage) {
-            (function(index) {
+        if (!isNowPage) {
+            (function (index) {
                 //监听点击事件 object比如google地图中的Maker对象
-                li.addEventListener("click", function(e) {
+                li.addEventListener("click", function (e) {
                     baseProperty.goPageEvent(index); //调用方法
                 });
             })(index);
         }
-        if (nowPage) {
+        if (isNowPage) {
             li.innerHTML = '(' + (index + 1) + ')';
-        } else if (first) {
+        }
+        else if (isFirst) {
             li.innerHTML = '首页';
-        } else if (last) {
+        }
+        else if (isLast) {
             li.innerHTML = '末页';
-        } else {
+        }
+        else {
             li.innerHTML = (index + 1);
         }
 
@@ -69,7 +81,6 @@ function progPaging(property) {
         //region 异常数据处理
         if (countPageNum <= 1) {
             //不显示
-            console.log(countPageNum, nowPageIndex, showPageNum, "不显示");
             return;
         }
         if (showPageNum < 3) {
@@ -78,7 +89,8 @@ function progPaging(property) {
         //页面异常数据处理
         if (nowPageIndex < 0) {
             nowPageIndex = 0;
-        } else if (nowPageIndex > countPageNum - 1) {
+        }
+        else if (nowPageIndex > countPageNum - 1) {
             nowPageIndex = countPageNum - 1
         }
         if (showPageNum > countPageNum) {
@@ -89,23 +101,21 @@ function progPaging(property) {
         let halfAmount = parseInt((showPageNum - 1) / 2);
         let amendmentsNum = (showPageNum + 1) % 2;
         let frontNumber, afterNumber;
-        console.log("总页面", countPageNum, "当前页面", nowPageIndex, "显示页面数量", showPageNum);
-        console.log("一半数量", halfAmount, "修正", amendmentsNum);
         //当前页面位置判断。
         if (nowPageIndex <= halfAmount) {
-            console.log("算法1");
             frontNumber = nowPageIndex;
             afterNumber = showPageNum - 1 - frontNumber;
-        } else if ((countPageNum - nowPageIndex - 1) <= halfAmount) {
-            console.log("算法2");
+        }
+        else if ((countPageNum - nowPageIndex - 1) <= halfAmount) {
             afterNumber = countPageNum - nowPageIndex - 1;
             frontNumber = showPageNum - 1 - afterNumber;
-        } else {
-            console.log("算法3");
+        }
+        else {
             if (countPageNum / 2 > nowPageIndex) {
                 frontNumber = halfAmount + amendmentsNum;
                 afterNumber = showPageNum - 1 - frontNumber;
-            } else {
+            }
+            else {
                 afterNumber = halfAmount + amendmentsNum;
                 frontNumber = showPageNum - 1 - afterNumber;
             }
@@ -120,26 +130,18 @@ function progPaging(property) {
             baseProperty.parentDiv.appendChild(baseProperty.outerDiv);
         }
         baseProperty.outerDiv.innerHTML = '';
-        console.log("前面数量", frontNumber, "后面数量", afterNumber);
-        let out = '';
         if ((nowPageIndex - frontNumber) > 0) {
-            out += ";首页0";
             setPage(0, (nowPageIndex == 0), true, false);
         }
         for (let i = frontNumber; i > 0; i--) {
-            out += ";" + (nowPageIndex - i);
             setPage(nowPageIndex - i, false, false, false);
         }
-        out += "(" + (countPageNum - 1) + ")";
         setPage(nowPageIndex, true, false, false);
         for (let i = 0; i < afterNumber; i++) {
-            out += ";" + (nowPageIndex + i + 1);
             setPage(nowPageIndex + i + 1, false, false, false);
         }
         if ((nowPageIndex + afterNumber) < countPageNum - 1) {
-            out += ";末页(" + (countPageNum - 1) + ")";
             setPage(countPageNum - 1, (nowPageIndex === (countPageNum - 1)), false, true);
         }
-        console.log(countPageNum, nowPageIndex, showPageNum, out);
     }
 }
