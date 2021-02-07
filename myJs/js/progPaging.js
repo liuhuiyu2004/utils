@@ -5,7 +5,7 @@
  * @param property {showFirstPage,showLastPage,parentDiv,outerDiv,outPage,goPageEvent}
  * @return
  */
-function progPaging(property) {
+function ProgPaging(property) {
     let baseProperty = {
         /**
          * 显示首页
