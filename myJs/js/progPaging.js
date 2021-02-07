@@ -1,5 +1,5 @@
 /**
- * 功能描述
+ * 分页功能
  * @author LiuHuiYu
  * Created DateTime 2021-02-07 10:09
  * @param property {showFirstPage,showLastPage,parentDiv,outerDiv,outPage,goPageEvent}
@@ -47,7 +47,7 @@ function progPaging(property) {
         if (!isNowPage) {
             (function (index) {
                 //监听点击事件 object比如google地图中的Maker对象
-                li.addEventListener("click", function (e) {
+                li.addEventListener("click", function () {
                     baseProperty.goPageEvent(index); //调用方法
                 });
             })(index);
@@ -105,7 +105,7 @@ function progPaging(property) {
         }
         //endregion
         //显示页面的中间位置//取丢弃小数部分,保留整数部分
-        let halfAmount = parseInt((showPageNum - 1) / 2);
+        let halfAmount = Math.ceil((showPageNum - 1) / 2);
         let amendmentsNum = (showPageNum + 1) % 2;
         let frontNumber, afterNumber;
         //当前页面位置判断。
@@ -138,7 +138,7 @@ function progPaging(property) {
         }
         baseProperty.outerDiv.innerHTML = '';
         if ((nowPageIndex - frontNumber) > 0) {
-            setPage(0, (nowPageIndex == 0), true, false);
+            setPage(0, (nowPageIndex === 0), true, false);
         }
         for (let i = frontNumber; i > 0; i--) {
             setPage(nowPageIndex - i, false, false, false);
