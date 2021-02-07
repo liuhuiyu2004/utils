@@ -1,10 +1,10 @@
 /**
-* 功能描述
-* @author LiuHuiYu
-* Created DateTime 2021-02-07 10:09
-* @param property {showFirstPage,showLastPage,parentDiv,outerDiv,outPage,goPageEvent}
-* @return
-*/
+ * 功能描述
+ * @author LiuHuiYu
+ * Created DateTime 2021-02-07 10:09
+ * @param property {showFirstPage,showLastPage,parentDiv,outerDiv,outPage,goPageEvent}
+ * @return
+ */
 function progPaging(property) {
     let baseProperty = {
         /**
@@ -33,6 +33,7 @@ function progPaging(property) {
          */
         goPageEvent: goPage,
     };
+    Object.assign(baseProperty, property);
 
     /**
      * 设置更新分页页面
@@ -72,12 +73,18 @@ function progPaging(property) {
     }
 
     /**
-     *
+    * 功能描述
+    * @author LiuHuiYu
+    * Created DateTime 2021-02-07 10:15
      * @param countPageNum 总页数
      * @param nowPageIndex 当前页索引（0开始）
      * @param showPageNum 显示页面数量(最少显示3页)
-     */
-    this.showPage = function page(countPageNum, nowPageIndex, showPageNum) {
+     * @param property 更新设定参数
+     * @return
+    */
+    this.showPage = function page(countPageNum, nowPageIndex, showPageNum, property) {
+        Object.assign(baseProperty, property);
+
         //region 异常数据处理
         if (countPageNum <= 1) {
             //不显示
