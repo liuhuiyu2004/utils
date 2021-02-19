@@ -32,7 +32,7 @@ public class RsaUtil {
         try {
             kpg = KeyPairGenerator.getInstance(RSA_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException("No such algorithm-->[" + RSA_ALGORITHM + "]");
+            throw new IllegalArgumentException("没有[" + RSA_ALGORITHM + "]的算法");
         }
 
         //初始化KeyPairGenerator对象,密钥长度
@@ -144,6 +144,8 @@ public class RsaUtil {
         }
     }
 
+
+
     private static byte[] rsaSplitCodec(Cipher cipher, int opMode, byte[] dataBytes, int keySize) throws IOException {
         int maxBlock;
         if (opMode == Cipher.DECRYPT_MODE) {
@@ -174,5 +176,4 @@ public class RsaUtil {
             return out.toByteArray();
         }
     }
-
 }
