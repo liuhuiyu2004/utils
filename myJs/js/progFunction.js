@@ -78,12 +78,16 @@ progFunction = {
         let obj = target;
         if (typeof target != 'object' || typeof sources != 'object') {
             return sources; // 如果其中一个不是对象 就返回sources
-        }else{
+        }
+        else {
             for (let key in sources) {
                 // 如果target也存在 那就再次合并
                 obj[key] = target.hasOwnProperty(key) ? progFunction.assignObj(target[key], sources[key]) : sources[key];
             }
         }
         return obj;
+    },
+    isIE: function () {
+        return !!window.ActiveXObject || "ActiveXObject" in window;
     }
 }
