@@ -71,7 +71,9 @@ function ProgLoading(property) {
      */
     function addStyle(item, styles) {
         for (let key in styles) {
-            item.style[key] = styles[key];
+            if(styles.hasOwnProperty(key)){
+                item.style[key] = styles[key];
+            }
         }
     }
     /**
