@@ -2,18 +2,6 @@
 //  需要 progFunction.js 支持
 //
 
-/**
- * 数据加载蒙版
- * @author liuhuiyu
- * @date 2021-02-06
- * @param property
- * @constructor
- * @eg
- let a=new ProgLoading();
- a.show();
- a.show({info:{content:'我修改文字了'}})
- b.show({info:{content:'<span style="color:#FFF">我修改里面的内容了。</span>'}});a.close()
- */
 function ProgLoading(property) {
     let baseProperty = {
         style: {
@@ -58,6 +46,10 @@ function ProgLoading(property) {
      */
     function initProgLoading(property) {
         console.log('参数初始化');
+        if (typeof (property) === "string") {
+            //字符串的话就作为信息传入处理
+            property = {info: {content: property,}}
+        }
         progFunction.assignObj(baseProperty, property);
     }
 
@@ -82,7 +74,6 @@ function ProgLoading(property) {
             item.style[key] = styles[key];
         }
     }
-
     /**
      * 显示loading
      * @param property
@@ -118,20 +109,31 @@ function ProgLoading(property) {
         else {
             addStyle(box, baseProperty.style.box);
         }
-        //endregion
-        // if (baseProperty.info.div === null) {
-        //     let textNode = document.createTextNode(baseProperty.info.content);
-        //     box.appendChild(textNode);
-        // }
-        // else {
-        //     box.appendChild(baseProperty.info.div);
-        // }
         box.innerHTML = baseProperty.info.content;
         document.body.append(div);
+        return this;
     }
     this.close = function () {
         if (div !== undefined) {
             document.body.removeChild(div);
         }
+    }
+    /**
+     * 显示信息到时间自动关闭
+     * @author LiuHuiYu
+     * Created DateTime 2021-02-18 10:36
+     * @param property 参数
+     * @param time 显示时间（毫秒）
+     * @return
+     */
+    this.showInfo = function (property, time) {
+        if (time === undefined) {
+            time = 3000;
+        }
+        this.show(property);
+        let _this = this;
+        setTimeout(function () {
+            _this.close();
+        }, time);
     }
 }
