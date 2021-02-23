@@ -1,4 +1,4 @@
-package com.liuhuiyui.test;
+package com.liuhuiyu.test;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;

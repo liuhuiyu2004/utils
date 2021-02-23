@@ -1,4 +1,4 @@
-package com.liuhuiyui.test;
+package com.liuhuiyu.test;
 
 import static org.junit.Assert.assertTrue;
 
