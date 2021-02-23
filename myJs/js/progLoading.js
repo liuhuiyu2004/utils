@@ -2,6 +2,11 @@
 //  需要 progFunction.js 支持
 //
 
+/**
+ * 数据加载蒙版
+ * @param property
+ * @constructor
+ */
 function ProgLoading(property) {
     let baseProperty = {
         style: {
@@ -37,7 +42,8 @@ function ProgLoading(property) {
     };
     let div;//蒙版
     let box;//对话框
-
+    let autoClose = false;
+    let nowShowState = false;
     initProgLoading(property);
 
     /**
@@ -71,11 +77,12 @@ function ProgLoading(property) {
      */
     function addStyle(item, styles) {
         for (let key in styles) {
-            if(styles.hasOwnProperty(key)){
+            if (styles.hasOwnProperty(key)) {
                 item.style[key] = styles[key];
             }
         }
     }
+
     /**
      * 显示loading
      * @param property
@@ -86,6 +93,10 @@ function ProgLoading(property) {
             let nowZIndex = progFunction.getMaxZIndex() + 100;
             div = document.createElement("div");
             div.style['z-index'] = nowZIndex;
+            if (autoClose) {
+                let _this = this;
+                div.onclick = _this.close;
+            }
         }
         else {
             //样式 class 清理
@@ -113,10 +124,12 @@ function ProgLoading(property) {
         }
         box.innerHTML = baseProperty.info.content;
         document.body.append(div);
+        nowShowState = true;
         return this;
     }
     this.close = function () {
-        if (div !== undefined) {
+        if (div !== undefined && nowShowState) {
+            nowShowState = false;
             document.body.removeChild(div);
         }
     }
@@ -129,6 +142,7 @@ function ProgLoading(property) {
      * @return
      */
     this.showInfo = function (property, time) {
+        autoClose = true;
         if (time === undefined) {
             time = 3000;
         }
@@ -137,5 +151,6 @@ function ProgLoading(property) {
         setTimeout(function () {
             _this.close();
         }, time);
+        return this;
     }
 }
