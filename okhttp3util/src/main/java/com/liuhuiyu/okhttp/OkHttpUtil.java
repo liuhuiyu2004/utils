@@ -8,6 +8,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author LiuHuiYu
@@ -15,12 +16,25 @@ import java.util.*;
  * Created DateTime 2021-01-09 15:06
  */
 public class OkHttpUtil {
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client;
     private final Request.Builder builder;
     private final FormBody.Builder body;
     private final Map<String, String> queryParameterMap;
+    public static int CONNECT_TIMEOUT = 15;
+    public static int READ_TIMEOUT = 15;
+    public static int WRITE_TIMEOUT = 15;
 
     private OkHttpUtil() {
+        this.client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+//                .addInterceptor(new CommonHeaderInterceptor())
+//                .addInterceptor(new CacheInterceptor())
+//                .addInterceptor(new HttpLoggerInterceptor())
+//                .addNetworkInterceptor(new EncryptInterceptor())
+                .build();
         this.builder = new Request.Builder();
         this.body = new FormBody.Builder();
         this.queryParameterMap = new HashMap<>(0);
@@ -97,7 +111,7 @@ public class OkHttpUtil {
         return this.addHeader("Authorization", "Basic " + base64AppMsg);
     }
 
-    public OkHttpUtil headerAuthorizationByBearerToken(String token){
+    public OkHttpUtil headerAuthorizationByBearerToken(String token) {
         return this.addHeader("Authorization", "Bearer " + token);
     }
 
@@ -112,8 +126,9 @@ public class OkHttpUtil {
     public Response executePost(String url) {
         try {
             this.builder.url(url);
-            return client.newCall(this.builder.post(body.build()).build()).execute();
-        } catch (IOException e) {
+            return this.client.newCall(this.builder.post(body.build()).build()).execute();
+        }
+        catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
@@ -121,7 +136,8 @@ public class OkHttpUtil {
     public String executePostToString(String url) {
         try {
             return Objects.requireNonNull(this.executePost(url).body()).string();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
@@ -132,7 +148,8 @@ public class OkHttpUtil {
             Gson gson = new Gson();
             return gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
             }.getType());
-        } catch (JsonSyntaxException e) {
+        }
+        catch (JsonSyntaxException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
@@ -147,9 +164,10 @@ public class OkHttpUtil {
     public Response executeGet(String url) {
         try {
             HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
-            queryParameterMap.forEach(urlBuilder::addQueryParameter);
-            return client.newCall(this.builder.url(urlBuilder.build()).build()).execute();
-        } catch (IOException e) {
+            this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
+            return this.client.newCall(this.builder.url(urlBuilder.build()).build()).execute();
+        }
+        catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
@@ -157,7 +175,8 @@ public class OkHttpUtil {
     public String executeGetToString(String url) {
         try {
             return Objects.requireNonNull(this.executeGet(url).body()).string();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
@@ -169,7 +188,8 @@ public class OkHttpUtil {
             Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
             }.getType());
             return mapDoubleToInt(resultMap);
-        } catch (JsonSyntaxException e) {
+        }
+        catch (JsonSyntaxException e) {
             throw new OkHttpException(e.getMessage());
         }
     }
@@ -183,14 +203,18 @@ public class OkHttpUtil {
                 Double value = (Double) resultMap.get(key);
                 if (value.intValue() == value) {
                     res.put(key, ((Double) resultMap.get(key)).intValue());
-                } else {
+                }
+                else {
                     res.put(key, resultMap.get(key));
                 }
-            } else if (resultMap.get(key) instanceof List<?>) {
+            }
+            else if (resultMap.get(key) instanceof List<?>) {
                 res.put(key, listDoubleToInt((List<?>) resultMap.get(key)));
-            } else if (resultMap.get(key) instanceof Map<?, ?>) {
+            }
+            else if (resultMap.get(key) instanceof Map<?, ?>) {
                 res.put(key, mapDoubleToInt((Map<?, ?>) resultMap.get(key)));
-            } else {
+            }
+            else {
                 res.put(key, resultMap.get(key));
             }
         }
@@ -205,14 +229,18 @@ public class OkHttpUtil {
                 if (value.intValue() == value) {
                     Object v = value.intValue();
                     res.add(v);
-                } else {
+                }
+                else {
                     res.add(value);
                 }
-            } else if (o instanceof Map<?, ?>) {
+            }
+            else if (o instanceof Map<?, ?>) {
                 res.add(mapDoubleToInt((Map<?, ?>) o));
-            } else if (o instanceof List<?>) {
+            }
+            else if (o instanceof List<?>) {
                 res.add(listDoubleToInt((List<?>) o));
-            } else {
+            }
+            else {
                 res.add(o);
             }
         }
