@@ -89,5 +89,40 @@ progFunction = {
     },
     isIE: function () {
         return !!window.ActiveXObject || "ActiveXObject" in window;
-    }
+    },
+    /**
+     * 深层复制
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-03 10:22
+     * @param obj
+     * @return
+     */
+    clone: function (obj) {
+        let o;
+        if (typeof obj == "object") {
+            if (obj === null) {
+                o = null;
+            }
+            else {
+                if (obj instanceof Array) {
+                    o = [];
+                    for (let i = 0, len = obj.length; i < len; i++) {
+                        o.push(progFunction.clone(obj[i]));
+                    }
+                }
+                else {
+                    o = {};
+                    for (let j in obj) {
+                        if (obj.hasOwnProperty(j)) {
+                            o[j] = progFunction.clone(obj[j]);
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            o = obj;
+        }
+        return o;
+    },
 }
