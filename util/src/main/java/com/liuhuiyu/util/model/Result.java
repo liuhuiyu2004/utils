@@ -93,22 +93,26 @@ public class Result<T> implements Serializable {
     public static <T> @NotNull Result<T> ofMap(Map<String, Object> map, Class<T> clazz) {
         Result<T> result = new Result<>();
         if (map.containsKey(FLAG_KEY)) {
-            result.setFlag(((Number) map.get(FLAG_KEY)).intValue());
-        } else {
+            result.flag = ((Number) map.get(FLAG_KEY)).intValue();
+        }
+        else {
             throw new RuntimeException("缺少关键字" + FLAG_KEY);
         }
         if (map.containsKey(MSG_KEY)) {
-            result.setMsg(map.get(MSG_KEY).toString());
-        } else {
+            result.msg = map.get(MSG_KEY).toString();
+        }
+        else {
             throw new RuntimeException("缺少关键字" + MSG_KEY);
         }
         if (map.containsKey(DATA_KEY)) {
             if (clazz.isInstance(map.get(DATA_KEY))) {
-                result.setData(clazz.cast(map.get(DATA_KEY)));
-            } else {
+                result.data = clazz.cast(map.get(DATA_KEY));
+            }
+            else {
                 throw new RuntimeException("Map 关键字‘" + DATA_KEY + "’无法转换为当前类型。");
             }
-        } else {
+        }
+        else {
             throw new RuntimeException("缺少关键字" + DATA_KEY);
         }
         return result;
