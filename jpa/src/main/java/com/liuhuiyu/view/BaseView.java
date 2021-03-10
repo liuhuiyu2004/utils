@@ -23,6 +23,7 @@ public abstract class BaseView {
             return obj.toString();
         }
     }
+
     public static Integer objectToInt(Object obj,Integer nullValue,Integer errValue) {
         if (obj == null) {
             return nullValue;
