@@ -1,37 +1,44 @@
 /**
- * @author liuhuiyu
- * @date 2021-02-06
  * 程序通用函数
  * @type {{assignObj: (function(*=, *=): *), exitFullScreen: progFunction.exitFullScreen, isFullScreen: (function(): boolean), getMaxZIndex: (function(): any), fullScreen: progFunction.fullScreen}}
  */
 progFunction = {
     /**
-     * ajax封装
+     * 功能描述
      * @author LiuHuiYu
-     * Created DateTime 2021-03-06 15:11
+     * Created DateTime 2021-03-15 9:00
      * @param url
      * @param data
-     * @param backFunction
+     * @param backFunction {success,error,complete}回调函数
      * @return
      */
     ajax: function (url, data, backFunction) {
+        if (typeof (backFunction.beforeSend) === "undefined") {
+            backFunction.beforeSend = function (xhr) {
+                xhr.setRequestHeader("Authorization", "Basic " + btoa("test:test"));
+            };
+        }
         $.ajax({
             type: "POST",
             url: url,
             dataType: "json",
             async: true,
             data: data,
+            traditional: true,
+            beforeSend: function (xhr) {
+                backFunction.beforeSend(xhr);
+            },
             success: function (res) {
                 if (res.success) {
                     progFunction.runFunc(backFunction.success, res.data);
                 }
                 else {
-                    debugger;
+                    // debugger;
                     progFunction.runFunc(backFunction.error, res.msg);
                 }
             },
             error: function (res) {
-                debugger;
+                // debugger;
                 progFunction.runFunc(backFunction.error, "错误码：" + res.status);
             },
             complete: function () {
@@ -39,18 +46,6 @@ progFunction = {
             }
         });
     },
-    /**
-     * 如果对象是函数，执行函数
-     * @author LiuHuiYu
-     * Created DateTime 2021-03-06 15:10
-     * @param runFunction 要执行的函数
-     * @param v1 函数参数
-     * @param v2 函数参数
-     * @param v3 函数参数
-     * @param v4 函数参数
-     * @param v5 函数参数
-     * @return
-     */
     runFunc: function (runFunction, v1, v2, v3, v4, v5) {
         if (typeof (runFunction) === "function") {
             runFunction(v1, v2, v3, v4, v5);
@@ -60,22 +55,26 @@ progFunction = {
      * 进入全屏
      */
     fullScreen: function () {
-        let docElm = document.documentElement;
-        //W3C
-        if (docElm.requestFullscreen) {
-            docElm.requestFullscreen();
-        }
-        //FireFox
-        else if (docElm.mozRequestFullScreen) {
-            docElm.mozRequestFullScreen();
-        }
-        //Chrome等
-        else if (docElm.webkitRequestFullScreen) {
-            docElm.webkitRequestFullScreen();
-        }
-        //IE11
-        else if (docElm.msRequestFullscreen) {
-            docElm.msRequestFullscreen();
+        try {
+            let docElm = document.documentElement;
+            //W3C
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            }
+            //FireFox
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            }
+            //Chrome等
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+            //IE11
+            else if (docElm.msRequestFullscreen) {
+                docElm.msRequestFullscreen();
+            }
+        } catch (error) {
+            console.error("执行全屏失败：", error);
         }
     },
     /**
@@ -123,13 +122,24 @@ progFunction = {
      * @returns {boolean, undefined}ie11检测不到是否全屏
      */
     isFullScreen: function () {
-        return (
-            document.fullscreen ||
-            document.mozFullScreen ||
-            document.webkitIsFullScreen ||
-            document.webkitFullScreen ||
-            document.msFullScreen
-        );
+        if (document.fullscreen !== undefined) {
+            return document.fullscreen;
+        }
+        else if (document.mozFullScreen !== undefined) {
+            return document.mozFullScreen;
+        }
+        else if (document.webkitIsFullScreen !== undefined) {
+            return document.webkitIsFullScreen;
+        }
+        else if (document.webkitFullScreen !== undefined) {
+            return document.webkitFullScreen;
+        }
+        else if (document.msFullScreen !== undefined) {
+            return document.msFullScreen;
+        }
+        else {
+            return undefined;
+        }
     },
     /**
      * 最大的 zIndex 获取
@@ -203,6 +213,27 @@ progFunction = {
         return typeof (obj) == "string" && obj.trim() !== "";
     },
     /**
+     * 默认赋值
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-16 9:56
+     * @param inputValue 传入值
+     * @param defValue 默认返回值(null)
+     * @param allowNull 允许null
+     * @return
+     */
+    defaultValue: function (inputValue, defValue, allowNull) {
+        if (allowNull === undefined) {
+            allowNull = false;
+        }
+        if (inputValue === undefined || (inputValue === null && !allowNull)) {
+            if (defValue === undefined) {
+                return null;
+            }
+            return defValue;
+        }
+        return inputValue;
+    },
+    /**
      * 是否是ie浏览器
      * @returns {boolean}
      * @constructor
@@ -227,5 +258,52 @@ progFunction = {
                 }
             }
         }
-    }
+    },
+    /**
+     * 遍历循环 array（反向循环）
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-08 11:12
+     * @param array 数组
+     * @param func 便利函数返回true 结束循环
+     * @return boolean 是否终止循环跳出
+     */
+    forArray: function (array, func) {
+        let isBreak = false;
+        for (let index = array.length - 1; index >= 0; index--) {
+            isBreak = func(array[index], index);
+            if (isBreak === true) {
+                break;
+            }
+        }
+        return isBreak;
+    },
+    formatDate: function (date, fmt) {
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+        }
+        let o = {
+            'M+': date.getMonth() + 1,
+            'd+': date.getDate(),
+            'h+': date.getHours(),
+            'm+': date.getMinutes(),
+            's+': date.getSeconds()
+        };
+        for (let k in o) {
+            let t = new RegExp('($' + k + ')');
+            if (t.test(fmt)) {
+                let str = o[k] + '';
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
+            }
+        }
+
+        function padLeftZero(str) {
+            return ('00' + str).substr(str.length)
+        }
+
+        return fmt;
+    },
+    formatTimestamp: function (timestamp, fmt) {
+        let date = new Date(timestamp);
+        return progFunction.formatDate(date, fmt)
+    },
 }
