@@ -147,7 +147,7 @@ progFunction = {
      */
     getMaxZIndex: function () {
         return Math.max.apply(null,
-            $.map($('body *'), function (e, n) {
+            $.map($('body *'), function (e) {
                 if ($(e).css('position') !== 'static')
                     return parseInt($(e).css('z-index')) || -1;
             }));
@@ -305,5 +305,22 @@ progFunction = {
     formatTimestamp: function (timestamp, fmt) {
         let date = new Date(timestamp);
         return progFunction.formatDate(date, fmt)
+    },
+    /**
+     * 获取随机数
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-18 15:02
+     * @param start 最小数
+     * @param end  最大数
+     * @param fixed 是整数
+     * @return
+     */
+    getRandom: function (start, end, fixed) {
+        if (fixed === undefined) {
+            fixed = 0;
+        }
+        let differ = end - start
+        let random = Math.random()
+        return (start + differ * random).toFixed(fixed)
     },
 }
