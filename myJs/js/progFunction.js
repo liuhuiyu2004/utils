@@ -289,7 +289,7 @@ progFunction = {
             's+': date.getSeconds()
         };
         for (let k in o) {
-            let t = new RegExp('($' + k + ')');
+            let t = new RegExp('(' + k + ')');
             if (t.test(fmt)) {
                 let str = o[k] + '';
                 fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
