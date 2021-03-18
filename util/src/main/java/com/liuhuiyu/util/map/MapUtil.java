@@ -20,14 +20,20 @@ public class MapUtil {
     public static Map<String, Object> mapObjectToStringKeyMap(Object obj) {
         if (obj == null) {
             return null;
-        } else if (obj instanceof Map<?, ?>) {
+        }
+        else if (obj instanceof Map<?, ?>) {
             Map<?, ?> map = (Map<?, ?>) obj;
             Map<String, Object> resMap = new HashMap<>(map.size());
             map.forEach((k, v) -> resMap.put(k.toString(), v));
             return resMap;
-        } else {
+        }
+        else {
             return new HashMap<>(0);
         }
+    }
+
+    public static String getMapStringValue(Map<String, Object> map, String key) {
+        return getMapStringValue(map, key, "");
     }
 
     /**
@@ -37,12 +43,69 @@ public class MapUtil {
      * @param key key
      * @return 字符串
      */
-    public static String getMapStringValue(Map<String, Object> map, String key) {
+    public static String getMapStringValue(Map<String, Object> map, String key, String defValue) {
         if (map.containsKey(key)) {
             Object obj = map.get(key);
-            return obj == null ? "" : obj.toString();
-        } else {
-            return "";
+            return obj == null ? defValue : obj.toString();
+        }
+        else {
+            return defValue;
+        }
+    }
+
+    public static Integer getMapIntegerValue(Map<String, Object> map, String key) {
+        return getMapIntegerValue(map, key, 0);
+    }
+
+    public static Integer getMapIntegerValue(Map<String, Object> map, String key, Integer defValue) {
+        if (map.containsKey(key)) {
+            Object obj = map.get(key);
+            if (obj == null) {
+                return defValue;
+            }
+            else if (obj instanceof Number) {
+                return ((Number) obj).intValue();
+            }
+            else {
+                String value = obj.toString();
+                try {
+                    return Integer.parseInt(value);
+                }
+                catch (NumberFormatException ex) {
+                    return defValue;
+                }
+            }
+        }
+        else {
+            return defValue;
+        }
+    }
+
+    public static Float getMapFloatValue(Map<String, Object> map, String key) {
+        return getMapFloatValue(map, key, 0F);
+    }
+
+    public static Float getMapFloatValue(Map<String, Object> map, String key, Float defValue) {
+        if (map.containsKey(key)) {
+            Object obj = map.get(key);
+            if (obj == null) {
+                return defValue;
+            }
+            else if (obj instanceof Number) {
+                return ((Number) obj).floatValue();
+            }
+            else {
+                String value = obj.toString();
+                try {
+                    return Float.parseFloat(value);
+                }
+                catch (NumberFormatException ex) {
+                    return defValue;
+                }
+            }
+        }
+        else {
+            return defValue;
         }
     }
 
@@ -60,14 +123,18 @@ public class MapUtil {
                 Double value = (Double) resultMap.get(key);
                 if (value.intValue() == value) {
                     res.put(key, ((Double) resultMap.get(key)).intValue());
-                } else {
+                }
+                else {
                     res.put(key, resultMap.get(key));
                 }
-            } else if (resultMap.get(key) instanceof List<?>) {
+            }
+            else if (resultMap.get(key) instanceof List<?>) {
                 res.put(key, listNumberToInt((List<?>) resultMap.get(key)));
-            } else if (resultMap.get(key) instanceof Map<?, ?>) {
+            }
+            else if (resultMap.get(key) instanceof Map<?, ?>) {
                 res.put(key, mapNumberToInt((Map<?, ?>) resultMap.get(key)));
-            } else {
+            }
+            else {
                 res.put(key, resultMap.get(key));
             }
         }
@@ -88,14 +155,18 @@ public class MapUtil {
                 if (value.intValue() == value) {
                     Object v = value.intValue();
                     res.add(v);
-                } else {
+                }
+                else {
                     res.add(value);
                 }
-            } else if (o instanceof Map<?, ?>) {
+            }
+            else if (o instanceof Map<?, ?>) {
                 res.add(mapNumberToInt((Map<?, ?>) o));
-            } else if (o instanceof List<?>) {
+            }
+            else if (o instanceof List<?>) {
                 res.add(listNumberToInt((List<?>) o));
-            } else {
+            }
+            else {
                 res.add(o);
             }
         }
