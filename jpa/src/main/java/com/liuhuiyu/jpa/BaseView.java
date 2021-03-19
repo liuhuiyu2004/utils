@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,28 +18,41 @@ import java.util.Map;
  * Created DateTime 2020-07-07 10:03
  */
 @Log4j2
+//@Component
 public abstract class BaseView {
-    private EntityManager getEntityManager() {
-        return DaoEntityManagerFactory.getInstance().getEntityManager();
+    private final EntityManagerFactory emf;
+    EntityManager em;
+
+    public BaseView(EntityManagerFactory emf) {
+        this.emf = emf;
     }
 
-
-    protected List<?> getQueryList(String sql, Map<String, Object> parameterMap, Pageable pageable) {
-        try {
-            Query query = this.getEntityManager().createNativeQuery(sql);
-            if (parameterMap != null) {
-                for (String key : parameterMap.keySet()) {
-                    query.setParameter(key, parameterMap.get(key));
+    public EntityManager getEntityManager() {
+        if (em == null) {
+            synchronized (BaseView.class) {
+                if (em == null) {
+                    em = emf.createEntityManager();
                 }
             }
-            if (pageable != null) {
-                query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-                query.setMaxResults(pageable.getPageSize());
-            }
-            return query.getResultList();
-        } catch (Exception ex) {
-            throw ex;
         }
+        if (!em.isOpen()) {
+            em = emf.createEntityManager();
+        }
+        return em;
+    }
+
+    protected List<?> getQueryList(String sql, Map<String, Object> parameterMap, Pageable pageable) {
+        Query query = this.getEntityManager().createNativeQuery(sql);
+        if (parameterMap != null) {
+            for (String key : parameterMap.keySet()) {
+                query.setParameter(key, parameterMap.get(key));
+            }
+        }
+        if (pageable != null) {
+            query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+            query.setMaxResults(pageable.getPageSize());
+        }
+        return query.getResultList();
     }
 
     protected Long getCount(String sql, @NotNull Map<String, Object> parameterMap) {
@@ -66,7 +80,8 @@ public abstract class BaseView {
         }
         try {
             return query.getSingleResult();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             return null;
         }
     }
@@ -89,6 +104,7 @@ public abstract class BaseView {
         }
         return resList;
     }
+
     protected <T> T getSingle(DaoOperator<T> b, String sql, Map<String, Object> parameterMap) {
         Object obj = getSingleResult(sql, parameterMap);
         return b.objectToT(obj);
