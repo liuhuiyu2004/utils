@@ -1,103 +1,108 @@
 package com.liuhuiyu.jpa;
 
-
 import lombok.extern.log4j.Log4j2;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.domain.Pageable;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.*;
 
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
- * Created DateTime 2020-07-07 10:03
+ * Created DateTime 2021-03-22 9:12
  */
 @Log4j2
-//@Component
 public abstract class BaseView {
-    private final EntityManagerFactory emf;
-    EntityManager em;
+    private final DataSource dataSource;
 
-    public BaseView(EntityManagerFactory emf) {
-        this.emf = emf;
+    public BaseView(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public EntityManager getEntityManager() {
-        if (em == null) {
-            synchronized (BaseView.class) {
-                if (em == null) {
-                    em = emf.createEntityManager();
+    private Connection getConnection() {
+        try {
+            return this.dataSource.getConnection();
+        }
+        catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
+    }
+
+    private PreparedStatement getPreparedStatement(String sql) {
+        try {
+            return getConnection().prepareStatement(sql);
+        }
+        catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
+    }
+
+    private ResultSet getResultSet(String sql, Map<String, Object> parameterMap) {
+        try {
+            NamedParameterStatement namedParameterStatement = new NamedParameterStatement(sql);
+            PreparedStatement preparedStatement = this.getPreparedStatement(namedParameterStatement.getSql());
+            namedParameterStatement.fillParameters(preparedStatement, parameterMap);
+            log.info(namedParameterStatement.getSql());
+            return preparedStatement.executeQuery();
+        }
+        catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
+    }
+
+    /**
+     * 对象列表获取
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-22 14:05
+     * @param sql 基本语句
+     * @param parameterMap 参数表
+     * @return java.util.List<java.lang.Object[]>
+     */
+    protected List<Object[]> getResultList(String sql, Map<String, Object> parameterMap) {
+        return getResultList(sql, parameterMap, false);
+    }
+    /**
+     * 对象列表获取
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-22 14:05
+     * @param sql 基本语句
+     * @param parameterMap 参数表
+     * @param onlyFirst 仅第一行数据
+     * @return java.util.List<java.lang.Object[]>
+     */
+    protected List<Object[]> getResultList(String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
+        ArrayList<Object[]> resList = new ArrayList<>();
+        ResultSet resultSet = this.getResultSet(sql, parameterMap);
+        try {
+            int columnCount = resultSet.getMetaData().getColumnCount();
+            while (resultSet.next()) {
+                Object[] objs = new Object[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    objs[i - 1] = (resultSet.getObject(i));
+                }
+                resList.add(objs);
+                if (onlyFirst) {
+                    return resList;
                 }
             }
-        }
-        if (!em.isOpen()) {
-            em = emf.createEntityManager();
-        }
-        return em;
-    }
-
-    protected List<?> getQueryList(String sql, Map<String, Object> parameterMap, Pageable pageable) {
-        Query query = this.getEntityManager().createNativeQuery(sql);
-        if (parameterMap != null) {
-            for (String key : parameterMap.keySet()) {
-                query.setParameter(key, parameterMap.get(key));
-            }
-        }
-        if (pageable != null) {
-            query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-            query.setMaxResults(pageable.getPageSize());
-        }
-        return query.getResultList();
-    }
-
-    protected Long getCount(String sql, @NotNull Map<String, Object> parameterMap) {
-        Query query = this.getEntityManager().createNativeQuery(sql);
-        for (String key : parameterMap.keySet()) {
-            query.setParameter(key, parameterMap.get(key));
-        }
-        Object obj = query.getSingleResult();
-        return Long.parseLong(obj.toString());
-    }
-
-    /**
-     * 第一条信息的第一列查询
-     *
-     * @param baseSql      语句
-     * @param parameterMap 参数map
-     * @return 第一条信息的第一列
-     */
-    protected Object getSingleResult(String baseSql, Map<String, Object> parameterMap) {
-        Query query = this.getEntityManager().createNativeQuery(baseSql);
-        if (parameterMap != null) {
-            for (String key : parameterMap.keySet()) {
-                query.setParameter(key, parameterMap.get(key));
-            }
-        }
-        try {
-            return query.getSingleResult();
+            return resList;
         }
         catch (Exception ex) {
-            return null;
+            throw new RuntimeException(ex);
         }
     }
 
     /**
-     * 将查询字符串转换成like字符串
-     *
-     * @param value 原始字符串
-     * @return like字符串
+     * 对象列表获取
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-22 14:04
+     * @param b DaoOperator
+     * @param sql 基本语句
+     * @param parameterMap 参数表
+     * @return java.util.List<T>
      */
-    protected String getLikeString(String value) {
-        return "%" + value + "%";
-    }
-
-    protected <T> List<T> getList(DaoOperator<T> b, String sql, Map<String, Object> parameterMap, Pageable pageable) {
-        List<?> list = getQueryList(sql, parameterMap, pageable);
+    protected <T> List<T> getResultList(DaoOperator<T> b, String sql, Map<String, Object> parameterMap) {
+        List<?> list = this.getResultList(sql, parameterMap);
         List<T> resList = new ArrayList<>();
         for (Object obj : list) {
             resList.add(b.objectToT(obj));
@@ -105,8 +110,42 @@ public abstract class BaseView {
         return resList;
     }
 
-    protected <T> T getSingle(DaoOperator<T> b, String sql, Map<String, Object> parameterMap) {
-        Object obj = getSingleResult(sql, parameterMap);
-        return b.objectToT(obj);
+    /**
+     * 返回第一行信息
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-22 14:02
+     * @param b DaoOperator
+     * @param sql 执行语句
+     * @param parameterMap 参数表
+     * @return java.util.Optional<T>
+     */
+    protected <T> Optional<T> getFirstResult(DaoOperator<T> b, String sql, Map<String, Object> parameterMap) {
+        List<?> list = this.getResultList(sql, parameterMap, true);
+        if (list.size() == 0) {
+            return Optional.empty();
+        }
+        else {
+            T t = b.objectToT(list.get(0));
+            return Optional.of(t);
+        }
+    }
+
+    /**
+     * 第一行第一列信息获取
+     *
+     * @param sql          语句
+     * @param parameterMap 参数表
+     * @return java.util.Optional<java.lang.Object>
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-22 13:46
+     */
+    protected Optional<Object> getSingleResult(String sql, Map<String, Object> parameterMap) {
+        List<Object[]> list = this.getResultList(sql, parameterMap, true);
+        if (list.size() == 0 || list.get(0).length == 0) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(list.get(0)[0]);
+        }
     }
 }
