@@ -20,36 +20,51 @@ public abstract class BaseView {
         this.dataSource = dataSource;
     }
 
-    private Connection getConnection() {
-        try {
-            return this.dataSource.getConnection();
+    private void actionConnection(Consumer<Connection> full) {
+        try (Connection connection = this.dataSource.getConnection()) {
+            full.accept(connection);
         }
-        catch (SQLException throwables) {
-            throw new RuntimeException(throwables);
+        catch (SQLException throwable) {
+            throw new RuntimeException("获取连接异常。", throwable);
         }
     }
 
-    private PreparedStatement getPreparedStatement(String sql) {
-        try {
-            this.getConnection().close();
-            return this.getConnection().prepareStatement(sql);
-        }
-        catch (SQLException throwables) {
-            throw new RuntimeException(throwables);
-        }
+    private void actionPreparedStatement(String sql, Consumer<PreparedStatement> full) {
+        actionConnection(connection -> {
+            PreparedStatement preparedStatement;
+            try {
+                preparedStatement = connection.prepareStatement(sql);
+            }
+            catch (SQLException throwable) {
+                throw new RuntimeException("创建PreparedStatement异常", throwable);
+            }
+            full.accept(preparedStatement);
+        });
     }
 
     private void fullResultSet(String sql, Map<String, Object> parameterMap, Consumer<ResultSet> full) {
         NamedParameterStatement namedParameterStatement = new NamedParameterStatement(sql);
-        try (PreparedStatement preparedStatement = this.getPreparedStatement(namedParameterStatement.getSql())) {
+        this.actionPreparedStatement(namedParameterStatement.getSql(), preparedStatement -> {
             namedParameterStatement.fillParameters(preparedStatement, parameterMap);
             log.info(namedParameterStatement.getSql());
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet;
+            try {
+                resultSet = preparedStatement.executeQuery();
+            }
+            catch (SQLException throwable) {
+                throw new RuntimeException("执行sql语句异常。", throwable);
+            }
             full.accept(resultSet);
-        }
-        catch (SQLException throwables) {
-            throw new RuntimeException(throwables);
-        }
+        });
+//        try (PreparedStatement preparedStatement = this.getPreparedStatement(namedParameterStatement.getSql())) {
+//            namedParameterStatement.fillParameters(preparedStatement, parameterMap);
+//            log.info(namedParameterStatement.getSql());
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            full.accept(resultSet);
+//        }
+//        catch (SQLException throwables) {
+//            throw new RuntimeException(throwables);
+//        }
     }
 
     /**
@@ -77,7 +92,7 @@ public abstract class BaseView {
      */
     protected List<Object[]> getResultList(String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
         ArrayList<Object[]> resList = new ArrayList<>();
-        this.fullResultSet(sql, parameterMap,(resultSet)->{
+        this.fullResultSet(sql, parameterMap, (resultSet) -> {
             try {
                 int columnCount = resultSet.getMetaData().getColumnCount();
                 while (resultSet.next()) {
@@ -87,7 +102,7 @@ public abstract class BaseView {
                     }
                     resList.add(objs);
                     if (onlyFirst) {
-                        return ;
+                        return;
                     }
                 }
             }

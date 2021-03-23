@@ -37,9 +37,10 @@ public class NamedParameterStatement {
 
     /**
      * 分析处理带命名参数的SQL语句。使用Map存储参数，然后将参数替换成?
+     *
+     * @param sql 基本语句
      * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:10
-     * @param sql 基本语句
      */
     private void parseSql(String sql) {
         String regex = "(:(\\w+))";
@@ -58,12 +59,13 @@ public class NamedParameterStatement {
 
     /**
      * 使用参数值Map，填充pStat
-     * @author LiuHuiYu
-     * Created DateTime 2021-03-22 14:10
+     *
      * @param pStat PreparedStatement
      * @param pMap  命名参数的值表，其中的值可以比较所需的参数多。
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-22 14:10
      */
-    public void fillParameters(PreparedStatement pStat, Map<String, Object> pMap) throws SQLException {
+    public void fillParameters(PreparedStatement pStat, Map<String, Object> pMap) {
         this.paramsMap.forEach((idKey, valueKey) -> {
             if (pMap.containsKey(valueKey)) {
                 Object value = pMap.get(valueKey);
