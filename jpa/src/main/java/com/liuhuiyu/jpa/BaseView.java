@@ -29,18 +29,23 @@ public abstract class BaseView {
         }
     }
 
+    private PreparedStatement getPreparedStatement(String sql) {
+        try {
+            this.getConnection().close();
+            return this.getConnection().prepareStatement(sql);
+        }
+        catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
+    }
+
     private void fullResultSet(String sql, Map<String, Object> parameterMap, Consumer<ResultSet> full) {
         NamedParameterStatement namedParameterStatement = new NamedParameterStatement(sql);
-        try (Connection connection = this.getConnection()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(namedParameterStatement.getSql())) {
-                namedParameterStatement.fillParameters(preparedStatement, parameterMap);
-                log.info(namedParameterStatement.getSql());
-                ResultSet resultSet = preparedStatement.executeQuery();
-                full.accept(resultSet);
-            }
-            catch (SQLException throwables) {
-                throw new RuntimeException(throwables);
-            }
+        try (PreparedStatement preparedStatement = this.getPreparedStatement(namedParameterStatement.getSql())) {
+            namedParameterStatement.fillParameters(preparedStatement, parameterMap);
+            log.info(namedParameterStatement.getSql());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            full.accept(resultSet);
         }
         catch (SQLException throwables) {
             throw new RuntimeException(throwables);
@@ -72,7 +77,7 @@ public abstract class BaseView {
      */
     protected List<Object[]> getResultList(String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
         ArrayList<Object[]> resList = new ArrayList<>();
-        this.fullResultSet(sql, parameterMap, (resultSet) -> {
+        this.fullResultSet(sql, parameterMap,(resultSet)->{
             try {
                 int columnCount = resultSet.getMetaData().getColumnCount();
                 while (resultSet.next()) {
@@ -82,7 +87,7 @@ public abstract class BaseView {
                     }
                     resList.add(objs);
                     if (onlyFirst) {
-                        return;
+                        return ;
                     }
                 }
             }
