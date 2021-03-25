@@ -11,6 +11,8 @@ import java.util.Map;
  * Created DateTime 2021-01-20 14:53
  */
 public class MapUtil {
+    //region 静态方法
+
     /**
      * Map对象转换成Map<String, Object>对象
      *
@@ -30,6 +32,14 @@ public class MapUtil {
         else {
             return new HashMap<>(0);
         }
+    }
+
+    private Object getMapObjectValue(Map<String, Object> map, String key) {
+        return getMapObjectValue(map, key, null);
+    }
+
+    private Object getMapObjectValue(Map<String, Object> map, String key, Object defValue) {
+        return map.getOrDefault(key, defValue);
     }
 
     public static String getMapStringValue(Map<String, Object> map, String key) {
@@ -58,26 +68,21 @@ public class MapUtil {
     }
 
     public static Integer getMapIntegerValue(Map<String, Object> map, String key, Integer defValue) {
-        if (map.containsKey(key)) {
-            Object obj = map.get(key);
-            if (obj == null) {
-                return defValue;
-            }
-            else if (obj instanceof Number) {
-                return ((Number) obj).intValue();
-            }
-            else {
-                String value = obj.toString();
-                try {
-                    return Integer.parseInt(value);
-                }
-                catch (NumberFormatException ex) {
-                    return defValue;
-                }
-            }
+        Object obj = map.getOrDefault(key, defValue);
+        if (obj == null) {
+            return defValue;
+        }
+        else if (obj instanceof Number) {
+            return ((Number) obj).intValue();
         }
         else {
-            return defValue;
+            String value = obj.toString();
+            try {
+                return Integer.parseInt(value);
+            }
+            catch (NumberFormatException ex) {
+                return defValue;
+            }
         }
     }
 
@@ -86,25 +91,37 @@ public class MapUtil {
     }
 
     public static Float getMapFloatValue(Map<String, Object> map, String key, Float defValue) {
-        if (map.containsKey(key)) {
-            Object obj = map.get(key);
-            if (obj == null) {
-                return defValue;
-            }
-            else if (obj instanceof Number) {
-                return ((Number) obj).floatValue();
-            }
-            else {
-                String value = obj.toString();
-                try {
-                    return Float.parseFloat(value);
-                }
-                catch (NumberFormatException ex) {
-                    return defValue;
-                }
-            }
+        Object obj = map.getOrDefault(key, defValue);
+        if (obj == null) {
+            return defValue;
+        }
+        else if (obj instanceof Number) {
+            return ((Number) obj).floatValue();
         }
         else {
+            String value = obj.toString();
+            try {
+                return Float.parseFloat(value);
+            }
+            catch (NumberFormatException ex) {
+                return defValue;
+            }
+        }
+    }
+
+    public static Boolean getMapBooleanValue(Map<String, Object> map, String key) {
+        return getMapBooleanValue(map, key, false);
+    }
+
+    public static Boolean getMapBooleanValue(Map<String, Object> map, String key, boolean defValue) {
+        Object obj = map.getOrDefault(key, defValue);
+        if (obj instanceof Boolean) {
+            return (Boolean) obj;
+        }
+        try {
+            return Boolean.parseBoolean(obj.toString());
+        }
+        catch (Exception ex) {
             return defValue;
         }
     }
@@ -171,5 +188,52 @@ public class MapUtil {
             }
         }
         return res;
+    }
+    //endregion
+
+    private final Map<String, Object> map;
+
+    public MapUtil(Map<String, Object> map) {
+        this.map = map;
+    }
+
+    public String getStringValue(String key) {
+        return getMapStringValue(this.map, key);
+    }
+
+    public String getStringValue(String key, String defValue) {
+        return getMapStringValue(this.map, key, defValue);
+    }
+
+    public Integer getIntegerValue(String key) {
+        return getMapIntegerValue(map, key);
+    }
+
+    public Integer getIntegerValue(String key, Integer defValue) {
+        return getMapIntegerValue(map, key, defValue);
+    }
+
+    public Float getFloatValue(String key) {
+        return getMapFloatValue(map, key);
+    }
+
+    public Float getFloatValue(String key, Float defValue) {
+        return getMapFloatValue(map, key, defValue);
+    }
+
+    public Object getObjectValue(String key) {
+        return getMapObjectValue(map, key);
+    }
+
+    public Object getObjectValue(String key, Object defValue) {
+        return getMapObjectValue(map, key, defValue);
+    }
+
+    public Boolean getBooleanValue(String key) {
+        return getMapBooleanValue(map, key);
+    }
+
+    public Boolean getBooleanValue(String key, boolean defValue) {
+        return getMapBooleanValue(map, key, defValue);
     }
 }
