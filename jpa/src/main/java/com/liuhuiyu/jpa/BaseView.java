@@ -19,17 +19,28 @@ public abstract class BaseView {
     public BaseView(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-    private void actionConnection(Consumer<Connection> full) {
+    /**
+     * 连接获取
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-25 10:42
+     * @param callFunctions 调用函数
+     */
+    protected void actionConnection(Consumer<Connection> callFunctions) {
         try (Connection connection = this.dataSource.getConnection()) {
-            full.accept(connection);
+            callFunctions.accept(connection);
         }
         catch (SQLException throwable) {
             throw new RuntimeException("获取连接异常。", throwable);
         }
     }
-
-    private void actionPreparedStatement(String sql, Consumer<PreparedStatement> full) {
+    /**
+     * 获取 PreparedStatement
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-25 10:45
+     * @param sql 基础语句
+     * @param callFunctions 回调
+     */
+    protected void actionPreparedStatement(String sql, Consumer<PreparedStatement> callFunctions) {
         actionConnection(connection -> {
             PreparedStatement preparedStatement;
             try {
@@ -38,11 +49,18 @@ public abstract class BaseView {
             catch (SQLException throwable) {
                 throw new RuntimeException("创建PreparedStatement异常", throwable);
             }
-            full.accept(preparedStatement);
+            callFunctions.accept(preparedStatement);
         });
     }
-
-    private void fullResultSet(String sql, Map<String, Object> parameterMap, Consumer<ResultSet> full) {
+    /**
+     * 执行sql回调ResultSet
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-25 10:46
+     * @param sql 基础语句
+     * @param parameterMap 参数Map
+     * @param callFunctions 回调
+     */
+    protected void fullResultSet(String sql, Map<String, Object> parameterMap, Consumer<ResultSet> callFunctions) {
         NamedParameterStatement namedParameterStatement = new NamedParameterStatement(sql);
         this.actionPreparedStatement(namedParameterStatement.getSql(), preparedStatement -> {
             namedParameterStatement.fillParameters(preparedStatement, parameterMap);
@@ -54,17 +72,8 @@ public abstract class BaseView {
             catch (SQLException throwable) {
                 throw new RuntimeException("执行sql语句异常。", throwable);
             }
-            full.accept(resultSet);
+            callFunctions.accept(resultSet);
         });
-//        try (PreparedStatement preparedStatement = this.getPreparedStatement(namedParameterStatement.getSql())) {
-//            namedParameterStatement.fillParameters(preparedStatement, parameterMap);
-//            log.info(namedParameterStatement.getSql());
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            full.accept(resultSet);
-//        }
-//        catch (SQLException throwables) {
-//            throw new RuntimeException(throwables);
-//        }
     }
 
     /**
