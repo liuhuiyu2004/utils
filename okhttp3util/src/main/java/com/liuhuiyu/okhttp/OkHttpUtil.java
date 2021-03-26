@@ -194,7 +194,50 @@ public class OkHttpUtil {
         }
     }
     //endregion
+    //region put申请
 
+    /**
+     * @param url 地址
+     * @return Response
+     */
+    public Response executePut(String url) {
+        try {
+            HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
+            this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
+            Request request = this.builder
+                    .url(urlBuilder.build())
+                    .put(this.body.build())
+                    .build();
+            return this.client.newCall(request).execute();
+        }
+        catch (IOException e) {
+            throw new OkHttpException(e.getMessage());
+        }
+
+    }
+
+    public String executePutToString(String url) {
+        try {
+            return Objects.requireNonNull(this.executePut(url).body()).string();
+        }
+        catch (IOException e) {
+            throw new OkHttpException(e.getMessage());
+        }
+    }
+
+    public Map<String, Object> executePutToMap(String url) {
+        String strJson = this.executePutToString(url);
+        try {
+            Gson gson = new Gson();
+            Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
+            }.getType());
+            return mapDoubleToInt(resultMap);
+        }
+        catch (JsonSyntaxException e) {
+            throw new OkHttpException(e.getMessage());
+        }
+    }
+    //endregion
     public static Map<String, Object> mapDoubleToInt(Map<?, ?> resultMap) {
         Map<String, Object> res = new HashMap<>(resultMap.size());
         for (Object keyObj : resultMap.keySet()) {

@@ -1,6 +1,7 @@
 package com.liuhuiyu.okhttp;
 
 import jdk.nashorn.internal.runtime.logging.Logger;
+import okhttp3.Response;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -42,13 +43,14 @@ public class OkHttpUtilTest {
     }
 
     @Test
-    public void testHeadGet(){
-        String token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiWkhfQWRtaW4iLCJleHAiOjE2MTI2MzM4MzAsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjIuNzo4MDA2IiwiYXVkIjoiaHR0cDovLzE5Mi4xNjguMi43OjgwMDYifQ.E6R3ei7UyUK3UnLAKbbLj9vIO9frdUtekT1UD4hHB6A";
-        String url="http://192.168.2.7:8006/U_SYSTREE/GetUserTreeStr";
-        Map<String, Object> map=OkHttpUtil.create().headerAuthorizationByBearerToken(token).addQueryParameter("dc","ZH").executeGetToMap(url);
-        if(Integer.parseInt(map.get("code").toString())==200){
+    public void testHeadGet() {
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiWkhfQWRtaW4iLCJleHAiOjE2MTI2MzM4MzAsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjIuNzo4MDA2IiwiYXVkIjoiaHR0cDovLzE5Mi4xNjguMi43OjgwMDYifQ.E6R3ei7UyUK3UnLAKbbLj9vIO9frdUtekT1UD4hHB6A";
+        String url = "http://192.168.2.7:8006/U_SYSTREE/GetUserTreeStr";
+        Map<String, Object> map = OkHttpUtil.create().headerAuthorizationByBearerToken(token).addQueryParameter("dc", "ZH").executeGetToMap(url);
+        if (Integer.parseInt(map.get("code").toString()) == 200) {
             System.out.println(map.get("data"));
-        }else{
+        }
+        else {
             System.out.println(map);
         }
         /*
@@ -62,6 +64,27 @@ public class OkHttpUtilTest {
                     ]
                 }
         ]
+         */
+    }
+
+    @Test
+    public void testPut() {
+        String url = "http://192.168.2.7:8006/YJYAJX/QYSX";
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiWkhfQWRtaW4iLCJleHAiOjE2MTY3NjE1NDYsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjIuNzo4MDA2IiwiYXVkIjoiaHR0cDovLzE5Mi4xNjguMi43OjgwMDYifQ.nmLKiJHeIf5niL1k6g4hVRA_RIa2BcYIR0jF9XNs4uo";
+        String id = "b7af1ab0-0719-4e3e-93f0-c81dba07e9cb";
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        okHttpUtil.addQueryParameter("id", id);
+        okHttpUtil.headerAuthorizationByBearerToken(token);
+        Response response= okHttpUtil.executePut(url);
+        Map<String, Object> map = okHttpUtil.executePutToMap(url);
+        /*
+         {
+         "code": 200,
+         "msg": "",
+         "id": "b7af1ab0-0719-4e3e-93f0-c81dba07e9cb",
+         "JSR": "管理员",
+         "JSSJ": "2021-03-26 10:35:25"
+         }
          */
     }
 }
