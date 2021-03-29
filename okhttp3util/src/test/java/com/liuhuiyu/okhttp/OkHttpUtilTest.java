@@ -75,7 +75,7 @@ public class OkHttpUtilTest {
         OkHttpUtil okHttpUtil = OkHttpUtil.create();
         okHttpUtil.addQueryParameter("id", id);
         okHttpUtil.headerAuthorizationByBearerToken(token);
-        Response response= okHttpUtil.executePut(url);
+        Response response = okHttpUtil.executePut(url);
         Map<String, Object> map = okHttpUtil.executePutToMap(url);
         /*
          {
@@ -87,4 +87,23 @@ public class OkHttpUtilTest {
          }
          */
     }
+
+    @Test
+    public void testPost() {
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiWkhfQWRtaW4iLCJleHAiOjE2MTcwMjMyMzAsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjIuNzo4MDA2IiwiYXVkIjoiaHR0cDovLzE5Mi4xNjguMi43OjgwMDYifQ.8Y91ifTYi0-KH5PDWvFaJrN53Iz0_3Itqko8PzM82MM";
+        String url="http://192.168.2.7:8006/YJYAJX/UpDate";
+        Map<String,String>queryParameter=new HashMap<>(5);
+        queryParameter.put("id", "aa30fe55-746c-45a1-8bc1-ef91cd7566c9");
+        queryParameter.put("yjyaid", "96f3065d-8006-4758-a784-b12f147594b6");
+        queryParameter.put("title", "2021年122号台风天鸽应急预案");
+        queryParameter.put("type", "防风");
+        queryParameter.put("dz", "200002");
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        okHttpUtil.headerAuthorizationByBearerToken(token);
+        for (String key : queryParameter.keySet()) {
+            okHttpUtil.addBody(key, queryParameter.get(key));
+        }
+        Map<String, Object> map = okHttpUtil.executePutToMap(url);
+    }
+
 }

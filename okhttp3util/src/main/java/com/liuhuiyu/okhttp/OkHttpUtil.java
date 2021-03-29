@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpUtil {
     private final OkHttpClient client;
     private final Request.Builder builder;
-    private final FormBody.Builder body;
+    //    private final FormBody.Builder body;
+    private final Map<String, String> bodyParameter;
     private final Map<String, String> queryParameterMap;
     public static int CONNECT_TIMEOUT = 15;
     public static int READ_TIMEOUT = 15;
@@ -36,8 +37,9 @@ public class OkHttpUtil {
 //                .addNetworkInterceptor(new EncryptInterceptor())
                 .build();
         this.builder = new Request.Builder();
-        this.body = new FormBody.Builder();
+//        this.body = new FormBody.Builder();
         this.queryParameterMap = new HashMap<>(0);
+        this.bodyParameter = new HashMap<>(0);
     }
 
     /**
@@ -69,7 +71,8 @@ public class OkHttpUtil {
      * @return OkHttpUtil
      */
     public OkHttpUtil addBody(String key, String value) {
-        this.body.add(key, value);
+//        this.body.add(key, value);
+        this.bodyParameter.put(key, value);
         return this;
     }
 
@@ -126,6 +129,8 @@ public class OkHttpUtil {
     public Response executePost(String url) {
         try {
             this.builder.url(url);
+            FormBody.Builder body = new FormBody.Builder();
+            this.bodyParameter.forEach(body::add);
             return this.client.newCall(this.builder.post(body.build()).build()).execute();
         }
         catch (IOException e) {
@@ -194,6 +199,7 @@ public class OkHttpUtil {
         }
     }
     //endregion
+
     //region put申请
 
     /**
@@ -203,11 +209,16 @@ public class OkHttpUtil {
     public Response executePut(String url) {
         try {
             HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
+            //地址参数
             this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
-            Request request = this.builder
-                    .url(urlBuilder.build())
-                    .put(this.body.build())
-                    .build();
+            if (this.bodyParameter.size() > 0) {
+                Gson gson = new Gson();
+                String jsonData = gson.toJson(bodyParameter);
+                RequestBody body = RequestBody.create(jsonData, MediaType.parse("application/json;charset=utf-8"));
+                this.builder.put(body);
+            }
+            this.builder.url(urlBuilder.build());
+            Request request = this.builder.build();
             return this.client.newCall(request).execute();
         }
         catch (IOException e) {
@@ -237,6 +248,7 @@ public class OkHttpUtil {
             throw new OkHttpException(e.getMessage());
         }
     }
+
     //endregion
     public static Map<String, Object> mapDoubleToInt(Map<?, ?> resultMap) {
         Map<String, Object> res = new HashMap<>(resultMap.size());
