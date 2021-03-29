@@ -228,7 +228,14 @@ public class MapUtil {
     public Object getObjectValue(String key, Object defValue) {
         return getMapObjectValue(map, key, defValue);
     }
-
+    public <T> T getValue(String key, T defValue) {
+        Object obj=map.getOrDefault(key, defValue);
+        if(obj.getClass().equals(defValue.getClass())){
+            return (T)obj;
+        }else{
+            throw new RuntimeException("类型转换失败。");
+        }
+    }
     public Boolean getBooleanValue(String key) {
         return getMapBooleanValue(map, key);
     }
