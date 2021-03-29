@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +22,8 @@ public class OkHttpUtil {
     //    private final FormBody.Builder body;
     private final Map<String, String> bodyParameter;
     private final Map<String, String> queryParameterMap;
+    private String mediaTypeString;
+    public static final String MEDIA_TYPE_APPLICATION_JSON_UTF_8 = "application/json;charset=utf-8";
     public static int CONNECT_TIMEOUT = 15;
     public static int READ_TIMEOUT = 15;
     public static int WRITE_TIMEOUT = 15;
@@ -40,6 +43,7 @@ public class OkHttpUtil {
 //        this.body = new FormBody.Builder();
         this.queryParameterMap = new HashMap<>(0);
         this.bodyParameter = new HashMap<>(0);
+        this.mediaTypeString = "";
     }
 
     /**
@@ -49,6 +53,14 @@ public class OkHttpUtil {
      */
     public static OkHttpUtil create() {
         return new OkHttpUtil();
+    }
+
+    public String getMediaTypeString() {
+        return this.mediaTypeString;
+    }
+
+    public void setMediaTypeString(String value) {
+        this.mediaTypeString=value==null?"":value.trim();
     }
 
     /**
@@ -71,7 +83,6 @@ public class OkHttpUtil {
      * @return OkHttpUtil
      */
     public OkHttpUtil addBody(String key, String value) {
-//        this.body.add(key, value);
         this.bodyParameter.put(key, value);
         return this;
     }
@@ -128,10 +139,34 @@ public class OkHttpUtil {
      */
     public Response executePost(String url) {
         try {
-            this.builder.url(url);
-            FormBody.Builder body = new FormBody.Builder();
-            this.bodyParameter.forEach(body::add);
-            return this.client.newCall(this.builder.post(body.build()).build()).execute();
+//            this.builder.url(url);
+//            FormBody.Builder body = new FormBody.Builder();
+//            this.bodyParameter.forEach(body::add);
+//            return this.client.newCall(this.builder.post(body.build()).build()).execute();
+
+            HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
+            //地址参数
+            this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
+            RequestBody body;
+            if (this.bodyParameter.size() > 0) {
+                if ("".equals(this.mediaTypeString)) {
+                    FormBody.Builder bodyBuilder = new FormBody.Builder();
+                    this.bodyParameter.forEach(bodyBuilder::add);
+                    body = bodyBuilder.build();
+                }
+                else {
+                    Gson gson = new Gson();
+                    String jsonData = gson.toJson(bodyParameter);
+                    body = RequestBody.create(jsonData, MediaType.parse(this.mediaTypeString));
+                }
+            }
+            else {
+                body = new FormBody.Builder().build();
+            }
+            this.builder.post(body);
+            this.builder.url(urlBuilder.build());
+            Request request = this.builder.build();
+            return this.client.newCall(request).execute();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
@@ -149,14 +184,7 @@ public class OkHttpUtil {
 
     public Map<String, Object> executePostToMap(String url) {
         String strJson = this.executePostToString(url);
-        try {
-            Gson gson = new Gson();
-            return gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
-            }.getType());
-        }
-        catch (JsonSyntaxException e) {
-            throw new OkHttpException(e.getMessage());
-        }
+        return getStringObjectMap(strJson);
     }
     //endregion
 
@@ -188,15 +216,7 @@ public class OkHttpUtil {
 
     public Map<String, Object> executeGetToMap(String url) {
         String strJson = this.executeGetToString(url);
-        try {
-            Gson gson = new Gson();
-            Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
-            }.getType());
-            return mapDoubleToInt(resultMap);
-        }
-        catch (JsonSyntaxException e) {
-            throw new OkHttpException(e.getMessage());
-        }
+        return getStringObjectMap(strJson);
     }
     //endregion
 
@@ -211,12 +231,23 @@ public class OkHttpUtil {
             HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
             //地址参数
             this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
+            RequestBody body;
             if (this.bodyParameter.size() > 0) {
-                Gson gson = new Gson();
-                String jsonData = gson.toJson(bodyParameter);
-                RequestBody body = RequestBody.create(jsonData, MediaType.parse("application/json;charset=utf-8"));
-                this.builder.put(body);
+                if ("".equals(this.mediaTypeString)) {
+                    FormBody.Builder bodyBuilder = new FormBody.Builder();
+                    this.bodyParameter.forEach(bodyBuilder::add);
+                    body = bodyBuilder.build();
+                }
+                else {
+                    Gson gson = new Gson();
+                    String jsonData = gson.toJson(bodyParameter);
+                    body = RequestBody.create(jsonData, MediaType.parse(this.mediaTypeString));
+                }
             }
+            else {
+                body = new FormBody.Builder().build();
+            }
+            this.builder.put(body);
             this.builder.url(urlBuilder.build());
             Request request = this.builder.build();
             return this.client.newCall(request).execute();
@@ -238,6 +269,11 @@ public class OkHttpUtil {
 
     public Map<String, Object> executePutToMap(String url) {
         String strJson = this.executePutToString(url);
+        return getStringObjectMap(strJson);
+    }
+
+    @NotNull
+    private Map<String, Object> getStringObjectMap(String strJson) {
         try {
             Gson gson = new Gson();
             Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
