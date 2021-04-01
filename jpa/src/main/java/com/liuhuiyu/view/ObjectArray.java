@@ -1,7 +1,11 @@
 package com.liuhuiyu.view;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 /**
  * 顺序获取对象序列
+ *
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2021-03-09 17:30
@@ -26,7 +30,18 @@ public class ObjectArray {
     }
 
     public String getString() {
-        return get().toString();
+        return getString("");
+    }
+
+    public String getString(String defValue) {
+        return getT((obj) -> {
+            if (obj instanceof String) {
+                return (String) obj;
+            }
+            else {
+                return obj.toString();
+            }
+        }, defValue);
     }
 
     public Integer getInteger() {
@@ -34,15 +49,61 @@ public class ObjectArray {
     }
 
     public Integer getInteger(Integer defValue) {
+        return getT((obj) -> {
+            if (obj instanceof Number) {
+                return ((Number) obj).intValue();
+            }
+            else {
+                return Integer.parseInt(obj.toString());
+            }
+        }, defValue);
+    }
+
+    public Long getLong() {
+        return getLong(0L);
+    }
+
+    public Long getLong(Long defValue) {
+        return getT((obj) -> {
+            if (obj instanceof Number) {
+                return ((Number) obj).longValue();
+            }
+            else {
+                return Long.parseLong(obj.toString());
+            }
+        }, defValue);
+    }
+
+    public Boolean getBoolean() {
+        return getBoolean(false);
+    }
+
+    public Boolean getBoolean(Boolean defValue) {
+        return getT((obj) -> {
+            if (obj instanceof Boolean) {
+                return (Boolean) obj;
+            }
+            else if (obj instanceof Number) {
+                return ((Number) obj).intValue() == 1;
+            }
+            else {
+                return Boolean.parseBoolean(obj.toString());
+            }
+        }, defValue);
+    }
+
+    private <T> T getT(Function<Object, T> function, T defValue) {
         Object obj = this.get();
         if (obj == null) {
             return defValue;
         }
-        try {
-            return Integer.parseInt(obj.toString());
-        }
-        catch (NumberFormatException ex) {
-            return defValue;
+        else {
+            try {
+                return function.apply(obj);
+            }
+            catch (Exception ex) {
+                return defValue;
+            }
         }
     }
 }
