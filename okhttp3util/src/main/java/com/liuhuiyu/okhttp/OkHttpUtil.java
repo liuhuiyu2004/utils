@@ -3,10 +3,7 @@ package com.liuhuiyu.okhttp;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import lombok.extern.log4j.Log4j2;
-import lombok.var;
 import okhttp3.*;
-import okio.ByteString;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -19,7 +16,6 @@ import java.util.concurrent.TimeUnit;
  * @version v1.0.0.0
  * Created DateTime 2021-01-09 15:06
  */
-@Log4j2
 public class OkHttpUtil {
     private final OkHttpClient client;
 //    private final Request.Builder builder;

@@ -1,6 +1,5 @@
 package com.liuhuiyu.okhttp;
 
-import jdk.nashorn.internal.runtime.logging.Logger;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -14,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
-import static org.junit.Assert.*;
 
 /**
  * @author LiuHuiYu
@@ -37,6 +34,13 @@ public class OkHttpUtilTest {
         Response res = okHttpUtil.executeGet(url);
         String resString = okHttpUtil.executeGetToString(url);
         Map<String, Object> resMap = okHttpUtil.executeGetToMap(url);
+    }
+
+    @Test
+    public void testTime() {
+        for (int i = 0; i < 100; i++) {
+            testGetForLogin();
+        }
     }
 
     private String getToken() {
@@ -151,7 +155,9 @@ public class OkHttpUtilTest {
         Response response = okHttpUtil.executePut(url);
         Map<String, Object> map = okHttpUtil.executePutToMap(url);
     }
-    static CountDownLatch countDownLatch=new CountDownLatch(1);
+
+    static CountDownLatch countDownLatch = new CountDownLatch(1);
+
     @Test
     public void testWebSocket() throws InterruptedException {
         String url = "ws://localhost:8111/ws1";
@@ -188,5 +194,22 @@ public class OkHttpUtilTest {
         };
         OkHttpUtil.webSocket(url, webSocketListener);
         countDownLatch.await();
+    }
+
+    @Test
+    public void testFor() {
+        int num = 100_000;
+        int n = 0;
+        long m = 0;
+        for (int k = 0; k <= 50; k++) {
+            for (int j = 0; j <= 10_000; j++) {
+                n = 0;
+                for (int i = 0; i <= num; i++) {
+                    n += i * 2 - 1;
+                    m++;
+                }
+            }
+        }
+        System.out.println(m + "," + n);
     }
 }
