@@ -2,12 +2,18 @@ package com.liuhuiyu.okhttp;
 
 import jdk.nashorn.internal.runtime.logging.Logger;
 import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +23,57 @@ import static org.junit.Assert.*;
  * Created DateTime 2021-01-12 19:11
  */
 public class OkHttpUtilTest {
+    //region get测试
+    private String getUrl(String url) {
+        return "http://192.168.2.7:8006" + url;
+    }
 
+    @Test
+    public void testGetForLogin() {
+        String url = getUrl("/Authentication/Login");
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        okHttpUtil.addQueryParameter("userid", "ZH_Admin");
+        okHttpUtil.addQueryParameter("password", "UmVob21lLnpocHNAMjAyMA==");
+        Response res = okHttpUtil.executeGet(url);
+        String resString = okHttpUtil.executeGetToString(url);
+        Map<String, Object> resMap = okHttpUtil.executeGetToMap(url);
+    }
+
+    private String getToken() {
+        String url = getUrl("/Authentication/Login");
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        okHttpUtil.addQueryParameter("userid", "ZH_Admin");
+        okHttpUtil.addQueryParameter("password", "UmVob21lLnpocHNAMjAyMA==");
+        Map<String, Object> resMap = okHttpUtil.executeGetToMap(url);
+        return resMap.get("token").toString();
+    }
+
+    @Test
+    public void testGet02() {
+        String url = getUrl("/U_RS_BASICINFO/GetUserInfoByManID");
+        String token = getToken();
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        okHttpUtil.headerAuthorizationByBearerToken(token);
+        okHttpUtil.headerAuthorizationByBearerToken(token);
+        Response res = okHttpUtil.executeGet(url);
+        String resString = okHttpUtil.executeGetToString(url);
+        Map<String, Object> resMap = okHttpUtil.executeGetToMap(url);
+    }
+
+    @Test
+    public void testGet03() {
+        String url = getUrl("/U_RS_BASICINFO/GetTreeUser");
+        String token = getToken();
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        okHttpUtil.addQueryParameter("dc", "ZH");
+        okHttpUtil.headerAuthorizationByBearerToken(token);
+        okHttpUtil.headerAuthorizationByBearerToken(token);
+        Response res = okHttpUtil.executeGet(url);
+        String resString = okHttpUtil.executeGetToString(url);
+        Map<String, Object> resMap = okHttpUtil.executeGetToMap(url);
+    }
+
+    //endregion
     @Test
     public void test() {
         Map<String, Object> m1 = new HashMap<>();
@@ -53,24 +109,12 @@ public class OkHttpUtilTest {
         else {
             System.out.println(map);
         }
-        /*
-        [
-                { "isexpand": "false", "text": "特别防护期管理", "name": "特别防护期管理", "children":
-                    [
-                            {  "urls": "/DemoAIHtml/CSWH/TBFH_CSWH_List.html", "text": "措施管理", "name": "措施管理", "id": "2.0.1.1" },
-                            {  "urls": "/DemoAIHtml/CSGL/TBFH_CSGL_List.html", "text": "防护期管理", "name": "防护期管理", "id": "2.0.1.2" },
-                            {  "urls": "/DemoAIHtml/JCSC/TBFH_JCSC_List.html", "text": "进厂人员申请", "name": "进厂人员申请", "id": "2.0.1.3" },
-                            {  "urls": "/DemoAIHtml/SCWZ/TBFH_SCWZ_List_Data.html", "text": "生产物资保障数据源", "name": "生产物资保障数据源", "id": "2.0.1.7" }
-                    ]
-                }
-        ]
-         */
     }
 
     @Test
-    public void testPut() {
+    public void testPut01() {
         String url = "http://192.168.2.7:8006/YJYAJX/QYSX";
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiWkhfQWRtaW4iLCJleHAiOjE2MTY3NjE1NDYsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjIuNzo4MDA2IiwiYXVkIjoiaHR0cDovLzE5Mi4xNjguMi43OjgwMDYifQ.nmLKiJHeIf5niL1k6g4hVRA_RIa2BcYIR0jF9XNs4uo";
+        String token = this.getToken();
         String id = "b7af1ab0-0719-4e3e-93f0-c81dba07e9cb";
         OkHttpUtil okHttpUtil = OkHttpUtil.create();
         okHttpUtil.addQueryParameter("id", id);
@@ -89,10 +133,10 @@ public class OkHttpUtilTest {
     }
 
     @Test
-    public void testPost() {
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiWkhfQWRtaW4iLCJleHAiOjE2MTcwMjMyMzAsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjIuNzo4MDA2IiwiYXVkIjoiaHR0cDovLzE5Mi4xNjguMi43OjgwMDYifQ.8Y91ifTYi0-KH5PDWvFaJrN53Iz0_3Itqko8PzM82MM";
-        String url="http://192.168.2.7:8006/YJYAJX/UpDate";
-        Map<String,String>queryParameter=new HashMap<>(5);
+    public void testPut02() {
+        String token = this.getToken();
+        String url = "http://192.168.2.7:8006/YJYAJX/UpDate";
+        Map<String, String> queryParameter = new HashMap<>(5);
         queryParameter.put("id", "aa30fe55-746c-45a1-8bc1-ef91cd7566c9");
         queryParameter.put("yjyaid", "96f3065d-8006-4758-a784-b12f147594b6");
         queryParameter.put("title", "2021年122号台风天鸽应急预案");
@@ -103,7 +147,46 @@ public class OkHttpUtilTest {
         for (String key : queryParameter.keySet()) {
             okHttpUtil.addBody(key, queryParameter.get(key));
         }
+        okHttpUtil.setMethod(OkHttpUtil.MEDIA_TYPE_APPLICATION_JSON_UTF_8);
+        Response response = okHttpUtil.executePut(url);
         Map<String, Object> map = okHttpUtil.executePutToMap(url);
     }
+    static CountDownLatch countDownLatch=new CountDownLatch(1);
+    @Test
+    public void testWebSocket() throws InterruptedException {
+        String url = "ws://localhost:8111/ws1";
+        WebSocketListener webSocketListener = new WebSocketListener() {
+            @Override
+            public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
+                super.onClosed(webSocket, code, reason);
+            }
 
+            @Override
+            public void onClosing(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
+                super.onClosing(webSocket, code, reason);
+            }
+
+            @Override
+            public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
+                super.onFailure(webSocket, t, response);
+            }
+
+            @Override
+            public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
+                super.onMessage(webSocket, text);
+            }
+
+            @Override
+            public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
+                super.onMessage(webSocket, bytes);
+            }
+
+            @Override
+            public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
+                super.onOpen(webSocket, response);
+            }
+        };
+        OkHttpUtil.webSocket(url, webSocketListener);
+        countDownLatch.await();
+    }
 }

@@ -3,7 +3,10 @@ package com.liuhuiyu.okhttp;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.log4j.Log4j2;
+import lombok.var;
 import okhttp3.*;
+import okio.ByteString;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -16,34 +19,39 @@ import java.util.concurrent.TimeUnit;
  * @version v1.0.0.0
  * Created DateTime 2021-01-09 15:06
  */
+@Log4j2
 public class OkHttpUtil {
     private final OkHttpClient client;
-    private final Request.Builder builder;
-    //    private final FormBody.Builder body;
-    private final Map<String, String> bodyParameter;
-    private final Map<String, String> queryParameterMap;
-    private String mediaTypeString;
+//    private final Request.Builder builder;
+    /**
+     * 保存body中的form-data、x-www-form-urlencoded 信息
+     * Created DateTime 2021-03-29 22:00
+     */
+    private final Map<String, String> bodyMap;
+    /**
+     * 保存params信息
+     * Created DateTime 2021-03-29 21:58
+     */
+    private final Map<String, String> paramMap;
+    private final List<String[]> headerList;
+    private String method;
+    private Object tag;
     public static final String MEDIA_TYPE_APPLICATION_JSON_UTF_8 = "application/json;charset=utf-8";
     public static int CONNECT_TIMEOUT = 15;
     public static int READ_TIMEOUT = 15;
     public static int WRITE_TIMEOUT = 15;
 
-    private OkHttpUtil() {
+    private OkHttpUtil(int connectTimeout, int readTimeout, int writeTimeout) {
         this.client = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-//                .addInterceptor(new CommonHeaderInterceptor())
-//                .addInterceptor(new CacheInterceptor())
-//                .addInterceptor(new HttpLoggerInterceptor())
-//                .addNetworkInterceptor(new EncryptInterceptor())
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
                 .build();
-        this.builder = new Request.Builder();
-//        this.body = new FormBody.Builder();
-        this.queryParameterMap = new HashMap<>(0);
-        this.bodyParameter = new HashMap<>(0);
-        this.mediaTypeString = "";
+        this.paramMap = new HashMap<>(0);
+        this.bodyMap = new HashMap<>(0);
+        this.headerList = new ArrayList<>();
+        this.method = "";
     }
 
     /**
@@ -52,27 +60,29 @@ public class OkHttpUtil {
      * @return 实例
      */
     public static OkHttpUtil create() {
-        return new OkHttpUtil();
-    }
-
-    public String getMediaTypeString() {
-        return this.mediaTypeString;
-    }
-
-    public void setMediaTypeString(String value) {
-        this.mediaTypeString=value==null?"":value.trim();
+        return create(CONNECT_TIMEOUT, READ_TIMEOUT, WRITE_TIMEOUT);
     }
 
     /**
-     * 添加地址
+     * 创建实例
      *
-     * @param url 地址
-     * @return OkHttpUtil
+     * @param connectTimeout 连接超时
+     * @param readTimeout    读取超时
+     * @param writeTimeout   写入超时
+     * @return com.liuhuiyu.okhttp.OkHttpUtil
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-30 9:39
      */
-    @Deprecated
-    public OkHttpUtil addUrl(String url) {
-        this.builder.url(url);
-        return this;
+    public static OkHttpUtil create(int connectTimeout, int readTimeout, int writeTimeout) {
+        return new OkHttpUtil(connectTimeout, readTimeout, writeTimeout);
+    }
+
+    public void setMethod(String value) {
+        this.method = value == null ? "" : value.trim();
+    }
+
+    public void setTag(Object tag) {
+        this.tag = tag;
     }
 
     /**
@@ -83,19 +93,19 @@ public class OkHttpUtil {
      * @return OkHttpUtil
      */
     public OkHttpUtil addBody(String key, String value) {
-        this.bodyParameter.put(key, value);
+        this.bodyMap.put(key, value);
         return this;
     }
 
     /**
-     * 配合 get 使用
+     * 添加uri参数
      *
      * @param key   键值
      * @param value 数值
      * @return OkHttpUtil
      */
     public OkHttpUtil addQueryParameter(String key, String value) {
-        this.queryParameterMap.put(key, value);
+        this.paramMap.put(key, value);
         return this;
     }
 
@@ -107,7 +117,7 @@ public class OkHttpUtil {
      * @return OkHttpUtil
      */
     public OkHttpUtil addHeader(String key, String value) {
-        this.builder.addHeader(key, value);
+        this.headerList.add(new String[]{key, value});
         return this;
     }
 
@@ -129,6 +139,43 @@ public class OkHttpUtil {
         return this.addHeader("Authorization", "Bearer " + token);
     }
 
+    //region 生成基本数据
+    private HttpUrl getHttpUrl(String url) {
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
+        this.paramMap.forEach(urlBuilder::addQueryParameter);
+        return urlBuilder.build();
+    }
+
+    private RequestBody getRequestBody() {
+        RequestBody body;
+        if (this.bodyMap.size() > 0) {
+            if ("".equals(this.method)) {
+                FormBody.Builder bodyBuilder = new FormBody.Builder();
+                this.bodyMap.forEach(bodyBuilder::add);
+                body = bodyBuilder.build();
+            }
+            else {
+                Gson gson = new Gson();
+                String jsonData = gson.toJson(bodyMap);
+                body = RequestBody.create(jsonData, MediaType.parse(this.method));
+            }
+        }
+        else {
+            body = new FormBody.Builder().build();
+        }
+        return body;
+    }
+
+    private void addHeader(Request.Builder builder) {
+        this.headerList.forEach(keyValue -> builder.addHeader(keyValue[0], keyValue[1]));
+    }
+
+    private void addTag(Request.Builder builder) {
+        if (this.tag != null) {
+            builder.tag(this.tag);
+        }
+    }
+    //endregion
     //region post申请
 
     /**
@@ -139,33 +186,16 @@ public class OkHttpUtil {
      */
     public Response executePost(String url) {
         try {
-//            this.builder.url(url);
-//            FormBody.Builder body = new FormBody.Builder();
-//            this.bodyParameter.forEach(body::add);
-//            return this.client.newCall(this.builder.post(body.build()).build()).execute();
+            HttpUrl httpUrl = this.getHttpUrl(url);
+            RequestBody body = this.getRequestBody();
 
-            HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
-            //地址参数
-            this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
-            RequestBody body;
-            if (this.bodyParameter.size() > 0) {
-                if ("".equals(this.mediaTypeString)) {
-                    FormBody.Builder bodyBuilder = new FormBody.Builder();
-                    this.bodyParameter.forEach(bodyBuilder::add);
-                    body = bodyBuilder.build();
-                }
-                else {
-                    Gson gson = new Gson();
-                    String jsonData = gson.toJson(bodyParameter);
-                    body = RequestBody.create(jsonData, MediaType.parse(this.mediaTypeString));
-                }
-            }
-            else {
-                body = new FormBody.Builder().build();
-            }
-            this.builder.post(body);
-            this.builder.url(urlBuilder.build());
-            Request request = this.builder.build();
+            Request.Builder builder = new Request.Builder();
+            this.addHeader(builder);
+            this.addTag(builder);
+            builder.post(body);
+            builder.url(httpUrl);
+            /* builder.method(this.method,body); */
+            Request request = builder.build();
             return this.client.newCall(request).execute();
         }
         catch (IOException e) {
@@ -196,9 +226,14 @@ public class OkHttpUtil {
      */
     public Response executeGet(String url) {
         try {
-            HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
-            this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
-            return this.client.newCall(this.builder.url(urlBuilder.build()).build()).execute();
+            HttpUrl httpUrl = this.getHttpUrl(url);
+            Request.Builder builder = new Request.Builder();
+            this.addHeader(builder);
+            this.addTag(builder);
+            builder.get();
+            builder.url(httpUrl);
+            Request request = builder.build();
+            return this.client.newCall(request).execute();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
@@ -228,28 +263,15 @@ public class OkHttpUtil {
      */
     public Response executePut(String url) {
         try {
-            HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
-            //地址参数
-            this.queryParameterMap.forEach(urlBuilder::addQueryParameter);
-            RequestBody body;
-            if (this.bodyParameter.size() > 0) {
-                if ("".equals(this.mediaTypeString)) {
-                    FormBody.Builder bodyBuilder = new FormBody.Builder();
-                    this.bodyParameter.forEach(bodyBuilder::add);
-                    body = bodyBuilder.build();
-                }
-                else {
-                    Gson gson = new Gson();
-                    String jsonData = gson.toJson(bodyParameter);
-                    body = RequestBody.create(jsonData, MediaType.parse(this.mediaTypeString));
-                }
-            }
-            else {
-                body = new FormBody.Builder().build();
-            }
-            this.builder.put(body);
-            this.builder.url(urlBuilder.build());
-            Request request = this.builder.build();
+            HttpUrl httpUrl = this.getHttpUrl(url);
+            RequestBody body = this.getRequestBody();
+
+            Request.Builder builder = new Request.Builder();
+            this.addHeader(builder);
+            this.addTag(builder);
+            builder.put(body);
+            builder.url(httpUrl);
+            Request request = builder.build();
             return this.client.newCall(request).execute();
         }
         catch (IOException e) {
@@ -272,6 +294,25 @@ public class OkHttpUtil {
         return getStringObjectMap(strJson);
     }
 
+    //endregion
+    //region webSocket
+    public static WebSocket webSocket(String url, WebSocketListener webSocketListener) {
+        OkHttpClient client = new OkHttpClient.Builder().retryOnConnectionFailure(true).build();
+        Request request = new Request.Builder().url(url).build();
+        client.dispatcher().cancelAll();//清理一次
+
+        return client.newWebSocket(request, webSocketListener);
+    }
+    //endregion
+
+    /**
+     * 将json字符串转换成Map
+     *
+     * @param strJson json字符串
+     * @return java.util.Map<java.lang.String, java.lang.Object>
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-30 9:04
+     */
     @NotNull
     private Map<String, Object> getStringObjectMap(String strJson) {
         try {
@@ -285,7 +326,6 @@ public class OkHttpUtil {
         }
     }
 
-    //endregion
     public static Map<String, Object> mapDoubleToInt(Map<?, ?> resultMap) {
         Map<String, Object> res = new HashMap<>(resultMap.size());
         for (Object keyObj : resultMap.keySet()) {
