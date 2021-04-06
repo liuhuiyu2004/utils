@@ -1,7 +1,6 @@
 package com.liuhuiyu.view;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * 顺序获取对象序列
