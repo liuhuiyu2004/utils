@@ -10,6 +10,7 @@ import java.util.List;
  * Created DateTime 2021-04-14 10:59
  */
 public class ListUtil {
+
     public static List<Object> objectToList(Object obj) {
         List<Object> resList;
         if (obj instanceof List<?>) {
