@@ -109,6 +109,29 @@ public class MapUtil {
         }
     }
 
+    public static Long getMapLongValue(Map<String, Object> map, String key) {
+        return getMapLongValue(map, key, 0L);
+    }
+
+    public static Long getMapLongValue(Map<String, Object> map, String key, Long defValue) {
+        Object obj = map.getOrDefault(key, defValue);
+        if (obj == null) {
+            return defValue;
+        }
+        else if (obj instanceof Number) {
+            return ((Number) obj).longValue();
+        }
+        else {
+            String value = obj.toString();
+            try {
+                return Long.parseLong(value);
+            }
+            catch (NumberFormatException ex) {
+                return defValue;
+            }
+        }
+    }
+
     public static Boolean getMapBooleanValue(Map<String, Object> map, String key) {
         return getMapBooleanValue(map, key, false);
     }
@@ -221,6 +244,14 @@ public class MapUtil {
         return getMapFloatValue(map, key, defValue);
     }
 
+    public Long getLongValue(String key) {
+        return getMapLongValue(map, key);
+    }
+
+    public Long getLongValue(String key, Long defValue) {
+        return getMapLongValue(map, key, defValue);
+    }
+
     public Object getObjectValue(String key) {
         return getMapObjectValue(map, key);
     }
@@ -228,14 +259,17 @@ public class MapUtil {
     public Object getObjectValue(String key, Object defValue) {
         return getMapObjectValue(map, key, defValue);
     }
+
     public <T> T getValue(String key, T defValue) {
-        Object obj=map.getOrDefault(key, defValue);
-        if(obj.getClass().equals(defValue.getClass())){
-            return (T)obj;
-        }else{
+        Object obj = map.getOrDefault(key, defValue);
+        if (obj.getClass().equals(defValue.getClass())) {
+            return (T) obj;
+        }
+        else {
             throw new RuntimeException("类型转换失败。");
         }
     }
+
     public Boolean getBooleanValue(String key) {
         return getMapBooleanValue(map, key);
     }
