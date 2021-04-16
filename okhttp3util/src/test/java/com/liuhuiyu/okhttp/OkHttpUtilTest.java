@@ -1,5 +1,6 @@
 package com.liuhuiyu.okhttp;
 
+import okhttp3.HttpUrl;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -197,6 +198,23 @@ public class OkHttpUtilTest {
     }
 
     @Test
+    public void testHttps() {
+        String url="https://safety-vsmapi.geg.com.cn/WebService.asmx/GetToken";
+        OkHttpUtil okHttpUtil=OkHttpUtil.create();
+        okHttpUtil.https();
+        okHttpUtil.addBody("userName","zhAdmin");
+        okHttpUtil.addBody("userPwd","zh@2021");
+        String info=okHttpUtil.executePostToString(url);
+    }
+    @Test
+    public  void testHttpsGet(){
+        String url="https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=13614600169";
+        OkHttpUtil okHttpUtil=OkHttpUtil.create();
+        okHttpUtil.https();
+        String info=okHttpUtil.executeGetToString(url);
+    }
+
+    @Test
     public void testFor() {
         int num = 100_000;
         int n = 0;
@@ -211,5 +229,11 @@ public class OkHttpUtilTest {
             }
         }
         System.out.println(m + "," + n);
+    }
+    @Test
+    public void testVoid(){
+        String id="f592b1eac6fb4d1091041bf1dab89aa2";
+        String url="http://10.19.0.114:8354/partnerRequest/hik8700/queryHls.shtml";
+        String str=OkHttpUtil.create().addQueryParameter("indexCode",id).executeGetToString(url);
     }
 }

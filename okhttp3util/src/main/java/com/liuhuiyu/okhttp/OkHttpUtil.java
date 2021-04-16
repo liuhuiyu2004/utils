@@ -6,10 +6,33 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Supplier;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * @author LiuHuiYu
@@ -17,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * Created DateTime 2021-01-09 15:06
  */
 public class OkHttpUtil {
-    private final OkHttpClient client;
+    private final OkHttpClient.Builder client;
 //    private final Request.Builder builder;
     /**
      * 保存body中的form-data、x-www-form-urlencoded 信息
@@ -42,13 +65,21 @@ public class OkHttpUtil {
                 .retryOnConnectionFailure(true)
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-                .build();
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS);
+        //.build();
         this.paramMap = new HashMap<>(0);
         this.bodyMap = new HashMap<>(0);
         this.headerList = new ArrayList<>();
         this.method = "";
     }
+//    public void https(){
+//        this.client.hostnameVerifier(new HostnameVerifier() {
+//            @Override
+//            public boolean verify(String hostname, SSLSession session) {
+//                return true;
+//            }
+//        }).sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+//    }
 
     /**
      * 创建实例
@@ -192,7 +223,7 @@ public class OkHttpUtil {
             builder.url(httpUrl);
             /* builder.method(this.method,body); */
             Request request = builder.build();
-            return this.client.newCall(request).execute();
+            return this.client.build().newCall(request).execute();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
@@ -212,6 +243,10 @@ public class OkHttpUtil {
         String strJson = this.executePostToString(url);
         return getStringObjectMap(strJson);
     }
+
+    public List<Object> executePostToList(String url) {
+        return executeList(() -> this.executePostToString(url));
+    }
     //endregion
 
     //region get申请
@@ -229,7 +264,7 @@ public class OkHttpUtil {
             builder.get();
             builder.url(httpUrl);
             Request request = builder.build();
-            return this.client.newCall(request).execute();
+            return this.client.build().newCall(request).execute();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
@@ -246,8 +281,11 @@ public class OkHttpUtil {
     }
 
     public Map<String, Object> executeGetToMap(String url) {
-        String strJson = this.executeGetToString(url);
-        return getStringObjectMap(strJson);
+        return executeMap(() -> this.executeGetToString(url));
+    }
+
+    public List<Object> executeGetList(String url) {
+        return executeList(() -> this.executeGetToString(url));
     }
     //endregion
 
@@ -268,7 +306,7 @@ public class OkHttpUtil {
             builder.put(body);
             builder.url(httpUrl);
             Request request = builder.build();
-            return this.client.newCall(request).execute();
+            return this.client.build().newCall(request).execute();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
@@ -290,7 +328,11 @@ public class OkHttpUtil {
         return getStringObjectMap(strJson);
     }
 
+    public List<Object> executePutList(String url) {
+        return executeList(() -> this.executePutToString(url));
+    }
     //endregion
+
     //region webSocket
     public static WebSocket webSocket(String url, WebSocketListener webSocketListener) {
         OkHttpClient client = new OkHttpClient.Builder().retryOnConnectionFailure(true).build();
@@ -302,6 +344,32 @@ public class OkHttpUtil {
     //endregion
 
     /**
+     * 使用函数式将String转换成Map
+     *
+     * @param supplier 数据获取函数式
+     * @return java.util.Map<java.lang.String, java.lang.Object>
+     * @author LiuHuiYu
+     * Created DateTime 2021-04-16 9:08
+     */
+    private static Map<String, Object> executeMap(Supplier<String> supplier) {
+        String strJson = supplier.get();
+        return getStringObjectMap(strJson);
+    }
+
+    /**
+     * 使用函数式将String转换成List
+     *
+     * @param supplier 数据获取函数式
+     * @return java.util.List<java.lang.Object>
+     * @author LiuHuiYu
+     * Created DateTime 2021-04-16 9:09
+     */
+    private static List<Object> executeList(Supplier<String> supplier) {
+        String strJson = supplier.get();
+        return getStringObjectList(strJson);
+    }
+
+    /**
      * 将json字符串转换成Map
      *
      * @param strJson json字符串
@@ -310,12 +378,24 @@ public class OkHttpUtil {
      * Created DateTime 2021-03-30 9:04
      */
     @NotNull
-    private Map<String, Object> getStringObjectMap(String strJson) {
+    public static Map<String, Object> getStringObjectMap(String strJson) {
         try {
             Gson gson = new Gson();
             Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
             }.getType());
             return mapDoubleToInt(resultMap);
+        }
+        catch (JsonSyntaxException e) {
+            throw new OkHttpException(e.getMessage());
+        }
+    }
+
+    public static List<Object> getStringObjectList(String strJson) {
+        try {
+            Gson gson = new Gson();
+            List<Object> resultList = gson.fromJson(strJson, new TypeToken<List<Object>>() {
+            }.getType());
+            return listDoubleToInt(resultList);
         }
         catch (JsonSyntaxException e) {
             throw new OkHttpException(e.getMessage());
@@ -373,4 +453,130 @@ public class OkHttpUtil {
         }
         return res;
     }
+
+    //region https支持
+    private MyTrustManager mMyTrustManager;
+
+    public OkHttpUtil https() {
+        this.client.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager)
+                .hostnameVerifier(new TrustAllHostnameVerifier());
+        return this;
+    }
+
+    private SSLSocketFactory createSSLSocketFactory() {
+        SSLSocketFactory ssfFactory = null;
+        try {
+            mMyTrustManager = new MyTrustManager();
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, new TrustManager[]{mMyTrustManager}, new SecureRandom());
+            ssfFactory = sc.getSocketFactory();
+        }
+        catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
+
+        return ssfFactory;
+    }
+
+    //实现X509TrustManager接口
+    public class MyTrustManager implements X509TrustManager {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    }
+
+    //实现HostnameVerifier接口
+    private class TrustAllHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    }
+
+    /**
+     * 对外提供的获取支持自签名的okhttp客户端
+     *
+     * @param certificate 自签名证书的输入流
+     * @return 支持自签名的客户端
+     */
+    public OkHttpClient getTrusClient(InputStream certificate) {
+        X509TrustManager trustManager;
+        SSLSocketFactory sslSocketFactory;
+        try {
+            trustManager = trustManagerForCertificates(certificate);
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            //使用构建出的trustManger初始化SSLContext对象
+            sslContext.init(null, new TrustManager[]{trustManager}, null);
+            //获得sslSocketFactory对象
+            sslSocketFactory = sslContext.getSocketFactory();
+        }
+        catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+        return new OkHttpClient.Builder()
+                .sslSocketFactory(sslSocketFactory, trustManager)
+                .build();
+    }
+
+    /**
+     * 获去信任自签证书的trustManager
+     *
+     * @param in 自签证书输入流
+     * @return 信任自签证书的trustManager
+     * @throws GeneralSecurityException
+     */
+    private X509TrustManager trustManagerForCertificates(InputStream in)
+            throws GeneralSecurityException {
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        //通过证书工厂得到自签证书对象集合
+        Collection<? extends Certificate> certificates = certificateFactory.generateCertificates(in);
+        if (certificates.isEmpty()) {
+            throw new IllegalArgumentException("expected non-empty set of trusted certificates");
+        }
+        //为证书设置一个keyStore
+        char[] password = "password".toCharArray(); // Any password will work.
+        KeyStore keyStore = newEmptyKeyStore(password);
+        int index = 0;
+        //将证书放入keystore中
+        for (Certificate certificate : certificates) {
+            String certificateAlias = Integer.toString(index++);
+            keyStore.setCertificateEntry(certificateAlias, certificate);
+        }
+        // Use it to build an X509 trust manager.
+        //使用包含自签证书信息的keyStore去构建一个X509TrustManager
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(
+                KeyManagerFactory.getDefaultAlgorithm());
+        keyManagerFactory.init(keyStore, password);
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(keyStore);
+        TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+        if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+            throw new IllegalStateException("Unexpected default trust managers:"
+                    + Arrays.toString(trustManagers));
+        }
+        return (X509TrustManager) trustManagers[0];
+    }
+
+    private KeyStore newEmptyKeyStore(char[] password) throws GeneralSecurityException {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            InputStream in = null; // By convention, 'null' creates an empty key store.
+            keyStore.load(null, password);
+            return keyStore;
+        }
+        catch (IOException e) {
+            throw new AssertionError(e);
+        }
+    }
+    //endregion
 }
