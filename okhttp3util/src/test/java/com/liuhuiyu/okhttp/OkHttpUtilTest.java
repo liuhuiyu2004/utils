@@ -199,19 +199,41 @@ public class OkHttpUtilTest {
 
     @Test
     public void testHttps() {
-        String url="https://safety-vsmapi.geg.com.cn/WebService.asmx/GetToken";
-        OkHttpUtil okHttpUtil=OkHttpUtil.create();
-        okHttpUtil.https();
-        okHttpUtil.addBody("userName","zhAdmin");
-        okHttpUtil.addBody("userPwd","zh@2021");
-        String info=okHttpUtil.executePostToString(url);
+        String url = "https://safety-vsmapi.geg.com.cn/WebService.asmx/GetToken";
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        okHttpUtil.setMethod("application/json");
+        okHttpUtil.addBody("userName", "zhAdmin");
+        okHttpUtil.addBody("userPwd", "zh@2021");
+        Map<String, Object> map = okHttpUtil.executePostToMap(url);
+        String token = map.get("token").toString();
+        String url2 = "https://safety-vsmapi.geg.com.cn/WebService.asmx/GetDataRequest";
+        OkHttpUtil okHttpUtil2 = OkHttpUtil.create();
+        okHttpUtil2.setMethod("application/json");
+        okHttpUtil2.setBodyString("{\n" +
+                "    \"token\":\""+token+"\",\n" +
+                "    \"dataType\":\"C_VENUSER\",\n" +
+                "    \"company\":\"ZHP\",\n" +
+                "    \"pageSize\":1000,\n" +
+                "    \"data\":{" +
+                "        \"code\":\"\"," +
+                "        \"name\":\"\"," +
+                "        \"idcards\":\"\"," +
+                "        \"suCode\":\"\"," +
+                "        \"mobile\":\"\"," +
+                "        \"suName\":\"\"" +
+                "    }\n" +
+                "}\n");
+//        String info=okHttpUtil.executePostToString(url);
+        Map<String, Object> map2 = okHttpUtil2.executePostToMap(url2);
+
     }
+
     @Test
-    public  void testHttpsGet(){
-        String url="https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=13614600169";
-        OkHttpUtil okHttpUtil=OkHttpUtil.create();
+    public void testHttpsGet() {
+        String url = "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=13614600169";
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
         okHttpUtil.https();
-        String info=okHttpUtil.executeGetToString(url);
+        String info = okHttpUtil.executeGetToString(url);
     }
 
     @Test
@@ -230,10 +252,11 @@ public class OkHttpUtilTest {
         }
         System.out.println(m + "," + n);
     }
+
     @Test
-    public void testVoid(){
-        String id="f592b1eac6fb4d1091041bf1dab89aa2";
-        String url="http://10.19.0.114:8354/partnerRequest/hik8700/queryHls.shtml";
-        String str=OkHttpUtil.create().addQueryParameter("indexCode",id).executeGetToString(url);
+    public void testVoid() {
+        String id = "f592b1eac6fb4d1091041bf1dab89aa2";
+        String url = "http://10.19.0.114:8354/partnerRequest/hik8700/queryHls.shtml";
+        String str = OkHttpUtil.create().addQueryParameter("indexCode", id).executeGetToString(url);
     }
 }

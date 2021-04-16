@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
@@ -54,6 +55,7 @@ public class OkHttpUtil {
     private final Map<String, String> paramMap;
     private final List<String[]> headerList;
     private String method;
+    private String bodyString = "";
     private Object tag;
     public static final String MEDIA_TYPE_APPLICATION_JSON_UTF_8 = "application/json;charset=utf-8";
     public static int CONNECT_TIMEOUT = 15;
@@ -106,6 +108,10 @@ public class OkHttpUtil {
 
     public void setMethod(String value) {
         this.method = value == null ? "" : value.trim();
+    }
+
+    public void setBodyString(String bodyString) {
+        this.bodyString = bodyString;
     }
 
     public void setTag(Object tag) {
@@ -186,6 +192,9 @@ public class OkHttpUtil {
                 String jsonData = gson.toJson(bodyMap);
                 body = RequestBody.create(jsonData, MediaType.parse(this.method));
             }
+        }
+        else if (StringUtils.isNotBlank(this.bodyString)) {
+            body = RequestBody.create(this.bodyString, MediaType.parse(this.method));
         }
         else {
             body = new FormBody.Builder().build();
