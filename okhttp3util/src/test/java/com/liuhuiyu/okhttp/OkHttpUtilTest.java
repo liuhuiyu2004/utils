@@ -1,6 +1,5 @@
 package com.liuhuiyu.okhttp;
 
-import okhttp3.HttpUrl;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -199,7 +198,7 @@ public class OkHttpUtilTest {
 
     @Test
     public void testHttps() {
-        String url = "https://safety-vsmapi.geg.com.cn/WebService.asmx/GetToken";
+        String url = "http://10.0.21.227/WebService.asmx/GetToken";
         OkHttpUtil okHttpUtil = OkHttpUtil.create();
         okHttpUtil.setMethod("application/json");
         okHttpUtil.addBody("userName", "zhAdmin");
@@ -209,15 +208,20 @@ public class OkHttpUtilTest {
         String url2 = "https://safety-vsmapi.geg.com.cn/WebService.asmx/GetDataRequest";
         OkHttpUtil okHttpUtil2 = OkHttpUtil.create();
         okHttpUtil2.setMethod("application/json");
+        String[] names = {"", "巫中建"};//"巫中建";
+        String name = names[0];//"巫中建";
+        String[] ids = {"", "51162119900401647X", "510231197208103576", "511621"};
+        String idCards = ids[3];//""510231197208103576";
+        String pageSize = "5";
         okHttpUtil2.setBodyString("{\n" +
-                "    \"token\":\""+token+"\",\n" +
+                "    \"token\":\"" + token + "\",\n" +
                 "    \"dataType\":\"C_VENUSER\",\n" +
                 "    \"company\":\"ZHP\",\n" +
-                "    \"pageSize\":1000,\n" +
+                "    \"pageSize\":" + pageSize + ",\n" +
                 "    \"data\":{" +
                 "        \"code\":\"\"," +
-                "        \"name\":\"\"," +
-                "        \"idcards\":\"\"," +
+                "        \"name\":\"" + name + "\"," +
+                "        \"idcards\":\"" + idCards + "\"," +
                 "        \"suCode\":\"\"," +
                 "        \"mobile\":\"\"," +
                 "        \"suName\":\"\"" +
