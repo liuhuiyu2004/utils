@@ -160,8 +160,11 @@ progFunction = {
      */
     assignObj: function (target, sources) {
         let obj = target;
-        if (typeof target != 'object' || typeof sources != 'object') {
-            return sources; // 如果其中一个不是对象 就返回sources
+        if (typeof target != 'object' || typeof sources == 'function') {
+            return sources;
+        }
+        if (typeof sources != 'object') {
+            return target;
         }
         for (let key in sources) {
             if (sources.hasOwnProperty(key)) {
