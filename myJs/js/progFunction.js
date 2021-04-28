@@ -161,6 +161,9 @@ progFunction = {
     assignObj: function (target, sources) {
         let obj = target;
         if (typeof target != 'object' || typeof sources == 'function') {
+            if (typeof target == 'function' && typeof sources != 'function') {
+                return target;
+            }
             return sources;
         }
         if (typeof sources != 'object') {
