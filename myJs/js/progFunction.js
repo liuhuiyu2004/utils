@@ -329,4 +329,63 @@ progFunction = {
         let random = Math.random()
         return (start + differ * random).toFixed(fixed)
     },
+    /**
+     * 消息管理
+     * @author LiuHuiYu
+     * Created DateTime 2021-04-29 16:07
+     * @param null
+     * @return null
+     */
+    messageQueueManagement: {
+        /**
+         * 创建消息管理
+         * @author LiuHuiYu
+         * Created DateTime 2021-04-29 16:07
+         * @param props {backFunction}
+         * @return null
+         */
+        create: function (props) {
+            let baseProps = {backFunction: null};
+            let nowProps = progFunction.assignObj(baseProps, props);
+            let mqList = [];
+
+            function newInfo(info) {
+                let newV = {
+                    id: "mq" + performance.now() + "_" + Math.floor(Math.random() * 100000000),
+                    info: info,
+                }
+                mqList.push(newV);
+                change("D", message);
+                return newV;
+            }
+
+            function removeInfo(message) {
+                for (let i = mqList.length - 1; i >= 0; i--) {
+                    if (mqList[i].id === message.id) {
+                        mqList.splice(i, 1);
+                        change("D", message);
+                        return;
+                    }
+                }
+            }
+
+            function change(type, data) {
+                if (nowProps.backFunction) {
+                    nowProps.backFunction(type, data);
+                }
+            }
+
+            return {
+                putInfo: function (info) {
+                    return newInfo(info);
+                },
+                removeInfo: function (message) {
+                    removeInfo(message)
+                },
+                getList: function () {
+                    return mqList;
+                }
+            };
+        }
+    },
 }
