@@ -1,6 +1,7 @@
 package com.liuhuiyu.util;
 
 /**
+ * 此函数已经作废 尽量使用
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2021-01-28 8:23
