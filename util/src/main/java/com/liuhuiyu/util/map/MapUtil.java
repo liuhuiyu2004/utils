@@ -1,5 +1,8 @@
 package com.liuhuiyu.util.map;
 
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -211,6 +214,19 @@ public class MapUtil {
             }
         }
         return res;
+    }
+
+    public static <T> T mapToObject(Map<String, Object> map, T t){
+        if (map == null) {
+            return null;
+        }
+        try {
+            BeanUtils.populate(t, map);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return t;
     }
     //endregion
 
