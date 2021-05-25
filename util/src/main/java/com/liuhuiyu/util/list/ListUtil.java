@@ -49,4 +49,54 @@ public class ListUtil {
         }
         return -1;
     }
+
+    /**
+     * 获取排序后的列表
+     *
+     * @param list    要排序的列表
+     * @param sorts   排序的排列顺序
+     * @param compare 排序匹配规则
+     * @return java.util.List<T>
+     */
+    public static <T, L> List<T> getSortList(List<T> list, L[] sorts, BiFunction<T, L, Boolean> compare) {
+        return getSortList(list, sorts, compare, true, true, true);
+    }
+
+    /**
+     * 获取排序后的列表
+     *
+     * @param list              要排序的列表
+     * @param sorts             排序的排列顺序
+     * @param compare           排序匹配规则
+     * @param asc               按照排序顺序输出
+     * @param notMatchedPostfix 未匹配的元素放到最后
+     * @param notMatchedAsc     未匹配的元素顺序输出
+     * @return java.util.List<T>
+     * @author LiuHuiYu
+     * Created DateTime 2021-05-25 19:13
+     */
+    public static <T, L> List<T> getSortList(List<T> list, L[] sorts, BiFunction<T, L, Boolean> compare, Boolean asc, Boolean notMatchedPostfix, Boolean notMatchedAsc) {
+
+        List<T> resList = new ArrayList<>(list.size());
+        list.stream().sorted((a1, a2) -> {
+            Integer index1 = ListUtil.getIndex(a1, sorts, compare);
+            Integer index2 = ListUtil.getIndex(a2, sorts, compare);
+            if (index1 == -1 && index2 == -1) {
+                return notMatchedPostfix ? 1 : -1;
+            }
+            else if (index1 == -1) {
+                return notMatchedAsc ? 1 : -1;
+            }
+            else if (index2 == -1) {
+                return notMatchedAsc ? -1 : 1;
+            }
+            else if (asc) {
+                return index1.compareTo(index2);
+            }
+            else {
+                return index2.compareTo(index1);
+            }
+        }).forEach(resList::add);
+        return resList;
+    }
 }
