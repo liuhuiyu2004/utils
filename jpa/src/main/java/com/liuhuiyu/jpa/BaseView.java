@@ -19,11 +19,13 @@ public abstract class BaseView {
     public BaseView(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+
     /**
      * 连接获取
+     *
+     * @param callFunctions 调用函数
      * @author LiuHuiYu
      * Created DateTime 2021-03-25 10:42
-     * @param callFunctions 调用函数
      */
     protected void actionConnection(Consumer<Connection> callFunctions) {
         try (Connection connection = this.dataSource.getConnection()) {
@@ -33,12 +35,14 @@ public abstract class BaseView {
             throw new RuntimeException("获取连接异常。", throwable);
         }
     }
+
     /**
      * 获取 PreparedStatement
+     *
+     * @param sql           基础语句
+     * @param callFunctions 回调
      * @author LiuHuiYu
      * Created DateTime 2021-03-25 10:45
-     * @param sql 基础语句
-     * @param callFunctions 回调
      */
     protected void actionPreparedStatement(String sql, Consumer<PreparedStatement> callFunctions) {
         actionConnection(connection -> {
@@ -52,18 +56,22 @@ public abstract class BaseView {
             callFunctions.accept(preparedStatement);
         });
     }
+
     /**
      * 执行sql回调ResultSet
+     *
+     * @param sql           基础语句
+     * @param parameterMap  参数Map
+     * @param callFunctions 回调
      * @author LiuHuiYu
      * Created DateTime 2021-03-25 10:46
-     * @param sql 基础语句
-     * @param parameterMap 参数Map
-     * @param callFunctions 回调
      */
     protected void fullResultSet(String sql, Map<String, Object> parameterMap, Consumer<ResultSet> callFunctions) {
         NamedParameterStatement namedParameterStatement = new NamedParameterStatement(sql);
         this.actionPreparedStatement(namedParameterStatement.getSql(), preparedStatement -> {
-            namedParameterStatement.fillParameters(preparedStatement, parameterMap);
+            if (parameterMap != null) {
+                namedParameterStatement.fillParameters(preparedStatement, parameterMap);
+            }
             log.info(namedParameterStatement.getSql());
             ResultSet resultSet;
             try {
