@@ -3,6 +3,7 @@ package com.liuhuiyu.util.list;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * 对象转换成List
@@ -98,5 +99,22 @@ public class ListUtil {
             }
         }).forEach(resList::add);
         return resList;
+    }
+
+    /**
+     * List 转换
+     *
+     * @param tList    原始list
+     * @param function 转换规则
+     * @return java.util.List<R>
+     * @author LiuHuiYu
+     * Created DateTime 2021-06-04 16:08
+     */
+    public <T, R> List<R> listToList(List<T> tList, Function<T, R> function) {
+        List<R> rList = new ArrayList<>(0);
+        for (T item : tList) {
+            rList.add(function.apply(item));
+        }
+        return rList;
     }
 }
