@@ -110,7 +110,7 @@ public class ListUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-06-04 16:08
      */
-    public <T, R> List<R> listToList(List<T> tList, Function<T, R> function) {
+    public static <T, R> List<R> listToList(List<T> tList, Function<T, R> function) {
         List<R> rList = new ArrayList<>(0);
         for (T item : tList) {
             rList.add(function.apply(item));
