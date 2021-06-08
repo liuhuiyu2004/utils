@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -243,7 +241,7 @@ public class MapUtil {
             return mapDoubleToInt(resultMap);
         }
         catch (JsonSyntaxException e) {
-            throw new RuntimeException(new JSONException("无法解析成Map格式数据"));
+            throw new RuntimeException("无法解析成Map格式数据");
         }
     }
 
