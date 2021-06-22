@@ -43,4 +43,13 @@ public class ListUtilTest {
         log.info(res);
     }
 
+    @Test
+    public void testFind() {
+        String[] findS = {"https://", "http://","17"};
+        String s = "https://177";
+        for (String find : findS) {
+            int i = s.indexOf(find);
+            log.info("{} find {} = {}", s, find, i);
+        }
+    }
 }

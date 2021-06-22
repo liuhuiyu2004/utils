@@ -17,6 +17,16 @@ import java.util.function.Function;
  * Created DateTime 2021-01-20 14:53
  */
 public class MapUtil {
+
+    boolean throwException = false;
+
+    public boolean isThrowException() {
+        return throwException;
+    }
+
+    public void setThrowException(boolean throwException) {
+        this.throwException = throwException;
+    }
     //region 静态方法
 
     /**
@@ -354,8 +364,11 @@ public class MapUtil {
         if (obj.getClass().equals(defValue.getClass())) {
             return (T) obj;
         }
-        else {
+        else if (throwException) {
             throw new RuntimeException("类型转换失败。");
+        }
+        else {
+            return defValue;
         }
     }
 
@@ -380,12 +393,18 @@ public class MapUtil {
                 list.forEach(item -> resList.add(function.apply(item)));
                 return resList;
             }
-            else {
+            else if (this.throwException) {
                 throw new RuntimeException("无法解析非List数据");
             }
+            else {
+                return new ArrayList<>(0);
+            }
+        }
+        else if (this.throwException) {
+            throw new RuntimeException("不存在的键值。");
         }
         else {
-            throw new RuntimeException("不存在的键值。");
+            return new ArrayList<>(0);
         }
     }
 }
