@@ -47,7 +47,8 @@ public class OkHttpUtil {
      * 保存body中的form-data、x-www-form-urlencoded 信息
      * Created DateTime 2021-03-29 22:00
      */
-    private final Map<String, String> bodyMap;
+//    private final Map<String, String> bodyMap;
+    private final List<String[]> bodyMap;
     /**
      * 保存params信息
      * Created DateTime 2021-03-29 21:58
@@ -70,7 +71,8 @@ public class OkHttpUtil {
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS);
         //.build();
         this.paramMap = new HashMap<>(0);
-        this.bodyMap = new HashMap<>(0);
+//        this.bodyMap = new HashMap<>(0);
+        this.bodyMap = new ArrayList<>(0);
         this.headerList = new ArrayList<>();
         this.method = "";
     }
@@ -126,7 +128,8 @@ public class OkHttpUtil {
      * @return OkHttpUtil
      */
     public OkHttpUtil addBody(String key, String value) {
-        this.bodyMap.put(key, value);
+        this.bodyMap.add(new String[]{key, value});
+//        this.bodyMap.put(key, value);
         return this;
     }
 
@@ -182,16 +185,18 @@ public class OkHttpUtil {
     private RequestBody getRequestBody() {
         RequestBody body;
         if (this.bodyMap.size() > 0) {
-            if ("".equals(this.method)) {
+//            if ("".equals(this.method)) {
                 FormBody.Builder bodyBuilder = new FormBody.Builder();
-                this.bodyMap.forEach(bodyBuilder::add);
+//                this.bodyMap.forEach(bodyBuilder::add);
+                this.bodyMap.forEach((infos) -> bodyBuilder.add(infos[0], infos[1]));
                 body = bodyBuilder.build();
-            }
-            else {
-                Gson gson = new Gson();
-                String jsonData = gson.toJson(bodyMap);
-                body = RequestBody.create(jsonData, MediaType.parse(this.method));
-            }
+//                bodyBuilder.add("a", "1");
+//            }
+//            else {
+//                Gson gson = new Gson();
+//                String jsonData = gson.toJson(bodyMap);
+//                body = RequestBody.create(jsonData, MediaType.parse(this.method));
+//            }
         }
         else if (StringUtils.isNotBlank(this.bodyString)) {
             body = RequestBody.create(this.bodyString, MediaType.parse(this.method));
@@ -588,4 +593,5 @@ public class OkHttpUtil {
         }
     }
     //endregion
+
 }

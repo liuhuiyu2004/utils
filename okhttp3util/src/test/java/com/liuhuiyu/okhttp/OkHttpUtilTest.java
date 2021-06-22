@@ -203,6 +203,7 @@ public class OkHttpUtilTest {
         okHttpUtil.setMethod("application/json");
         okHttpUtil.addBody("userName", "zhAdmin");
         okHttpUtil.addBody("userPwd", "zh@2021");
+        okHttpUtil.https();
         Map<String, Object> map = okHttpUtil.executePostToMap(url);
         String token = map.get("token").toString();
         String url2 = "https://safety-vsmapi.geg.com.cn/WebService.asmx/GetDataRequest";
@@ -236,10 +237,25 @@ public class OkHttpUtilTest {
     public void testHttpsGet() {
         String url = "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=13614600169";
         OkHttpUtil okHttpUtil = OkHttpUtil.create();
-        okHttpUtil.https();
+//        okHttpUtil.https();
         String info = okHttpUtil.executeGetToString(url);
     }
 
+    @Test
+    public void testHttpsGet2(){
+        String url="https://127.0.0.1:8125/api/v1.0/system/authentication/login_do";
+        Map<String, String> queryParameter = new HashMap<>(2);
+        String account="ZH_AF_Admin";
+        String password="UmVob21lLnpoYWZAMjEwNg==";
+        queryParameter.put("account", account);
+        queryParameter.put("password", password);
+        OkHttpUtil okHttpUtil = OkHttpUtil.create();
+        for (String key : queryParameter.keySet()) {
+            okHttpUtil.addQueryParameter(key, queryParameter.get(key));
+        }
+        okHttpUtil.https();
+        Map<String, Object> map = okHttpUtil.executeGetToMap(url);
+    }
     @Test
     public void testFor() {
         int num = 100_000;
@@ -263,4 +279,5 @@ public class OkHttpUtilTest {
         String url = "http://10.19.0.114:8354/partnerRequest/hik8700/queryHls.shtml";
         String str = OkHttpUtil.create().addQueryParameter("indexCode", id).executeGetToString(url);
     }
+
 }
