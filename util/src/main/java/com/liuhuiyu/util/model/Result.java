@@ -81,6 +81,11 @@ public class Result<T> implements Serializable {
         return new Result<>(null, ERROR, msg);
     }
 
+    @Contract(value = "_, _-> new", pure = true)
+    public static <T> @NotNull Result<T> error(String msg, int errorCode) {
+        return new Result<>(null, errorCode, msg);
+    }
+
     @Contract(value = " -> new", pure = true)
     public static <T> @NotNull Result<T> success() {
         return new Result<>(null, OK, "");
