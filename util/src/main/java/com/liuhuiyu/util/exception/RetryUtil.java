@@ -3,7 +3,6 @@ package com.liuhuiyu.util.exception;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 /**
  * 重复执行
@@ -22,7 +21,7 @@ public class RetryUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-07-05 16:58
      */
-    public static <T> T retry(int num, Callable<T> callFunctions) {
+    public static <R> R retry(int num, Callable<R> callFunctions) {
         return retry(num, false, callFunctions);
     }
 
@@ -35,7 +34,7 @@ public class RetryUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-07-05 16:58
      */
-    public static <T> T retry(int num, Callable<T> callFunctions, Runnable failedCall) {
+    public static <R> R retry(int num, Callable<R> callFunctions, Runnable failedCall) {
         return retry(num, true, callFunctions, failedCall);
     }
 
@@ -47,7 +46,7 @@ public class RetryUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-07-05 16:58
      */
-    public static <T> T retry(Callable<T> callFunctions, Runnable failedCall) {
+    public static <R> R retry(Callable<R> callFunctions, Runnable failedCall) {
         return retry(2, true, callFunctions, failedCall);
     }
 
@@ -59,7 +58,7 @@ public class RetryUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-07-05 17:13
      */
-    public static <T> T retry(int num, Callable<T> callable, Runnable... callFunctions) {
+    public static <R> R retry(int num, Callable<R> callable, Runnable... callFunctions) {
         return retry(num, true, callable, callFunctions);
     }
 
@@ -71,7 +70,7 @@ public class RetryUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-07-05 17:13
      */
-    public static <T> T retry(int num, boolean loop, Callable<T> callable, Runnable... callFunctions) {
+    public static <R> R retry(int num, boolean loop, Callable<R> callable, Runnable... callFunctions) {
         int pointer = -1;
         try {
             for (int i = 0; i < num - 1; i++) {
@@ -99,58 +98,4 @@ public class RetryUtil {
             throw new RuntimeException(e);
         }
     }
-//
-//    private static ThreadLocal<Integer> retryTimesInThread = new ThreadLocal<>();
-//
-//    /**
-//     * 设置当前方法重试次数
-//     *
-//     * @param retryTimes
-//     * @return
-//     */
-//    public static RetryUtil setRetryTimes(Integer retryTimes) {
-//        if (retryTimesInThread.get() == null) {
-//            retryTimesInThread.set(retryTimes);
-//        }
-//        return new RetryUtil();
-//    }
-//
-//    /**
-//     * 重试当前方法
-//     * <p>按顺序传入调用者方法的所有参数</p>
-//     *
-//     * @param args
-//     * @return
-//     */
-//    public Object retry(Object... args) {
-//        try {
-//            Integer retryTimes = retryTimesInThread.get();
-//            if (retryTimes <= 0) {
-//                retryTimesInThread.remove();
-//                return null;
-//            }
-//            retryTimesInThread.set(--retryTimes);
-//            String upperClassName = Thread.currentThread().getStackTrace()[2].getClassName();
-//            String upperMethodName = Thread.currentThread().getStackTrace()[2].getMethodName();
-//
-//            Class clazz = Class.forName(upperClassName);
-//            Object targetObject = clazz.newInstance();
-//            Method targetMethod = null;
-//            for (Method method : clazz.getDeclaredMethods()) {
-//                if (method.getName().equals(upperMethodName)) {
-//                    targetMethod = method;
-//                    break;
-//                }
-//            }
-//            if (targetMethod == null) {
-//                return null;
-//            }
-//            targetMethod.setAccessible(true);
-//            return targetMethod.invoke(targetObject, args);
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 }
