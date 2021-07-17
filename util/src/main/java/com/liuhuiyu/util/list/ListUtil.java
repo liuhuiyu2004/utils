@@ -1,6 +1,8 @@
 package com.liuhuiyu.util.list;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -13,31 +15,81 @@ import java.util.function.Function;
  * Created DateTime 2021-04-14 10:59
  */
 public class ListUtil {
+    public static final String ARRAY_HEAD = "[";
 
+    /**
+     * 将对象 转换成 List
+     *
+     * @param obj List对象 或者 array对象
+     * @return java.util.List<java.lang.Object>
+     * @author LiuHuiYu
+     * Created DateTime 2021-07-17 9:26
+     */
     public static List<Object> objectToList(Object obj) {
-        List<Object> resList;
-        if (obj instanceof List<?>) {
+        if (obj == null) {
+            return new ArrayList<>(0);
+        }
+        else if (obj instanceof List<?>) {
+            List<Object> resList;
             List<?> list = (List<?>) obj;
             resList = new ArrayList<>(list.size());
             resList.addAll(list);
+            return resList;
+        }
+        else if (obj instanceof Object[]) {
+            Object[] objects = (Object[]) obj;
+            List<Object> resList = new ArrayList<>(objects.length);
+            Collections.addAll(resList, objects);
+            return resList;
+        }
+        else if (obj.getClass().getName().indexOf(ARRAY_HEAD) == 0) {
+            return new ArrayList<>(0);
         }
         else {
             throw new RuntimeException("无法转换");
         }
-        return resList;
+
     }
 
+    /**
+     * 将对象 转换成 List
+     *
+     * @param obj      List对象
+     * @param function 转换函数
+     * @return java.util.List<T>
+     * @author LiuHuiYu
+     * Created DateTime 2021-07-17 9:26
+     */
     public static <T> List<T> objectToListT(Object obj, Function<Object, T> function) {
-        List<T> resList;
-        if (obj instanceof List<?>) {
+        if (obj == null) {
+            return new ArrayList<>(0);
+        }
+        else if (obj instanceof List<?>) {
+            List<T> resList;
             List<?> list = (List<?>) obj;
             resList = new ArrayList<>(list.size());
             list.forEach((o) -> resList.add(function.apply(o)));
+            return resList;
+        }
+        else if (obj instanceof Object[]) {
+            Object[] objects = (Object[]) obj;
+            if (objects.length == 0) {
+                return new ArrayList<>(0);
+            }
+            else {
+                List<T> resList = new ArrayList<>(objects.length);
+                for (Object object : objects) {
+                    resList.add(function.apply(object));
+                }
+                return resList;
+            }
+        }
+        else if (obj.getClass().getName().indexOf(ARRAY_HEAD) == 0) {
+            return new ArrayList<>(0);
         }
         else {
             throw new RuntimeException("无法转换");
         }
-        return resList;
     }
 
     /**
@@ -129,5 +181,40 @@ public class ListUtil {
             rList.add(function.apply(item));
         }
         return rList;
+    }
+
+    /**
+     * list 转换成 数组
+     *
+     * @param list List
+     * @return T[]
+     * @author LiuHuiYu
+     * Created DateTime 2021-07-17 9:17
+     */
+    public static <T> T[] listToArray(List<T> list) {
+        if (list.size() == 0) {
+            @SuppressWarnings("unchecked") final T[] a1 = (T[]) new Object[0];
+            return a1;
+        }
+        Class<?> z = list.get(0).getClass();
+        @SuppressWarnings("unchecked") final T[] a = (T[]) Array.newInstance(z, list.size());
+        for (int i = 0; i < list.size(); i++) {
+            a[i] = list.get(i);
+        }
+        return a;
+    }
+
+    /**
+     * 数组转换 List
+     *
+     * @param array 数组
+     * @return java.util.List<T>
+     * @author LiuHuiYu
+     * Created DateTime 2021-07-17 9:17
+     */
+    public static <T> List<T> arrayToList(T[] array) {
+        List<T> list = new ArrayList<>(array.length);
+        Collections.addAll(list, array);
+        return list;
     }
 }
