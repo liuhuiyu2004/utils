@@ -27,6 +27,19 @@ public class ListUtil {
         return resList;
     }
 
+    public static <T> List<T> objectToListT(Object obj, Function<Object, T> function) {
+        List<T> resList;
+        if (obj instanceof List<?>) {
+            List<?> list = (List<?>) obj;
+            resList = new ArrayList<>(list.size());
+            list.forEach((o) -> resList.add(function.apply(o)));
+        }
+        else {
+            throw new RuntimeException("无法转换");
+        }
+        return resList;
+    }
+
     /**
      * 获取元素t 在列表中 对应的索引
      *
