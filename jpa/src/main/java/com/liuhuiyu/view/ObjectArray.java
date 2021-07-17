@@ -1,5 +1,9 @@
 package com.liuhuiyu.view;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
 /**
@@ -87,6 +91,59 @@ public class ObjectArray {
             }
             else {
                 return Boolean.parseBoolean(obj.toString());
+            }
+        }, defValue);
+    }
+
+    public BigDecimal getBigDecimal() {
+        return getBigDecimal(new BigDecimal("0"));
+    }
+
+    public BigDecimal getBigDecimal(BigDecimal defValue) {
+        return getT((obj) -> {
+            if (obj instanceof BigDecimal) {
+                return (BigDecimal) obj;
+            }
+            else if (obj instanceof Number) {
+                return new BigDecimal(((Number) obj).toString());
+            }
+            else {
+                return new BigDecimal(obj.toString());
+            }
+        }, defValue);
+    }
+
+
+    public Timestamp getTimestamp() {
+        return getTimestamp(Timestamp.valueOf(LocalDateTime.MIN));
+    }
+
+    public Timestamp getTimestamp(Timestamp defValue) {
+        return getT((obj) -> {
+            if (obj instanceof Timestamp) {
+                return (Timestamp) obj;
+            }
+            else {
+                return defValue;
+            }
+        }, defValue);
+    }
+
+
+    public BigInteger getBigInteger() {
+        return getBigInteger(BigInteger.ZERO);
+    }
+
+    public BigInteger getBigInteger(BigInteger defValue) {
+        return getT((obj) -> {
+            if (obj instanceof BigInteger) {
+                return (BigInteger) obj;
+            }
+            if (obj instanceof Number) {
+                return BigInteger.valueOf(((Number) obj).longValue());
+            }
+            else {
+                return defValue;
             }
         }, defValue);
     }
