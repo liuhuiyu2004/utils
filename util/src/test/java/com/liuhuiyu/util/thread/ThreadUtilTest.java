@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.Assert.*;
 
@@ -19,8 +20,8 @@ public class ThreadUtilTest {
     @Test
     public void asynchronousDataLoading() {
         List<Integer> list = new ArrayList<>(5);
-        Collections.addAll(list, 5, 1, 6, 4, 3,2,7,5,6);
-        ThreadUtil.asynchronousDataLoading(list, this::testExe,ExecutorBuilder.create().corePoolSize(8).threadName("test-").builder());
+        Collections.addAll(list, 5, 1, 6, 4, 3, 2, 7, 5, 6);
+        ThreadUtil.asynchronousDataLoading(list, this::testExe, ExecutorBuilder.create().corePoolSize(8).threadName("test-").builder());
     }
 
     private void testExe(Integer i) {
