@@ -1,8 +1,11 @@
 package com.liuhuiyu.util.thread;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.Executor;
 
@@ -15,7 +18,7 @@ import java.util.concurrent.Executor;
  */
 public class ThreadUtil {
     /**
-     * 异步List循环
+     * 异步List循环(等待返回结果)
      *
      * @param list     list
      * @param consumer list处理
@@ -23,11 +26,11 @@ public class ThreadUtil {
      * Created DateTime 2021-04-14 14:03
      */
     public static <T> void asynchronousDataLoading(List<T> list, Consumer<T> consumer) {
-        asynchronousDataLoading(list,consumer, ExecutorBuilder.create().threadName("async-load-").builder());
+        asynchronousDataLoading(list, consumer, ExecutorBuilder.create().threadName("async-load-").builder());
     }
 
     /**
-     * 异步List循环
+     * 异步List循环(等待返回结果)
      *
      * @param list     list
      * @param consumer list处理
@@ -35,19 +38,22 @@ public class ThreadUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-04-14 14:03
      */
-    public static <T> void asynchronousDataLoading(List<T> list, Consumer<T> consumer, Executor executor) {
-        List<CompletableFuture<Void>> threadPool = new ArrayList<>();
-        list.forEach((item) -> {
-            CompletableFuture<Void> d = CompletableFuture.runAsync(() -> consumer.accept(item), executor);
-            threadPool.add(d);
+    public static <T> void asynchronousDataLoading(@NotNull List<T> list, Consumer<T> consumer, Executor executor) {
+        @SuppressWarnings({"unchecked", "hiding"})
+        CompletableFuture<Void>[] list2 = new CompletableFuture[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            T t=list.get(i);
+            list2[i] = CompletableFuture.runAsync(() -> consumer.accept(t), executor);
+        }
+        CompletableFuture<Void> completableFuture = CompletableFuture.allOf(list2);
+        completableFuture.thenAccept((v) -> {
         });
-        threadPool.forEach((future) -> {
-            try {
-                future.get();
-            }
-            catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+        completableFuture.exceptionally((e) -> null);
+        try {
+            completableFuture.get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 }

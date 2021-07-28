@@ -21,7 +21,14 @@ public class ThreadUtilTest {
     public void asynchronousDataLoading() {
         List<Integer> list = new ArrayList<>(5);
         Collections.addAll(list, 5, 1, 6, 4, 3, 2, 7, 5, 6);
-        ThreadUtil.asynchronousDataLoading(list, this::testExe, ExecutorBuilder.create().corePoolSize(8).threadName("test-").builder());
+        ThreadUtil.asynchronousDataLoading(list, this::testExe);
+    }
+
+    @Test
+    public void asynchronousDataLoading2() {
+        List<Integer> list = new ArrayList<>(5);
+        Collections.addAll(list, 5, 1, 6, 4, 3, 2, 7, 5, 6);
+        ThreadUtil.asynchronousDataLoading(list, this::testExe, ExecutorBuilder.create().corePoolSize(list.size()).threadName("test-").builder());
     }
 
     private void testExe(Integer i) {
