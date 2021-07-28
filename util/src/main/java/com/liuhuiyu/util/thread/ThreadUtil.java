@@ -1,13 +1,14 @@
 package com.liuhuiyu.util.thread;
 
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 /**
  * 多线程工具
@@ -16,6 +17,7 @@ import java.util.concurrent.Executor;
  * @version v1.0.0.0
  * Created DateTime 2021-04-14 14:02
  */
+@Log4j2
 public class ThreadUtil {
     /**
      * 异步List循环(等待返回结果)
@@ -39,18 +41,21 @@ public class ThreadUtil {
      * Created DateTime 2021-04-14 14:03
      */
     public static <T> void asynchronousDataLoading(@NotNull List<T> list, Consumer<T> consumer, Executor executor) {
-        @SuppressWarnings({"unchecked", "hiding"})
-        CompletableFuture<Void>[] list2 = new CompletableFuture[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            T t=list.get(i);
-            list2[i] = CompletableFuture.runAsync(() -> consumer.accept(t), executor);
-        }
-        CompletableFuture<Void> completableFuture = CompletableFuture.allOf(list2);
-        completableFuture.thenAccept((v) -> {
-        });
-        completableFuture.exceptionally((e) -> null);
+        CompletableFuture<List<CompletableFuture<Void>>> completableFutureList = CompletableFuture.supplyAsync(() -> list.stream()
+                .map(item -> CompletableFuture.runAsync(() -> consumer.accept(item), executor))
+                .collect(Collectors.toList())
+        );
         try {
-            completableFuture.get();
+            completableFutureList.thenAccept(completableFutures -> {
+                CompletableFuture<Void> completableFuture = CompletableFuture
+                        .allOf(completableFutures.toArray(new CompletableFuture[0]));
+                try {
+                    completableFuture.get();
+                }
+                catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }).get();
         }
         catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
