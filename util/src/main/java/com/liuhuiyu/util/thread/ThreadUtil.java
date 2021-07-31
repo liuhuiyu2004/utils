@@ -53,12 +53,12 @@ public class ThreadUtil {
                     completableFuture.get();
                 }
                 catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
             }).get();
         }
         catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            log.error(e);
         }
     }
 }
