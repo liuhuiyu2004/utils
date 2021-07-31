@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
  * @version v1.0.0.0
  * Created DateTime 2021-03-22 11:01
  */
-@Log4j2
 public class NamedParameterStatement {
     private final Map<Integer, String> paramsMap = new HashMap<>();
     private String sql = "";
@@ -53,8 +52,8 @@ public class NamedParameterStatement {
             paramsMap.put(idx++, m.group(2));
         }
         this.sql = sql.replaceAll(regex, "?");
-        log.debug("分析前：" + sql);
-        log.debug("分析后：" + this.sql);
+        Log.i("分析前：" + sql);
+        Log.d("分析后：" + this.sql);
     }
 
     /**

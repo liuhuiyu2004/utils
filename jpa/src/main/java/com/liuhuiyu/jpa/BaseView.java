@@ -12,7 +12,6 @@ import java.util.function.Consumer;
  * @version v1.0.0.0
  * Created DateTime 2021-03-22 9:12
  */
-@Log4j2
 public abstract class BaseView {
     private final DataSource dataSource;
 
@@ -72,7 +71,7 @@ public abstract class BaseView {
             if (parameterMap != null) {
                 namedParameterStatement.fillParameters(preparedStatement, parameterMap);
             }
-            log.info(namedParameterStatement.getSql());
+            Log.i(namedParameterStatement.getSql());
             ResultSet resultSet;
             try {
                 resultSet = preparedStatement.executeQuery();
