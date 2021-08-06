@@ -383,29 +383,8 @@ public class MapUtil {
     }
 
     public <T> List<T> getListValue(String key, Function<Object, T> function) {
-        List<T> resList = new ArrayList<>(0);
-        return getCollectionValue(key, function, () -> resList);
-//        if (this.map.containsKey(key)) {
-//            Object obj = this.map.get(key);
-//            if (obj instanceof List<?>) {
-//                List<?> list = (List<?>) obj;
-//                List<T> resList = new ArrayList<>(list.size());
-//                list.forEach(item -> resList.add(function.apply(item)));
-//                return resList;
-//            }
-//            else if (this.throwException) {
-//                throw new RuntimeException("无法解析非List数据");
-//            }
-//            else {
-//                return new ArrayList<>(0);
-//            }
-//        }
-//        else if (this.throwException) {
-//            throw new RuntimeException("不存在的键值。");
-//        }
-//        else {
-//            return new ArrayList<>(0);
-//        }
+        Function<Object, ResInfo<T>> function2 = (obj) -> new ResInfo<>(true, function.apply(obj));
+        return getCollectionValueAllowJudgment(key, function2, () -> new ArrayList<>(0));
     }
 
     /**
@@ -419,12 +398,32 @@ public class MapUtil {
      * Created DateTime 2021-08-06 9:50
      */
     public <T, R extends Collection<T>> R getCollectionValue(String key, Function<Object, T> function, Supplier<R> initializeCollection) {
+        Function<Object, ResInfo<T>> function2 = (obj) -> new ResInfo<>(true, function.apply(obj));
+        return getCollectionValueAllowJudgment(key, function2, initializeCollection);
+    }
+
+    /**
+     * Collection获取(List;Set)
+     *
+     * @param key                  键值
+     * @param function             转换
+     * @param initializeCollection 初始化 Collection
+     * @return java.util.Collection<T>
+     * @author LiuHuiYu
+     * Created DateTime 2021-08-06 9:50
+     */
+    public <T, R extends Collection<T>> R getCollectionValueAllowJudgment(String key, Function<Object, ResInfo<T>> function, Supplier<R> initializeCollection) {
         R resList = initializeCollection.get();
         if (this.map.containsKey(key)) {
             Object obj = this.map.get(key);
             if (obj instanceof Collection<?>) {
                 Collection<?> list = (Collection<?>) obj;
-                list.forEach(item -> resList.add(function.apply(item)));
+                list.forEach(item -> {
+                    ResInfo<T> resInfo = function.apply(item);
+                    if (resInfo.res) {
+                        resList.add(resInfo.resData);
+                    }
+                });
                 return resList;
             }
             else if (this.throwException) {
@@ -439,6 +438,16 @@ public class MapUtil {
         }
         else {
             return resList;
+        }
+    }
+
+    public static class ResInfo<T> {
+        Boolean res;
+        T resData;
+
+        public ResInfo(Boolean res, T resData) {
+            this.res = res;
+            this.resData = resData;
         }
     }
 }
