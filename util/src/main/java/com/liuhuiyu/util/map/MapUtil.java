@@ -5,11 +5,9 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author LiuHuiYu
@@ -385,11 +383,47 @@ public class MapUtil {
     }
 
     public <T> List<T> getListValue(String key, Function<Object, T> function) {
+        List<T> resList = new ArrayList<>(0);
+        return getCollectionValue(key, function, () -> resList);
+//        if (this.map.containsKey(key)) {
+//            Object obj = this.map.get(key);
+//            if (obj instanceof List<?>) {
+//                List<?> list = (List<?>) obj;
+//                List<T> resList = new ArrayList<>(list.size());
+//                list.forEach(item -> resList.add(function.apply(item)));
+//                return resList;
+//            }
+//            else if (this.throwException) {
+//                throw new RuntimeException("无法解析非List数据");
+//            }
+//            else {
+//                return new ArrayList<>(0);
+//            }
+//        }
+//        else if (this.throwException) {
+//            throw new RuntimeException("不存在的键值。");
+//        }
+//        else {
+//            return new ArrayList<>(0);
+//        }
+    }
+
+    /**
+     * Collection获取(List;Set)
+     *
+     * @param key                  键值
+     * @param function             转换
+     * @param initializeCollection 初始化 Collection
+     * @return java.util.Collection<T>
+     * @author LiuHuiYu
+     * Created DateTime 2021-08-06 9:50
+     */
+    public <T, R extends Collection<T>> R getCollectionValue(String key, Function<Object, T> function, Supplier<R> initializeCollection) {
+        R resList = initializeCollection.get();
         if (this.map.containsKey(key)) {
             Object obj = this.map.get(key);
-            if (obj instanceof List<?>) {
-                List<?> list = (List<?>) obj;
-                List<T> resList = new ArrayList<>(list.size());
+            if (obj instanceof Collection<?>) {
+                Collection<?> list = (Collection<?>) obj;
                 list.forEach(item -> resList.add(function.apply(item)));
                 return resList;
             }
@@ -397,14 +431,14 @@ public class MapUtil {
                 throw new RuntimeException("无法解析非List数据");
             }
             else {
-                return new ArrayList<>(0);
+                return resList;
             }
         }
         else if (this.throwException) {
             throw new RuntimeException("不存在的键值。");
         }
         else {
-            return new ArrayList<>(0);
+            return resList;
         }
     }
 }
