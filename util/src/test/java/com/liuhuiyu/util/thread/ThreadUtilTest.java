@@ -3,6 +3,7 @@ package com.liuhuiyu.util.thread;
 import lombok.extern.log4j.Log4j2;
 import lombok.var;
 import org.junit.Test;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,9 +31,11 @@ public class ThreadUtilTest {
     public void asynchronousDataLoading2() {
         List<Integer> list = new ArrayList<>(5);
         Collections.addAll(list, 5, 1, 6, 4, 3, 2, 7, 5, 6);
-        ThreadUtil.asynchronousDataLoading(list, this::testExe, ExecutorBuilder.create().corePoolSize(list.size()).threadName("test-").builder());
+        for (int i = 0; i < 100; i++) {
+            ThreadPoolTaskExecutor threadPoolTaskExecutor = ExecutorBuilder.create().corePoolSize(list.size()).threadName("test-" + i + "-").builder();
+            ThreadUtil.asynchronousDataLoading(list, this::testExe, threadPoolTaskExecutor);
+        }
     }
-
 
     private void testExe(Integer i) {
         try {

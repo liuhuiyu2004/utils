@@ -2,6 +2,7 @@ package com.liuhuiyu.util.thread;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -107,7 +108,12 @@ public class ExecutorBuilder {
         return this;
     }
 
-    public Executor builder() {
+    public ThreadPoolTaskExecutor builder() {
+//        return (r)->{
+//            Thread thread=new Thread(r);
+//            thread.setName(threadName);
+//            thread.start();
+//        };
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         //核心线程数
         threadPoolTaskExecutor.setCorePoolSize(corePoolSize);
