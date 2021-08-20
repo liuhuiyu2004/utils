@@ -1,6 +1,7 @@
 package com.liuhuiyu.jpa;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.jpa.repository.query.Jpa21Utils;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -45,14 +46,26 @@ public abstract class BaseView {
      */
     protected void actionPreparedStatement(String sql, Consumer<PreparedStatement> callFunctions) {
         actionConnection(connection -> {
-            PreparedStatement preparedStatement;
-            try {
-                preparedStatement = connection.prepareStatement(sql);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                callFunctions.accept(preparedStatement);
             }
-            catch (SQLException throwable) {
-                throw new RuntimeException("创建PreparedStatement异常", throwable);
+            catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-            callFunctions.accept(preparedStatement);
+//            PreparedStatement preparedStatement;
+//            try {
+//                preparedStatement = connection.prepareStatement(sql);
+//            }
+//            catch (SQLException throwable) {
+//                throw new RuntimeException("创建PreparedStatement异常", throwable);
+//            }
+//            callFunctions.accept(preparedStatement);
+//            try {
+//                connection.close();
+//            }
+//            catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
         });
     }
 
