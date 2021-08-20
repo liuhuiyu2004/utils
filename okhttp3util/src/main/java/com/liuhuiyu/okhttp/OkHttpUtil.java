@@ -68,7 +68,8 @@ public class OkHttpUtil {
                 .retryOnConnectionFailure(true)
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout, TimeUnit.SECONDS);
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .connectionPool(new ConnectionPool(5, 1, TimeUnit.SECONDS));
         //.build();
         this.paramMap = new HashMap<>(0);
 //        this.bodyMap = new HashMap<>(0);
@@ -186,10 +187,10 @@ public class OkHttpUtil {
         RequestBody body;
         if (this.bodyMap.size() > 0) {
 //            if ("".equals(this.method)) {
-                FormBody.Builder bodyBuilder = new FormBody.Builder();
+            FormBody.Builder bodyBuilder = new FormBody.Builder();
 //                this.bodyMap.forEach(bodyBuilder::add);
-                this.bodyMap.forEach((infos) -> bodyBuilder.add(infos[0], infos[1]));
-                body = bodyBuilder.build();
+            this.bodyMap.forEach((infos) -> bodyBuilder.add(infos[0], infos[1]));
+            body = bodyBuilder.build();
 //                bodyBuilder.add("a", "1");
 //            }
 //            else {
@@ -245,8 +246,8 @@ public class OkHttpUtil {
     }
 
     public String executePostToString(String url) {
-        try {
-            return Objects.requireNonNull(this.executePost(url).body()).string();
+        try (Response response = this.executePost(url)) {
+            return Objects.requireNonNull(response.body()).string();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
@@ -286,12 +287,14 @@ public class OkHttpUtil {
     }
 
     public String executeGetToString(String url) {
-        try {
-            return Objects.requireNonNull(this.executeGet(url).body()).string();
+        String resData;
+        try (Response response = this.executeGet(url)) {
+            resData = Objects.requireNonNull(response.body()).string();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
         }
+        return resData;
     }
 
     public Map<String, Object> executeGetToMap(String url) {
@@ -329,8 +332,8 @@ public class OkHttpUtil {
     }
 
     public String executePutToString(String url) {
-        try {
-            return Objects.requireNonNull(this.executePut(url).body()).string();
+        try (Response response = this.executePut(url)) {
+            return Objects.requireNonNull(response.body()).string();
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
