@@ -1,7 +1,6 @@
 package com.liuhuiyu.util.thread;
 
 import lombok.extern.log4j.Log4j2;
-import lombok.var;
 import org.junit.Test;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -10,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -73,32 +71,20 @@ public class ThreadUtilTest {
     }
 
     @Test
+    @SuppressWarnings({"rawtypes", "unused"})
     public void testCompletableFuture() throws ExecutionException, InterruptedException {
         List<Integer> integerList = getIntegerList();
-        AtomicReference<CompletableFuture<Integer>> future = new AtomicReference<>();
+//        AtomicReference<CompletableFuture<Integer>> future = new AtomicReference<>();
         integerList.forEach(i -> {
             CompletableFuture<Integer> future01 = CompletableFuture.supplyAsync(() -> {
                 sleep(i);
                 return i;
             });
-            future.set(future01);
+//            future.set(future01);
         });
-        var s = CompletableFuture.supplyAsync(() -> integerList.stream().map((item) -> CompletableFuture.runAsync(() -> sleep(item))).collect(Collectors.toList()));
-        var s2 = integerList.stream().map((item) -> CompletableFuture.runAsync(() -> sleep(item))).toArray(CompletableFuture[]::new);
-
-//        CompletableFuture.anyOf(s).get();
-//        s.thenAccept(completableFutures -> {
-//            CompletableFuture<Void> completableFuture = CompletableFuture
-//                    .allOf(completableFutures.toArray(new CompletableFuture[0]));
-//            try {
-//                completableFuture.get();
-//            }
-//            catch (InterruptedException | ExecutionException e) {
-//                log.error(e);
-//            }
-//        }).get();
+        CompletableFuture.supplyAsync(() -> integerList.stream().map((item) -> CompletableFuture.runAsync(() -> sleep(item))).collect(Collectors.toList()));
+        CompletableFuture[] s2 = integerList.stream().map((item) -> CompletableFuture.runAsync(() -> sleep(item))).toArray(CompletableFuture[]::new);
         CompletableFuture.anyOf(s2).thenAccept((a) -> {
-//            log.info(a.getClass());
         }).get();
     }
 
@@ -115,5 +101,32 @@ public class ThreadUtilTest {
             e.printStackTrace();
         }
         log.info("离开{}", Thread.currentThread().getId());
+    }
+
+    @Test
+    public void testSleep() {
+        Runnable runnable = () -> {
+            long millis = 10_000;
+            log.info("开始执行:{}毫秒延时。", millis);
+            if (ThreadUtil.sleep(millis)) {
+                log.info("正常结束。");
+            }
+            else {
+                log.info("线程内异常,中断休眠");
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
+        log.info("3秒后引发中断。");
+        if (ThreadUtil.sleep(3_000)) {
+            log.info("引发中断。");
+            thread.interrupt();
+            log.info("引发中断完成。");
+        }
+        long millis = 100_000;
+        log.info("程序完成。");
+        if (!ThreadUtil.sleep(millis)) {
+            log.info("异常中断休眠");
+        }
     }
 }
