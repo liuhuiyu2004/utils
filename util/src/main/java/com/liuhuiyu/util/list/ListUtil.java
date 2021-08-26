@@ -2,6 +2,7 @@ package com.liuhuiyu.util.list;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -26,28 +27,36 @@ public class ListUtil {
      * Created DateTime 2021-07-17 9:26
      */
     public static List<Object> objectToList(Object obj) {
-        if (obj == null) {
-            return new ArrayList<>(0);
-        }
-        else if (obj instanceof List<?>) {
-            List<Object> resList;
-            List<?> list = (List<?>) obj;
-            resList = new ArrayList<>(list.size());
-            resList.addAll(list);
-            return resList;
-        }
-        else if (obj instanceof Object[]) {
-            Object[] objects = (Object[]) obj;
-            List<Object> resList = new ArrayList<>(objects.length);
-            Collections.addAll(resList, objects);
-            return resList;
-        }
-        else if (obj.getClass().getName().indexOf(ARRAY_HEAD) == 0) {
-            return new ArrayList<>(0);
-        }
-        else {
-            throw new RuntimeException("无法转换");
-        }
+        return objectToListT(obj, (o) -> o);
+//        if (obj == null) {
+//            return new ArrayList<>(0);
+//        }
+//        else if (obj instanceof List<?>) {
+//            List<Object> resList;
+//            List<?> list = (List<?>) obj;
+//            resList = new ArrayList<>(list.size());
+//            resList.addAll(list);
+//            return resList;
+//        }
+//        else if (obj instanceof Collection) {
+//            List<Object> resList;
+//            Collection<?> list = (Collection<?>) obj;
+//            resList = new ArrayList<>(list.size());
+//            resList.addAll(list);
+//            return resList;
+//        }
+//        else if (obj instanceof Object[]) {
+//            Object[] objects = (Object[]) obj;
+//            List<Object> resList = new ArrayList<>(objects.length);
+//            Collections.addAll(resList, objects);
+//            return resList;
+//        }
+//        else if (obj.getClass().getName().indexOf(ARRAY_HEAD) == 0) {
+//            return new ArrayList<>(0);
+//        }
+//        else {
+//            throw new RuntimeException("无法转换");
+//        }
 
     }
 
@@ -68,7 +77,24 @@ public class ListUtil {
             List<T> resList;
             List<?> list = (List<?>) obj;
             resList = new ArrayList<>(list.size());
-            list.forEach((o) -> resList.add(function.apply(o)));
+            list.forEach((o) -> {
+                T t = function.apply(o);
+                if (t != null) {
+                    resList.add(t);
+                }
+            });
+            return resList;
+        }
+        else if (obj instanceof Collection) {
+            List<T> resList;
+            Collection<?> list = (Collection<?>) obj;
+            resList = new ArrayList<>(list.size());
+            list.forEach((o) -> {
+                T t = function.apply(o);
+                if (t != null) {
+                    resList.add(t);
+                }
+            });
             return resList;
         }
         else if (obj instanceof Object[]) {
@@ -79,7 +105,10 @@ public class ListUtil {
             else {
                 List<T> resList = new ArrayList<>(objects.length);
                 for (Object object : objects) {
-                    resList.add(function.apply(object));
+                        T t = function.apply(object);
+                        if (t != null) {
+                            resList.add(function.apply(t));
+                        }
                 }
                 return resList;
             }
