@@ -1,8 +1,10 @@
 package com.liuhuiyu.util.exception;
 
+import com.liuhuiyu.util.thread.ThreadUtil;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -159,5 +161,16 @@ public class RetryUtilTest {
             throw new RuntimeException("");
         }
         return "" + time;
+    }
+
+    @Test
+    public void testTime(){
+        LocalDateTime time=LocalDateTime.now().plusSeconds(5);
+        ThreadUtil.sleep(2000);
+        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
+        ThreadUtil.sleep(2000);
+        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
+        ThreadUtil.sleep(2000);
+        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
     }
 }

@@ -3,8 +3,12 @@ package com.liuhuiyu.util.map;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.liuhuiyu.util.date.LocalDateUtil;
 import org.apache.commons.beanutils.BeanUtils;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -376,6 +380,34 @@ public class MapUtil {
 
     public Boolean getBooleanValue(String key, boolean defValue) {
         return getMapBooleanValue(map, key, defValue);
+    }
+
+    public Timestamp getTimestampValue(String key) {
+        return getTimestampValue(key, Timestamp.valueOf(LocalDateTime.now()));
+    }
+
+    public Timestamp getTimestampValue(String key, Timestamp defValue) {
+        Object obj = map.get(key);
+        if (obj == null) {
+            return defValue;
+        }
+        else if (obj instanceof Timestamp) {
+            return (Timestamp) obj;
+        }
+        else if (obj instanceof Number) {
+            return new Timestamp(((Number) obj).longValue());
+        }
+        else if (obj instanceof String) {
+            try {
+                return Timestamp.valueOf((String) obj);
+            }
+            catch (Exception ex) {
+                return defValue;
+            }
+        }
+        else {
+            return defValue;
+        }
     }
 
     public <T> T getValue(String key, Function<Object, T> function) {
