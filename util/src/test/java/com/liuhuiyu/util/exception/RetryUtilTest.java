@@ -4,9 +4,13 @@ import com.liuhuiyu.util.thread.ThreadUtil;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 /**
@@ -162,9 +166,16 @@ public class RetryUtilTest {
         }
         return "" + time;
     }
+    @Test
+    public void uuid(){
+        UUID uuid = UUID.randomUUID();
+        String uuidString=UUID.randomUUID().toString().replace("-","").toUpperCase();
+        log.info("{}【{}】",uuidString,uuidString.length());
 
+    }
     @Test
     public void testTime(){
+
         LocalDateTime time=LocalDateTime.now().plusSeconds(5);
         ThreadUtil.sleep(2000);
         log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
@@ -172,5 +183,24 @@ public class RetryUtilTest {
         log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
         ThreadUtil.sleep(2000);
         log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
+    }
+    @Test
+    public void duration(){
+        LocalDateTime time=LocalDateTime.now();
+        LocalDateTime time2=LocalDateTime.now().plusSeconds(1005);
+        log.info("{}",Duration.between(time, time2).getSeconds());
+        log.info("{}",Duration.between(time2, time).getSeconds());
+    }
+    @Test
+    public void du(){
+        Duration duration = Duration.between(LocalDateTime.now(),LocalDate.now().plusDays(1).atStartOfDay());
+        Duration duration2 = Duration.between(LocalDate.now().plusDays(1).atStartOfDay(), LocalDateTime.now());
+        log.info("({}秒{})",duration.getSeconds()/3600,duration2.getSeconds()/3600);
+    }
+    @Test
+    public void timeToString(){
+        LocalDateTime localDateTime=LocalDateTime.now().plusSeconds(30);
+        log.info(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
     }
 }
