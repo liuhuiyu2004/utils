@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
 public class OkHttpUtil2Test {
     @Test
     public void t() {
-        OkHttpUtil2.MethodModel methodModel = OkHttpUtil2.MethodModel.DELETE;
-        System.out.println(methodModel.getName());
+//        OkHttpUtil2.MethodModel methodModel = OkHttpUtil2.MethodModel.DELETE;
+//        System.out.println(methodModel.getName());
     }
 
 }

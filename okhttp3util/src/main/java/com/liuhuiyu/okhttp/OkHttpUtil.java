@@ -59,9 +59,9 @@ public class OkHttpUtil {
     private String bodyString = "";
     private Object tag;
     public static final String MEDIA_TYPE_APPLICATION_JSON_UTF_8 = "application/json;charset=utf-8";
-    public static int CONNECT_TIMEOUT = 15;
-    public static int READ_TIMEOUT = 15;
-    public static int WRITE_TIMEOUT = 15;
+    public static final int CONNECT_TIMEOUT = 15;
+    public static final int READ_TIMEOUT = 15;
+    public static final int WRITE_TIMEOUT = 15;
 
     private OkHttpUtil(int connectTimeout, int readTimeout, int writeTimeout) {
         this.client = new OkHttpClient.Builder()
@@ -200,7 +200,9 @@ public class OkHttpUtil {
 //            }
         }
         else if (StringUtils.isNotBlank(this.bodyString)) {
-            body = RequestBody.create(this.bodyString, MediaType.parse(this.method));
+            MediaType mediaType = MediaType.parse(this.method);
+//            body = RequestBody.create(MediaType.parse(this.method),this.bodyString);
+            body = RequestBody.create(mediaType, this.bodyString);
         }
         else {
             body = new FormBody.Builder().build();
@@ -397,10 +399,13 @@ public class OkHttpUtil {
     @NotNull
     public static Map<String, Object> getStringObjectMap(String strJson) {
         try {
+            if (strJson == null) {
+                return new HashMap<>(0);
+            }
             Gson gson = new Gson();
             Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
             }.getType());
-            return mapDoubleToInt(resultMap);
+            return  mapDoubleToInt(resultMap);
         }
         catch (JsonSyntaxException e) {
             throw new OkHttpException(e.getMessage());
@@ -496,7 +501,7 @@ public class OkHttpUtil {
     }
 
     //实现X509TrustManager接口
-    public class MyTrustManager implements X509TrustManager {
+    public static class MyTrustManager implements X509TrustManager {
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
@@ -512,7 +517,7 @@ public class OkHttpUtil {
     }
 
     //实现HostnameVerifier接口
-    private class TrustAllHostnameVerifier implements HostnameVerifier {
+    private static class TrustAllHostnameVerifier implements HostnameVerifier {
         @Override
         public boolean verify(String hostname, SSLSession session) {
             return true;
