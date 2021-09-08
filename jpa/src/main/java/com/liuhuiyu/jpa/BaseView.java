@@ -52,20 +52,6 @@ public abstract class BaseView {
             catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-//            PreparedStatement preparedStatement;
-//            try {
-//                preparedStatement = connection.prepareStatement(sql);
-//            }
-//            catch (SQLException throwable) {
-//                throw new RuntimeException("创建PreparedStatement异常", throwable);
-//            }
-//            callFunctions.accept(preparedStatement);
-//            try {
-//                connection.close();
-//            }
-//            catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
         });
     }
 
@@ -81,7 +67,7 @@ public abstract class BaseView {
     protected void fullResultSet(String sql, Map<String, Object> parameterMap, Consumer<ResultSet> callFunctions) {
         NamedParameterStatement namedParameterStatement = new NamedParameterStatement(sql);
         this.actionPreparedStatement(namedParameterStatement.getSql(), preparedStatement -> {
-            if (parameterMap != null) {
+            if (parameterMap != null && parameterMap.size() > 0) {
                 namedParameterStatement.fillParameters(preparedStatement, parameterMap);
             }
             Log.i(namedParameterStatement.getSql());

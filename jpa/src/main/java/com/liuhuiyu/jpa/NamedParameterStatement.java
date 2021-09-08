@@ -42,7 +42,7 @@ public class NamedParameterStatement {
      * Created DateTime 2021-03-22 14:10
      */
     private void parseSql(String sql) {
-        String regex = "(:(\\w+))";
+        String regex = "((=[\\s+]|=):(\\w+))";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(sql);
         emptyMap();
@@ -51,7 +51,7 @@ public class NamedParameterStatement {
             //参数名称可能有重复，使用序号来做Key
             paramsMap.put(idx++, m.group(2));
         }
-        this.sql = sql.replaceAll(regex, "?");
+        this.sql = sql.replaceAll(regex, "=?");
         Log.i("分析前：" + sql);
         Log.d("分析后：" + this.sql);
     }
