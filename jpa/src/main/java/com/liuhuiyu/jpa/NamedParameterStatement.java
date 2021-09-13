@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class NamedParameterStatement {
     private final Map<Integer, String> paramsMap = new HashMap<>();
-    private String sql = "";
+    private String sql;
 
     public Map<Integer, String> getParamsMap() {
         return paramsMap;
@@ -31,7 +31,7 @@ public class NamedParameterStatement {
     }
 
     public NamedParameterStatement(String sql) {
-        this.parseSql(sql);
+        this.sql = this.parseSql2(sql);
     }
 
     /**
@@ -41,6 +41,7 @@ public class NamedParameterStatement {
      * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:10
      */
+    @Deprecated
     private void parseSql(String sql) {
         String regex = "((=[\\s+]|=):(\\w+))";
         Pattern p = Pattern.compile(regex);
@@ -54,6 +55,52 @@ public class NamedParameterStatement {
         this.sql = sql.replaceAll(regex, "=?");
         Log.i("分析前：" + sql);
         Log.d("分析后：" + this.sql);
+    }
+
+    private String parseSql2(String query) {
+        int length = query.length();
+        StringBuilder parsedQuery = new StringBuilder(length);
+        boolean inSingleQuote = false;
+        boolean inDoubleQuote = false;
+        int index = 1;
+
+        for (int i = 0; i < length; i++) {
+            char c = query.charAt(i);
+            if (inSingleQuote) {
+                if (c == '\'') {
+                    inSingleQuote = false;
+                }
+            }
+            else if (inDoubleQuote) {
+                if (c == '"') {
+                    inDoubleQuote = false;
+                }
+            }
+            else {
+                if (c == '\'') {
+                    inSingleQuote = true;
+                }
+                else if (c == '"') {
+                    inDoubleQuote = true;
+                }
+                else if (c == ':' &&
+                        i + 1 < length &&
+                        Character.isJavaIdentifierStart(query.charAt(i + 1))) {
+                    int j = i + 2;
+                    while (j < length && Character.isJavaIdentifierPart(query.charAt(j))) {
+                        j++;
+                    }
+                    String name = query.substring(i + 1, j);
+                    // 用问号替换参数
+                    c = '?';
+                    // 如果参数是跳过结尾
+                    i += name.length();
+                    this.paramsMap.put(index++, name);
+                }
+            }
+            parsedQuery.append(c);
+        }
+        return parsedQuery.toString();
     }
 
     /**
