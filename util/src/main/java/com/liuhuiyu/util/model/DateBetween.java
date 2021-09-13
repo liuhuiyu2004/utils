@@ -1,6 +1,7 @@
 package com.liuhuiyu.util.model;
 
 import com.liuhuiyu.util.date.LocalDateUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ public class DateBetween {
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
 
-    public DateBetween(LocalDateTime time1, LocalDateTime time2) {
+    public DateBetween(@NotNull LocalDateTime time1, @NotNull LocalDateTime time2) {
         this.startDateTime = time1.isBefore(time2) ? time1 : time2;
         this.endDateTime = time1.isAfter(time2) ? time1 : time2;
     }

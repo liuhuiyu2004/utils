@@ -49,7 +49,7 @@ public class NamedParameterStatement {
         int idx = 1;
         while (m.find()) {
             //参数名称可能有重复，使用序号来做Key
-            paramsMap.put(idx++, m.group(2));
+            paramsMap.put(idx++, m.group(m.groupCount()));
         }
         this.sql = sql.replaceAll(regex, "=?");
         Log.i("分析前：" + sql);

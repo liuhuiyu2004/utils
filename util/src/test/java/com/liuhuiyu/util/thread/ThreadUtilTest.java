@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -128,5 +130,42 @@ public class ThreadUtilTest {
         if (!ThreadUtil.sleep(millis)) {
             log.info("异常中断休眠");
         }
+    }
+
+    /**
+     * 重入不影响已经传入的变量,但是会影响非原子变量
+     * @author LiuHuiYu
+     * Created DateTime 2021-09-09 16:37
+     */
+    @Test
+    public void testThread() {
+        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+        AtomicReference<Integer> atomicInt=new AtomicReference<>(0);
+        for (int i1 = 0; i1 < 10; i1++) {
+            atomicInt.set(i1);
+            Integer i = i1;
+            log.info("开始{}",i);
+            Thread thread = new Thread(() -> {
+                log.info("线程开始：{}",Thread.currentThread().getName());
+                ThreadUtil.sleep(100);
+                list.add(Thread.currentThread().getName()+":"+i+atomicInt.get());
+                ss(i);
+            });
+            thread.setName("SetName" + i1);
+            thread.start();
+            log.info("结束{}",i);
+        }
+        int j = 0;
+        while (j < 10) {
+            if (j != list.size()) {
+                j = list.size();
+            }
+            ThreadUtil.sleep(1000);
+        }
+        log.info("list={}", list);
+    }
+
+    private void ss(int i) {
+        log.info("id[{}]={}", Thread.currentThread().getName(), i);
     }
 }
