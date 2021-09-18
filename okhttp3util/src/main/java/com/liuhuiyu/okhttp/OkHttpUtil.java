@@ -405,6 +405,9 @@ public class OkHttpUtil {
             Gson gson = new Gson();
             Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
             }.getType());
+            if(resultMap==null){
+                return new HashMap<>(0);
+            }
             return  mapDoubleToInt(resultMap);
         }
         catch (JsonSyntaxException e) {
