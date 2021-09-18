@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -81,6 +82,36 @@ public class ListUtilTest {
         log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, false, true, true);
         log.info(res);
+    }
+
+    @Test
+    public void testSort() {
+        String[] f = {"0", "1", "2", "-", "7", "8","4"};
+        List<String> list = Arrays.stream(f).collect(Collectors.toList());
+        log.info(list);
+        list.sort((a, b) -> {
+            Integer i, j;
+            try {
+                i = Integer.parseInt(a);
+            }
+            catch (Exception exception) {
+                i = null;
+            }
+            try {
+                j = Integer.parseInt(b);
+            }
+            catch (Exception exception) {
+                j = null;
+            }
+            if (i == null) {
+                return 1;
+            }
+            if (j == null) {
+                return -1;
+            }
+            return j.compareTo(i);
+        });
+        log.info(list);
     }
 
     @Test

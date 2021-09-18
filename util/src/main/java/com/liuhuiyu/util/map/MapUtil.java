@@ -3,11 +3,10 @@ package com.liuhuiyu.util.map;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.liuhuiyu.util.date.LocalDateUtil;
 import org.apache.commons.beanutils.BeanUtils;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -309,7 +308,6 @@ public class MapUtil {
         return res;
     }
 
-
     public static MapUtil ofJsonString(String jsonString) {
         Map<String, Object> map = mapOfJsonString(jsonString);
         return new MapUtil(map);
@@ -400,6 +398,37 @@ public class MapUtil {
         else if (obj instanceof String) {
             try {
                 return Timestamp.valueOf((String) obj);
+            }
+            catch (Exception ex) {
+                return defValue;
+            }
+        }
+        else {
+            return defValue;
+        }
+    }
+
+    public BigDecimal getBigDecimal(String key) {
+        return getBigDecimal(key, BigDecimal.ZERO);
+    }
+
+    public BigDecimal getBigDecimal(String key, BigDecimal defValue) {
+        Object obj = map.get(key);
+        if (obj == null) {
+            return defValue;
+        }
+        else if (obj instanceof Double) {
+            return BigDecimal.valueOf((Double) obj);
+        }
+        else if (obj instanceof Long) {
+            return BigDecimal.valueOf((Long) obj);
+        }
+        else if (obj instanceof Number) {
+            return BigDecimal.valueOf(((Number) obj).doubleValue());
+        }
+        else if (obj instanceof String) {
+            try {
+                return new BigDecimal((String) obj);
             }
             catch (Exception ex) {
                 return defValue;
