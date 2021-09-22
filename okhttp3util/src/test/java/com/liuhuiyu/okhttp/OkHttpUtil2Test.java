@@ -33,7 +33,9 @@ public class OkHttpUtil2Test {
         String url = "http://127.0.0.1:9999/api/get/test";
         String s = OkHttpUtil2.create(url).get().executeToString();
         log.info(s);
-        String s2 = OkHttpUtil2.create(url).setMethodModel(OkHttpUtil2.MethodModel.GET).executeToString();
+        String s2 = OkHttpUtil2.create(url)
+                .setMethodModel(OkHttpUtil2.MethodModel.GET)
+                .executeToString();
         log.info(s2);
     }
 
@@ -86,12 +88,15 @@ public class OkHttpUtil2Test {
     public void asynchronousExecuteToMap() throws InterruptedException {
         String url = "http://127.0.0.1:9999/api/get/test";
         AtomicBoolean b = new AtomicBoolean(true);
-        OkHttpUtil2.create(url).get().asynchronousExecuteToMap((map) -> {
-            log.info("map:{}", map);
-            b.set(false);
-        }, (call, e) -> {
-            log.error(e);
-        });
+        OkHttpUtil2
+                .create(url)
+                .get()
+                .asynchronousExecuteToMap((map) -> {
+                    log.info("map:{}", map);
+                    b.set(false);
+                }, (call, e) -> {
+                    log.error(e);
+                });
         log.info("异步");
         while (b.get()) {
         }
@@ -138,14 +143,14 @@ public class OkHttpUtil2Test {
                 .executeToMap();
         log.info(map);
         String token = map.get("token").toString();
-        String cardNo="440421198903088237";
+        String cardNo = "440421198903088237";
         String findJson = getJson(token, cardNo);
         Map<String, Object> map2 = OkHttpUtil2
                 .create(CONTRACTOR_PERSONNEL_INFORMATION_URL)
                 .setBody(findJson, method)
                 .post()
                 .executeToMap();
-        log.info("map2:{}",map2);
+        log.info("map2:{}", map2);
     }
 
     private String getJson(String token, String cardNo) {
