@@ -264,12 +264,16 @@ public class OkHttpUtil2 {
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                onFailure.onFailure(call, e);
+                if(onFailure!=null){
+                    onFailure.onFailure(call, e);
+                }
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                onResponse.onResponse(call, response);
+                if(onResponse!=null){
+                    onResponse.onResponse(call, response);
+                }
             }
         };
         client.newCall(request).enqueue(callback);

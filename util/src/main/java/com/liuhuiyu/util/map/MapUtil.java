@@ -5,7 +5,9 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
 
+import javax.naming.CompositeName;
 import java.math.BigDecimal;
+import java.security.Key;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -155,7 +157,10 @@ public class MapUtil {
 
     public static Boolean getMapBooleanValue(Map<String, Object> map, String key, boolean defValue) {
         Object obj = map.getOrDefault(key, defValue);
-        if (obj instanceof Boolean) {
+        if (obj == null) {
+            return defValue;
+        }
+        else if (obj instanceof Boolean) {
             return (Boolean) obj;
         }
         try {
@@ -230,6 +235,7 @@ public class MapUtil {
         return res;
     }
 
+    @Deprecated
     public static <T> T mapToObject(Map<String, Object> map, T t) {
         if (map == null) {
             return null;
@@ -242,6 +248,8 @@ public class MapUtil {
         }
         return t;
     }
+
+
 
     //endregion
     public static Map<String, Object> mapOfJsonString(String jsonString) {
