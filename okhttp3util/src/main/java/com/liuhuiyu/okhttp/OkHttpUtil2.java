@@ -26,11 +26,13 @@ public class OkHttpUtil2 {
     private final FormBody.Builder bodyBuilder;
     private MethodModel methodModel;
     private RequestBody requestBody;
+
     /**
      * 提供已经包装的OkHttp3原型
+     *
+     * @return com.liuhuiyu.okhttp.OkHttpUtil2.OkHttpPrimeval
      * @author LiuHuiYu
      * Created DateTime 2021-09-18 16:31
-     * @return com.liuhuiyu.okhttp.OkHttpUtil2.OkHttpPrimeval
      */
     public OkHttpPrimeval getOkHttpPrimeval() {
         return new OkHttpPrimeval();
@@ -104,18 +106,23 @@ public class OkHttpUtil2 {
 
     /**
      * 字符串设置Body
-     * @author LiuHuiYu
-     * Created DateTime 2021-09-18 16:25
+     * 如果成功 bodyString!=null && method!=null 默认转成post模式
+     * 否则 默认转成get模式
+     *
      * @param bodyString body字符串
      * @param method     MediaType
      * @return com.liuhuiyu.okhttp.OkHttpUtil2
+     * @author LiuHuiYu
+     * Created DateTime 2021-09-18 16:25
      */
     public OkHttpUtil2 setBody(String bodyString, String method) {
         if (bodyString == null || method == null) {
             this.requestBody = null;
+            this.get();
         }
         else {
             this.requestBody = RequestBody.create(bodyString, MediaType.parse(method));
+            this.post();
         }
         return this;
     }
@@ -214,11 +221,13 @@ public class OkHttpUtil2 {
     //endregion
 
     //region 执行查询
+
     /**
      * 执行查询
+     *
+     * @return okhttp3.Response
      * @author LiuHuiYu
      * Created DateTime 2021-09-18 16:56
-     * @return okhttp3.Response
      */
     public Response execute() {
         this.request.url(httpUrl.build());
@@ -264,14 +273,14 @@ public class OkHttpUtil2 {
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                if(onFailure!=null){
+                if (onFailure != null) {
                     onFailure.onFailure(call, e);
                 }
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(onResponse!=null){
+                if (onResponse != null) {
                     onResponse.onResponse(call, response);
                 }
             }
