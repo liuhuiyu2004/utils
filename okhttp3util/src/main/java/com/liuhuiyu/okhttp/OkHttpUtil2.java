@@ -101,24 +101,23 @@ public class OkHttpUtil2 {
      */
     public OkHttpUtil2 addBody(String name, String value) {
         this.bodyBuilder.add(name, value);
+        this.post();
         return this;
     }
 
     /**
      * 字符串设置Body
-     * 如果成功 bodyString!=null && method!=null 默认转成post模式
-     * 否则 默认转成get模式
      *
      * @param bodyString body字符串
      * @param method     MediaType
      * @return com.liuhuiyu.okhttp.OkHttpUtil2
+     * @throws IllegalArgumentException 参数不能设置成空
      * @author LiuHuiYu
      * Created DateTime 2021-09-18 16:25
      */
     public OkHttpUtil2 setBody(String bodyString, String method) {
         if (bodyString == null || method == null) {
-            this.requestBody = null;
-            this.get();
+            throw new IllegalArgumentException("参数不能为空");
         }
         else {
             this.requestBody = RequestBody.create(bodyString, MediaType.parse(method));
