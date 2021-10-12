@@ -37,6 +37,12 @@ public class GetTestController extends AbsBaseController {
     @RequestMapping(value = PATH_TEST, method = RequestMethod.GET)
     @ApiOperation(value = "说明", notes = "")
     public Result<?> test() {
+        log.trace("log.trace");
+        log.debug("log.debug");
+        log.info("log.info");
+        log.warn("log.warn");
+        log.error("log.error");
+        log.fatal("log.fatal");
         return Result.of("get 无参数测试成功。");
     }
     //endregion

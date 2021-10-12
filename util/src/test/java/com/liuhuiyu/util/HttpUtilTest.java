@@ -2,7 +2,6 @@ package com.liuhuiyu.util;
 
 import junit.framework.TestCase;
 import lombok.extern.log4j.Log4j2;
-import sun.misc.Contended;
 
 /**
  * @author LiuHuiYu
