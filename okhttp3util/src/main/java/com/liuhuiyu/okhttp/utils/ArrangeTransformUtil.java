@@ -47,10 +47,15 @@ public class ArrangeTransformUtil {
             Gson gson = new Gson();
             Map<String, Object> resultMap = gson.fromJson(strJson, new TypeToken<Map<String, Object>>() {
             }.getType());
-            return mapDoubleToInt(resultMap);
+            if (resultMap == null) {
+                return new HashMap<>();
+            }
+            else {
+                return mapDoubleToInt(resultMap);
+            }
         }
         catch (JsonSyntaxException e) {
-            throw new OkHttpException(e.getMessage());
+            throw new OkHttpException("Json'" + strJson + "'解析异常：" + e.getMessage());
         }
     }
 
