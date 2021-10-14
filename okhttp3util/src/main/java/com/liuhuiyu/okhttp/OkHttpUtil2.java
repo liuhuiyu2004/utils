@@ -20,6 +20,9 @@ import java.util.function.Consumer;
  * Created DateTime 2021-07-06 10:05
  */
 public class OkHttpUtil2 {
+    public static final String MEDIA_TYPE_APPLICATION_JSON_UTF_8 = "application/json;charset=utf-8";
+    public static final String MEDIA_TYPE_APPLICATION_JSON = "application/json";
+
     private final OkHttpClient.Builder client;
     private final Request.Builder request;
     private final HttpUrl.Builder httpUrl;
