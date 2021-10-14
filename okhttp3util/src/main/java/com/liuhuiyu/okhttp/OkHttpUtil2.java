@@ -242,7 +242,9 @@ public class OkHttpUtil2 {
 
     public String executeToString() {
         try {
-            return Objects.requireNonNull(this.execute().body()).string();
+            try (Response response = this.execute()) {
+                return Objects.requireNonNull(response.body()).string();
+            }
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
@@ -307,6 +309,7 @@ public class OkHttpUtil2 {
     public void asynchronousExecuteToString(Consumer<String> consumer, OnFailure onFailure) {
         this.asynchronousExecute((call, response) -> {
             String str = Objects.requireNonNull(response.body()).string();
+            response.close();
             consumer.accept(str);
         }, onFailure);
     }
