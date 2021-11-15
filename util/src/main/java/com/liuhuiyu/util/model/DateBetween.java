@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 时间范围结构
@@ -29,5 +30,13 @@ public class DateBetween {
 
     public LocalDateTime getEndDateTime() {
         return endDateTime;
+    }
+
+    public String oracleBetweenSql(String columnName) {
+        return "(" + columnName + " between to_date('" +
+                this.getStartDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) +
+                "','yyyy-MM-dd hh24:mi:ss') and to_date('" +
+                this.getEndDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) +
+                "','yyyy-MM-dd hh24:mi:ss'))";
     }
 }
