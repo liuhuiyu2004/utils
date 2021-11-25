@@ -1,10 +1,16 @@
 package com.liuhuiyu.util.model;
 
+import com.liuhuiyu.util.asserts.LhyAssert;
+import com.liuhuiyu.util.functional.MapToT;
+import com.liuhuiyu.util.functional.ObjectToT;
+import com.liuhuiyu.util.map.MapUtil;
 import lombok.Data;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,6 +101,7 @@ public class Result<T> implements Serializable {
     private static String MSG_KEY = "msg";
     private static String DATA_KEY = "data";
 
+    @Deprecated
     public static <T> @NotNull Result<T> ofMap(Map<String, Object> map, Class<T> clazz) {
         Result<T> result = new Result<>();
         if (map.containsKey(FLAG_KEY)) {
@@ -121,5 +128,103 @@ public class Result<T> implements Serializable {
             throw new RuntimeException("缺少关键字" + DATA_KEY);
         }
         return result;
+    }
+
+    /**
+     * 获取ResultMap模型中的数据
+     *
+     * @param map 传入数据
+     * @return java.lang.Object
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-25 17:11
+     */
+    public static Object getResultObj(Map<String, Object> map) {
+        return getValueOfResultMap(map, o -> o);
+    }
+
+    /**
+     * 获取ResultMap模型中的数据
+     *
+     * @param map    传入数据
+     * @param mapToT 转换函数
+     * @param <T>    转换类型
+     * @return java.util.List<T> 返回转换后的数组（过滤null数据）
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-25 17:05
+     */
+    public static <T> List<T> getResultToList(Map<String, Object> map, MapToT<T> mapToT) {
+        LhyAssert.assertNotNull(mapToT, "不能传入null解析方法mapToT。");
+        LhyAssert.assertNotNull(map, "传入null值,无法进行解析map。");
+        ArrayList<?> arrayList = getValueOfResultMap(map, o -> {
+            LhyAssert.assertTrue(o instanceof ArrayList, "对象无法解析成列表");
+            return (ArrayList<?>) o;
+        });
+        List<T> list = new ArrayList<>(arrayList.size());
+        for (Object obj : arrayList) {
+            Map<String, Object> itemMap = MapUtil.mapObjectToStringKeyMap(obj);
+            final T t = mapToT.mapToT(itemMap);
+            if (t != null) {
+                list.add(t);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 获取ResultMap模型中的数据
+     *
+     * @param map    传入数据
+     * @param mapToT 转换函数
+     * @param <T>    转换类型
+     * @return T 返回转换后的结果
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-25 17:10
+     */
+    public static <T> T getResultData(Map<String, Object> map, MapToT<T> mapToT) {
+        LhyAssert.assertNotNull(mapToT, "不能传入null解析方法mapToT。");
+        Object obj = getValueOfResultMap(map, o -> o);
+        Map<String, Object> itemMap = MapUtil.mapObjectToStringKeyMap(obj);
+        return mapToT.mapToT(itemMap);
+    }
+
+    /**
+     * 将map转换成Result
+     *
+     * @param map Result的map结构
+     * @return com.liuhuiyu.util.model.Result<java.lang.Object> 返回Result结构
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-25 17:08
+     */
+    public static Result<Object> getResult(Map<String, Object> map) {
+        LhyAssert.assertNotNull(map, "传入null值,无法进行解析map。");
+        Result<Object> result = new Result<>();
+
+        LhyAssert.assertTrue(map.containsKey(FLAG_KEY), "flag信息有效判定字段不存在。");
+        result.setFlag((int) map.get(FLAG_KEY));
+
+        LhyAssert.assertTrue(map.containsKey(MSG_KEY), "msg信息字段不存在。");
+        result.setMsg(map.get(MSG_KEY).toString());
+
+        LhyAssert.assertTrue(map.containsKey(DATA_KEY), "data信息字段不存在。");
+        result.setData(map.get(DATA_KEY));
+        return result;
+    }
+
+    /**
+     * 获取ResultMap的数据
+     *
+     * @param map       Result Map形式
+     * @param objectToT 数据转换函数
+     * @param <T>       转换后的类型
+     * @return T 转换后的结果
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-25 16:52
+     */
+    public static <T> T getValueOfResultMap(Map<String, Object> map, ObjectToT<T> objectToT) {
+        LhyAssert.assertNotNull(objectToT, "不能传入null解析方法mapToT。");
+        LhyAssert.assertNotNull(map, "传入null值,无法进行解析map。");
+        Result<Object> result = getResult(map);
+        LhyAssert.assertTrue(result.isSuccess(), result.getMsg());
+        return objectToT.objectToT(result.getData());
     }
 }
