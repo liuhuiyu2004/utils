@@ -7,6 +7,8 @@ import com.liuhuiyu.util.map.MapUtil;
 import lombok.Data;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -226,5 +228,33 @@ public class Result<T> implements Serializable {
         Result<Object> result = getResult(map);
         LhyAssert.assertTrue(result.isSuccess(), result.getMsg());
         return objectToT.objectToT(result.getData());
+    }
+
+    /**
+     * 获取ResultMap模型中的分页数据
+     *
+     * @param map    原始map数据
+     * @param mapToT 转换函数
+     * @param <T>    泛型
+     * @return org.springframework.data.domain.PageImpl<T>
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-29 17:18
+     */
+    @Contract("_, _ -> new")
+    public static <T> @NotNull PageImpl<T> getResultToPageImpl(Map<String, Object> map, MapToT<T> mapToT) {
+        LhyAssert.assertNotNull(mapToT, "不能传入null解析方法mapToT。");
+        Result<Object> result = getResult(map);
+        if (result.isSuccess()) {
+            MapUtil mapUtil = new MapUtil(MapUtil.mapObjectToStringKeyMap(result.getData()));
+            int number = mapUtil.getIntegerValue("number", 0);
+            int size = mapUtil.getIntegerValue("size", 0);
+            PageRequest pageable = PageRequest.of(number, size);
+            long totalElements = mapUtil.getLongValue("totalElements", 0L);
+            List<T> list = mapUtil.getListValue("content", obj -> mapToT.mapToT(MapUtil.mapObjectToStringKeyMap(obj)));
+            return new PageImpl<>(list, pageable, totalElements);
+        }
+        else {
+            throw new RuntimeException(result.getMsg());
+        }
     }
 }
