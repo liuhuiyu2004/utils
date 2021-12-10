@@ -3,12 +3,38 @@ package com.liuhuiyu.util.asserts;
 import com.liuhuiyu.util.constant.enums.ResultEnum;
 import com.liuhuiyu.util.exception.LhyException;
 
+import java.lang.reflect.Proxy;
+import java.util.EventListener;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2020-09-10 8:41
  */
 public class LhyAssert {
+    static Function<String,RuntimeException> exceptionProxy;
+
+    private static RuntimeException throwEx(String message) {
+        if (exceptionProxy == null) {
+            return new RuntimeException(message);
+        }
+        else {
+            return exceptionProxy.apply(message);
+        }
+    }
+
+    /**
+     * 接受到异常信息后的异常抛出处理
+     *
+     * @param proxy 接受到异常信息后的代理。
+     * @author LiuHuiYu
+     * Created DateTime 2021-12-10 14:43
+     */
+    public static void exceptionProxy(Function<String,RuntimeException> proxy) {
+        exceptionProxy = proxy;
+    }
     //region assertTrue
 
     public static void assertTrue(boolean value, RuntimeException exception) {
@@ -18,19 +44,7 @@ public class LhyAssert {
     }
 
     public static void assertTrue(boolean value, String message) {
-        assertTrue(value, new RuntimeException(message));
-    }
-
-    /**
-     * 对象不为空则抛出异常
-     *
-     * @param value      对象
-     * @param resultEnum 错误枚举
-     */
-    public static void assertTrue(boolean value, ResultEnum resultEnum) {
-        if (!value) {
-            throw new LhyException(resultEnum);
-        }
+        assertTrue(value, throwEx(message));
     }
     //endregion
 
@@ -59,18 +73,11 @@ public class LhyAssert {
         assertTrue(object != null, message);
     }
 
-    /**
-     * 对象为空则抛出异常
-     *
-     * @param object     对象
-     * @param resultEnum 错误枚举
-     */
-    public static void assertNotNull(Object object, ResultEnum resultEnum) {
-        assertTrue(object != null, resultEnum);
-    }
+
     //endregion
 
     //region assertNull
+
     /**
      * 对象不为空则抛出异常
      *
@@ -88,7 +95,29 @@ public class LhyAssert {
     public static void assertNull(Object object, String message) {
         assertTrue(object == null, message);
     }
+    //endregion
 
+    //region 枚举模式拦截
+    /**
+     * 对象不为空则抛出异常
+     *
+     * @param value      对象
+     * @param resultEnum 错误枚举
+     */
+    public static void assertTrue(boolean value, ResultEnum resultEnum) {
+        if (!value) {
+            throw new LhyException(resultEnum);
+        }
+    }
+    /**
+     * 对象为空则抛出异常
+     *
+     * @param object     对象
+     * @param resultEnum 错误枚举
+     */
+    public static void assertNotNull(Object object, ResultEnum resultEnum) {
+        assertTrue(object != null, resultEnum);
+    }
     /**
      * 对象不为空则抛出异常
      *
