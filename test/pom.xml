@@ -6,7 +6,7 @@
 
     <groupId>com.liuhuiyu</groupId>
     <artifactId>test</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2021.1.0</version>
     <packaging>jar</packaging>
 
     <name>测试基础类</name>

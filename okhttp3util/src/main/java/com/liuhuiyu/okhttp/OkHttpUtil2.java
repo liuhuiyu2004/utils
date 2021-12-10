@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -27,6 +28,7 @@ public class OkHttpUtil2 {
     private final Request.Builder request;
     private final HttpUrl.Builder httpUrl;
     private final FormBody.Builder bodyBuilder;
+    private MultipartBody.Builder multipartBody;
     private MethodModel methodModel;
     private RequestBody requestBody;
 
@@ -80,6 +82,48 @@ public class OkHttpUtil2 {
     }
 
     /**
+     * 连接超时
+     *
+     * @param seconds 秒
+     * @return com.liuhuiyu.okhttp.OkHttpUtil2
+     * @author LiuHuiYu
+     * Created DateTime 2021-12-03 14:07
+     */
+    public OkHttpUtil2 connectTimeout(int seconds) {
+        this.client.connectTimeout(seconds, TimeUnit.SECONDS);
+        return this;
+    }
+
+    /**
+     * 读取超时
+     *
+     * @param seconds 秒
+     * @return com.liuhuiyu.okhttp.OkHttpUtil2
+     * @author LiuHuiYu
+     * Created DateTime 2021-12-03 14:07
+     */
+    public OkHttpUtil2 readTimeout(int seconds) {
+        this.readTimeout=seconds;
+        this.client.readTimeout(seconds, TimeUnit.SECONDS);
+        return this;
+    }
+    int readTimeout;
+
+    /**
+     * 写入超时
+     *
+     * @param seconds 秒
+     * @return com.liuhuiyu.okhttp.OkHttpUtil2
+     * @author LiuHuiYu
+     * Created DateTime 2021-12-03 14:07
+     */
+    public OkHttpUtil2 writeTimeout(int seconds) {
+        this.client.writeTimeout(seconds, TimeUnit.SECONDS);
+        return this;
+    }
+
+
+    /**
      * 添加地址参数
      *
      * @param name  键值
@@ -104,6 +148,44 @@ public class OkHttpUtil2 {
      */
     public OkHttpUtil2 addBody(String name, String value) {
         this.bodyBuilder.add(name, value);
+        this.post();
+        return this;
+    }
+
+    /**
+     * 添加form
+     *
+     * @param name  名称
+     * @param value 值
+     * @return com.liuhuiyu.okhttp.OkHttpUtil2
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-30 14:05
+     */
+    public OkHttpUtil2 addFormDataPart(String name, String value) {
+        //传递键值对参数
+        if (multipartBody == null) {
+            this.multipartBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        }
+        this.multipartBody.addFormDataPart(name, value);
+        this.post();
+        return this;
+    }
+
+    /**
+     * 添加formData
+     *
+     * @param name     名称
+     * @param filename 文件名
+     * @param body     RequestBody
+     * @return com.liuhuiyu.okhttp.OkHttpUtil2
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-30 14:07
+     */
+    public OkHttpUtil2 addFormDataPart(String name, String filename, RequestBody body) {
+        if (multipartBody == null) {
+            this.multipartBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        }
+        this.multipartBody.addFormDataPart(name, filename, body);
         this.post();
         return this;
     }
@@ -233,6 +315,9 @@ public class OkHttpUtil2 {
      */
     public Response execute() {
         this.request.url(httpUrl.build());
+        if (this.multipartBody != null) {
+            this.request.post(this.multipartBody.build());
+        }
         OkHttpClient client = this.getOkHttpClient();
         Request request = this.request.build();
         try {
@@ -245,9 +330,12 @@ public class OkHttpUtil2 {
 
     public String executeToString() {
         try {
+            String resData;
             try (Response response = this.execute()) {
-                return Objects.requireNonNull(response.body()).string();
+                resData=Objects.requireNonNull(response.body()).string();
+//                return Objects.requireNonNull(response.body()).string();
             }
+            return resData;
         }
         catch (IOException e) {
             throw new OkHttpException(e.getMessage());
