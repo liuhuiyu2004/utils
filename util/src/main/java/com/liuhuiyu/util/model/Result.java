@@ -1,6 +1,7 @@
 package com.liuhuiyu.util.model;
 
 import com.liuhuiyu.util.asserts.LhyAssert;
+import com.liuhuiyu.util.exception.ResultException;
 import com.liuhuiyu.util.functional.MapToT;
 import com.liuhuiyu.util.functional.ObjectToT;
 import com.liuhuiyu.util.map.MapUtil;
@@ -155,10 +156,10 @@ public class Result<T> implements Serializable {
      * Created DateTime 2021-11-25 17:05
      */
     public static <T> List<T> getResultToList(Map<String, Object> map, MapToT<T> mapToT) {
-        LhyAssert.assertNotNull(mapToT, "不能传入null解析方法mapToT。");
-        LhyAssert.assertNotNull(map, "传入null值,无法进行解析map。");
+        LhyAssert.assertNotNull(mapToT, new ResultException("不能传入null解析方法mapToT。"));
+        LhyAssert.assertNotNull(map, new ResultException("传入null值,无法进行解析map。"));
         ArrayList<?> arrayList = getValueOfResultMap(map, o -> {
-            LhyAssert.assertTrue(o instanceof ArrayList, "对象无法解析成列表");
+            LhyAssert.assertTrue(o instanceof ArrayList, new ResultException("对象无法解析成列表"));
             return (ArrayList<?>) o;
         });
         List<T> list = new ArrayList<>(arrayList.size());
@@ -183,7 +184,7 @@ public class Result<T> implements Serializable {
      * Created DateTime 2021-11-25 17:10
      */
     public static <T> T getResultData(Map<String, Object> map, MapToT<T> mapToT) {
-        LhyAssert.assertNotNull(mapToT, "不能传入null解析方法mapToT。");
+        LhyAssert.assertNotNull(mapToT, new ResultException("不能传入null解析方法mapToT。"));
         Object obj = getValueOfResultMap(map, o -> o);
         Map<String, Object> itemMap = MapUtil.mapObjectToStringKeyMap(obj);
         return mapToT.mapToT(itemMap);
@@ -198,16 +199,16 @@ public class Result<T> implements Serializable {
      * Created DateTime 2021-11-25 17:08
      */
     public static Result<Object> getResult(Map<String, Object> map) {
-        LhyAssert.assertNotNull(map, "传入null值,无法进行解析map。");
+        LhyAssert.assertNotNull(map, new ResultException("传入null值,无法进行解析map。"));
         Result<Object> result = new Result<>();
 
-        LhyAssert.assertTrue(map.containsKey(FLAG_KEY), "flag信息有效判定字段不存在。");
+        LhyAssert.assertTrue(map.containsKey(FLAG_KEY), new ResultException("flag信息有效判定字段不存在。"));
         result.setFlag((int) map.get(FLAG_KEY));
 
-        LhyAssert.assertTrue(map.containsKey(MSG_KEY), "msg信息字段不存在。");
+        LhyAssert.assertTrue(map.containsKey(MSG_KEY), new ResultException("msg信息字段不存在。"));
         result.setMsg(map.get(MSG_KEY).toString());
 
-        LhyAssert.assertTrue(map.containsKey(DATA_KEY), "data信息字段不存在。");
+        LhyAssert.assertTrue(map.containsKey(DATA_KEY), new ResultException("data信息字段不存在。"));
         result.setData(map.get(DATA_KEY));
         return result;
     }
@@ -223,8 +224,8 @@ public class Result<T> implements Serializable {
      * Created DateTime 2021-11-25 16:52
      */
     public static <T> T getValueOfResultMap(Map<String, Object> map, ObjectToT<T> objectToT) {
-        LhyAssert.assertNotNull(objectToT, "不能传入null解析方法mapToT。");
-        LhyAssert.assertNotNull(map, "传入null值,无法进行解析map。");
+        LhyAssert.assertNotNull(objectToT, new ResultException("不能传入null解析方法mapToT。"));
+        LhyAssert.assertNotNull(map, new ResultException("传入null值,无法进行解析map。"));
         Result<Object> result = getResult(map);
         LhyAssert.assertTrue(result.isSuccess(), result.getMsg());
         return objectToT.objectToT(result.getData());
@@ -242,7 +243,7 @@ public class Result<T> implements Serializable {
      */
     @Contract("_, _ -> new")
     public static <T> @NotNull PageImpl<T> getResultToPageImpl(Map<String, Object> map, MapToT<T> mapToT) {
-        LhyAssert.assertNotNull(mapToT, "不能传入null解析方法mapToT。");
+        LhyAssert.assertNotNull(mapToT, new ResultException("不能传入null解析方法mapToT。"));
         Result<Object> result = getResult(map);
         if (result.isSuccess()) {
             MapUtil mapUtil = new MapUtil(MapUtil.mapObjectToStringKeyMap(result.getData()));
