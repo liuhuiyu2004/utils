@@ -1,12 +1,15 @@
 package com.liuhuiyu.okhttp;
 
+import com.liuhuiyu.okhttp.utils.ArrangeTransformUtilTest;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +23,8 @@ import java.util.concurrent.CountDownLatch;
  * Created DateTime 2021-01-12 19:11
  */
 public class OkHttpUtilTest {
+    private final static Logger LOG = LogManager.getLogger(ArrangeTransformUtilTest.class);
+
     //region get测试
     private String getUrl(String url) {
         return "http://192.168.2.7:8006" + url;
@@ -34,6 +39,7 @@ public class OkHttpUtilTest {
         Response res = okHttpUtil.executeGet(url);
         String resString = okHttpUtil.executeGetToString(url);
         Map<String, Object> resMap = okHttpUtil.executeGetToMap(url);
+        LOG.info(resMap);
     }
 
     @Test
@@ -62,6 +68,9 @@ public class OkHttpUtilTest {
         Response res = okHttpUtil.executeGet(url);
         String resString = okHttpUtil.executeGetToString(url);
         Map<String, Object> resMap = okHttpUtil.executeGetToMap(url);
+        LOG.info(res);
+        LOG.info(resString);
+        LOG.info(resMap);
     }
 
     @Test
@@ -242,11 +251,11 @@ public class OkHttpUtilTest {
     }
 
     @Test
-    public void testHttpsGet2(){
-        String url="https://127.0.0.1:8125/api/v1.0/system/authentication/login_do";
+    public void testHttpsGet2() {
+        String url = "https://127.0.0.1:8125/api/v1.0/system/authentication/login_do";
         Map<String, String> queryParameter = new HashMap<>(2);
-        String account="ZH_AF_Admin";
-        String password="UmVob21lLnpoYWZAMjEwNg==";
+        String account = "ZH_AF_Admin";
+        String password = "UmVob21lLnpoYWZAMjEwNg==";
         queryParameter.put("account", account);
         queryParameter.put("password", password);
         OkHttpUtil okHttpUtil = OkHttpUtil.create();
@@ -256,6 +265,7 @@ public class OkHttpUtilTest {
         okHttpUtil.https();
         Map<String, Object> map = okHttpUtil.executeGetToMap(url);
     }
+
     @Test
     public void testFor() {
         int num = 100_000;

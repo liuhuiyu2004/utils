@@ -2,12 +2,9 @@ package com.liuhuiyu.okhttp;
 
 import com.liuhuiyu.okhttp.functional_interface.OnFailure;
 import com.liuhuiyu.okhttp.functional_interface.OnResponse;
-import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import okhttp3.*;
-import org.apache.commons.lang3.ThreadUtils;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -18,12 +15,12 @@ import java.io.IOException;
  */
 //@Log4j2
 public class OkHttpTest {
-    @SneakyThrows
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OkHttpTest.class);
     @Test
-    public void getAsynchronousInteraction() {
+    public void getAsynchronousInteraction() throws InterruptedException {
+        log.info("测试异步");
         OkHttpClient okHttpClient = new OkHttpClient();
         Request build = new Request.Builder().url("https://blog.csdn.net/QasimCyrus").build();
-//        val request: Request = Request.Builder().url("https://blog.csdn.net/QasimCyrus").build()
         OnFailure onFailure = (call, e) -> {
         };
         OnResponse onResponse = (call, response) -> {
@@ -42,8 +39,4 @@ public class OkHttpTest {
         okHttpClient.newCall(build).enqueue(callback);
         Thread.sleep(100000);
     }
-
-
-
-
 }

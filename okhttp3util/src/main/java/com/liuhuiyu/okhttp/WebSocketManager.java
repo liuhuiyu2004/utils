@@ -1,7 +1,6 @@
 package com.liuhuiyu.okhttp;
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j2;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;

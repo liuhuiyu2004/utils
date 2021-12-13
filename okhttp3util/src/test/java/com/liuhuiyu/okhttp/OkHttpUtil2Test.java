@@ -1,8 +1,10 @@
 package com.liuhuiyu.okhttp;
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+import com.liuhuiyu.okhttp.utils.ArrangeTransformUtilTest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,30 +15,31 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version v1.0.0.0
  * Created DateTime 2021-07-06 10:44
  */
-@Log4j2
 public class OkHttpUtil2Test {
+    //    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OkHttpUtil2Test.class);
+    private final static Logger LOG = LogManager.getLogger(OkHttpUtil2Test.class);
 
     public void getOkHttpPrimeval() {
         String url = "http://127.0.0.1:9999/api/get/test";
         OkHttpUtil2 okHttpUtil2 = OkHttpUtil2.create(url);
         OkHttpUtil2.OkHttpPrimeval okHttpPrimeval = okHttpUtil2.getOkHttpPrimeval();
-        log.info("OkHttpClient.Builder:{}", okHttpPrimeval.getOkHttpClientBuilder());
-        log.info("BodyBuilder.Builder:{}", okHttpPrimeval.getBodyBuilderBuilder());
-        log.info("HttpUrl.Builder:{}", okHttpPrimeval.getHttpUrlBuilder());
-        log.info("Request.Builder:{}", okHttpPrimeval.getRequestBuilder());
-        log.info("MethodModel:{}", okHttpPrimeval.getMethodModel());
-        log.info("RequestBody:{}", okHttpPrimeval.getRequestBody());
+        LOG.info("OkHttpClient.Builder:{}", okHttpPrimeval.getOkHttpClientBuilder());
+        LOG.info("BodyBuilder.Builder:{}", okHttpPrimeval.getBodyBuilderBuilder());
+        LOG.info("HttpUrl.Builder:{}", okHttpPrimeval.getHttpUrlBuilder());
+        LOG.info("Request.Builder:{}", okHttpPrimeval.getRequestBuilder());
+        LOG.info("MethodModel:{}", okHttpPrimeval.getMethodModel());
+        LOG.info("RequestBody:{}", okHttpPrimeval.getRequestBody());
     }
 
     @Test
     public void getNoParameters() {
         String url = "http://127.0.0.1:9999/api/get/test";
         String s = OkHttpUtil2.create(url).get().executeToString();
-        log.info(s);
+        LOG.info(s);
         String s2 = OkHttpUtil2.create(url)
                 .setMethodModel(OkHttpUtil2.MethodModel.GET)
                 .executeToString();
-        log.info(s2);
+        LOG.info(s2);
     }
 
     @Test
@@ -50,55 +53,52 @@ public class OkHttpUtil2Test {
         Map<String, Object> map = OkHttpUtil2.create(url)
                 .addQueryParameter(parameterName, parameter)
                 .executeToMap();
-        log.info(s);
-        log.info("map:{}", map);
+        LOG.info(s);
+        LOG.info("map:{}", map);
     }
 
     @Test
-    public void asynchronousExecute() throws InterruptedException {
+    public void asynchronousExecute()  {
         String url = "http://127.0.0.1:9999/api/get/test";
         AtomicBoolean b = new AtomicBoolean(true);
         OkHttpUtil2.create(url).get().asynchronousExecute((call, response) -> {
-            log.info("测试");
+            LOG.info("测试");
             b.set(false);
-        }, (call, e) -> {
-            log.error(e);
-        });
-        log.info("异步");
+        }, (call, e) -> LOG.error(e));
+        LOG.info("异步");
         while (b.get()) {
+            LOG.info("等待结束");
         }
     }
 
     @Test
-    public void asynchronousExecuteToString() throws InterruptedException {
+    public void asynchronousExecuteToString() {
         String url = "http://127.0.0.1:9999/api/get/test";
         AtomicBoolean b = new AtomicBoolean(true);
         OkHttpUtil2.create(url).get().asynchronousExecuteToString((str) -> {
-            log.info(str);
+            LOG.info(str);
             b.set(false);
-        }, (call, e) -> {
-            log.error(e);
-        });
-        log.info("异步");
+        }, (call, e) -> LOG.error("", e));
+        LOG.info("异步");
         while (b.get()) {
+            LOG.info("等待结束");
         }
     }
 
     @Test
-    public void asynchronousExecuteToMap() throws InterruptedException {
+    public void asynchronousExecuteToMap()  {
         String url = "http://127.0.0.1:9999/api/get/test";
         AtomicBoolean b = new AtomicBoolean(true);
         OkHttpUtil2
                 .create(url)
                 .get()
                 .asynchronousExecuteToMap((map) -> {
-                    log.info("map:{}", map);
+                    LOG.info("map:{}", map);
                     b.set(false);
-                }, (call, e) -> {
-                    log.error(e);
-                });
-        log.info("异步");
+                }, (call, e) -> LOG.error(e));
+        LOG.info("异步");
         while (b.get()) {
+            LOG.info("等待结束");
         }
     }
 
@@ -108,7 +108,7 @@ public class OkHttpUtil2Test {
         String s = OkHttpUtil2.create(url)
                 .post()
                 .executeToString();
-        log.info(s);
+        LOG.info(s);
     }
 
     @Test
@@ -121,13 +121,13 @@ public class OkHttpUtil2Test {
                 .addBody(parameterName, parameter + "body传入")
                 .post()
                 .executeToString();
-        log.info(s);
+        LOG.info(s);
         Map<String, Object> map = OkHttpUtil2.create(url)
                 .post()
                 .addQueryParameter(parameterName, parameter + "url传入")
                 .addBody(parameterName, parameter)
                 .executeToMap();
-        log.info("map:{}", map);
+        LOG.info("map:{}", map);
     }
 
     @Test
@@ -141,7 +141,7 @@ public class OkHttpUtil2Test {
                 .setBody(strJson, method)
                 .post()
                 .executeToMap();
-        log.info(map);
+        LOG.info(map);
         String token = map.get("token").toString();
         String cardNo = "440421198903088237";
         String findJson = getJson(token, cardNo);
@@ -150,7 +150,7 @@ public class OkHttpUtil2Test {
                 .setBody(findJson, method)
                 .post()
                 .executeToMap();
-        log.info("map2:{}", map2);
+        LOG.info("map2:{}", map2);
     }
 
     private String getJson(String token, String cardNo) {
