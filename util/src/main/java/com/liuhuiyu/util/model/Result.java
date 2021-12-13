@@ -201,15 +201,14 @@ public class Result<T> implements Serializable {
     public static Result<Object> getResult(Map<String, Object> map) {
         LhyAssert.assertNotNull(map, new ResultException("传入null值,无法进行解析map。"));
         Result<Object> result = new Result<>();
-
         LhyAssert.assertTrue(map.containsKey(FLAG_KEY), new ResultException("flag信息有效判定字段不存在。"));
         result.setFlag((int) map.get(FLAG_KEY));
-
-        LhyAssert.assertTrue(map.containsKey(MSG_KEY), new ResultException("msg信息字段不存在。"));
-        result.setMsg(map.get(MSG_KEY).toString());
-
-        LhyAssert.assertTrue(map.containsKey(DATA_KEY), new ResultException("data信息字段不存在。"));
-        result.setData(map.get(DATA_KEY));
+        if (map.containsKey(MSG_KEY)) {
+            result.setData(map.get(MSG_KEY));
+        }
+        if (map.containsKey(DATA_KEY)) {
+            result.setData(map.get(DATA_KEY));
+        }
         return result;
     }
 
