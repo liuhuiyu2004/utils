@@ -204,7 +204,7 @@ public class Result<T> implements Serializable {
         LhyAssert.assertTrue(map.containsKey(FLAG_KEY), new ResultException("flag信息有效判定字段不存在。"));
         result.setFlag((int) map.get(FLAG_KEY));
         if (map.containsKey(MSG_KEY)) {
-            result.setData(map.get(MSG_KEY));
+            result.setMsg((String)map.get(MSG_KEY));
         }
         if (map.containsKey(DATA_KEY)) {
             result.setData(map.get(DATA_KEY));

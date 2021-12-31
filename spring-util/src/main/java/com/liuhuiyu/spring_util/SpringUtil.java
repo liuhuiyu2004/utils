@@ -1,5 +1,8 @@
 package com.liuhuiyu.spring_util;
-import lombok.extern.log4j.Log4j2;
+
+import com.liuhuiyu.spring_util.run_timer.TimerUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -12,8 +15,8 @@ import org.springframework.context.ApplicationContextAware;
  * @version v1.0.0.0
  * Created DateTime 2020-06-24 14:55
  */
-@Log4j2
 public class SpringUtil implements ApplicationContextAware {
+    private static final Logger LOG = LogManager.getLogger(TimerUtil.class);
     private static ApplicationContext applicationContext;
 
     @Override
@@ -21,21 +24,38 @@ public class SpringUtil implements ApplicationContextAware {
         if (SpringUtil.applicationContext == null) {
             SpringUtil.applicationContext = applicationContext;
         }
-        log.info("===ApplicationContext配置成功,在普通类可以通过调用SpringUtils.getAppContext()获取applicationContext对象,applicationContext=%1$s==={}", SpringUtil.applicationContext);
-        log.info("--------------------------------------------------------------");
+        LOG.info("===ApplicationContext配置成功,在普通类可以通过调用SpringUtils.getAppContext()获取applicationContext对象,applicationContext=%1$s==={}", SpringUtil.applicationContext);
+        LOG.info("--------------------------------------------------------------");
     }
 
-    //获取applicationContext
+    /**
+     * 获取applicationContext
+     * @author LiuHuiYu
+     * Created DateTime 2021-12-15 9:26
+     * @return org.springframework.context.ApplicationContext
+     */
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }
 
-    //通过name获取 Bean.
+    /**
+     * 通过name获取 Bean.
+     * @author LiuHuiYu
+     * Created DateTime 2021-12-15 9:26
+     * @param name bean名称
+     * @return java.lang.Object
+     */
     public static @NotNull Object getBean(String name) {
         return getApplicationContext().getBean(name);
     }
 
-    //通过class获取Bean.
+    /**
+     * 通过class获取Bean.
+     * @author LiuHuiYu
+     * Created DateTime 2021-12-15 9:27
+     * @param clazz 类.class
+     * @return T
+     */
     public static <T> @NotNull T getBean(Class<T> clazz) {
         return getApplicationContext().getBean(clazz);
     }

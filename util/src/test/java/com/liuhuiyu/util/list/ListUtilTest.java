@@ -1,7 +1,7 @@
 package com.liuhuiyu.util.list;
 
-import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,26 +10,23 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
-
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2021-05-25 19:16
  */
-@Log4j2
 public class ListUtilTest {
     @Test
     public void objectToList() {
         Object o = getList();
         List<Object> list = ListUtil.objectToList(o);
-        log.info("转换List:{}", list);
+//        //log.info("转换List:{}", list);
         Object o1 = getArray();
         List<Object> list1 = ListUtil.objectToList(o1);
-        log.info("转换List:{}", list1);
+//        //log.info("转换List:{}", list1);
         Object o2 = new int[]{};
         List<Object> list2 = ListUtil.objectToList(o2);
-        log.info("转换List:{}", list2);
+        //log.info("转换List:{}", list2);
     }
 
     @Test
@@ -43,7 +40,7 @@ public class ListUtilTest {
                 return 0;
             }
         });
-        log.info("转换List:{}", list);
+        //log.info("转换List:{}", list);
         Object o1 = getArray();
         List<Integer> list1 = ListUtil.objectToListT(o1, (obj) -> {
             if (obj instanceof Integer) {
@@ -53,7 +50,7 @@ public class ListUtilTest {
                 return 0;
             }
         });
-        log.info("转换List:{}", list1);
+        //log.info("转换List:{}", list1);
     }
 
 
@@ -65,30 +62,30 @@ public class ListUtilTest {
         BiFunction<Integer, Integer, Boolean> compare = Integer::equals;
         List<Integer> res;
         res = ListUtil.getSortList(list, sorts, compare);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, true, false, false);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, true, false, true);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, true, true, false);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, true, true, true);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, false, false, false);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, false, false, true);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, false, true, false);
-        log.info(res);
+        //log.info(res);
         res = ListUtil.getSortList(list, sorts, compare, false, true, true);
-        log.info(res);
+        //log.info(res);
     }
 
     @Test
     public void testSort() {
         String[] f = {"0", "1", "2", "-", "7", "8","4"};
         List<String> list = Arrays.stream(f).collect(Collectors.toList());
-        log.info(list);
+        //log.info(list);
         list.sort((a, b) -> {
             Integer i, j;
             try {
@@ -111,7 +108,7 @@ public class ListUtilTest {
             }
             return j.compareTo(i);
         });
-        log.info(list);
+        //log.info(list);
     }
 
     @Test
@@ -119,21 +116,21 @@ public class ListUtilTest {
         List<Integer> integerList = this.getList();
         List<Long> longList = ListUtil.listToList(integerList, Integer::longValue);
         List<String> strList = ListUtil.listToList(integerList, (i) -> "'" + i.toString() + "'");
-        log.info("{}->{}->{}", integerList, longList, strList);
+        //log.info("{}->{}->{}", integerList, longList, strList);
     }
 
     @Test
     public void listToArray() {
         List<Integer> integerList = this.getList();
         Integer[] is = ListUtil.listToArray(integerList);
-        log.info("{}->{}", integerList, is);
+        //log.info("{}->{}", integerList, is);
     }
 
     @Test
     public void arrayToList() {
         Integer[] array = getArray();
         List<Integer> list = ListUtil.arrayToList(array);
-        log.info("{}->{}", array, list);
+        //log.info("{}->{}", array, list);
     }
 
     private List<Integer> getList() {

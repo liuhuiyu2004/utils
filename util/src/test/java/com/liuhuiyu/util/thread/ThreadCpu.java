@@ -1,7 +1,7 @@
 package com.liuhuiyu.util.thread;
 
-import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -10,7 +10,6 @@ import java.util.concurrent.CompletableFuture;
  * @version v1.0.0.0
  * Created DateTime 2021-07-30 20:25
  */
-@Log4j2
 public class ThreadCpu {
     private static int x = 0, y = 0;
     private static int a = 0, b = 0;

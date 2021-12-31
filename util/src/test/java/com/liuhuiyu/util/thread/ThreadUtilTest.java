@@ -1,7 +1,6 @@
 package com.liuhuiyu.util.thread;
 
-import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
  * @version v1.0.0.0
  * Created DateTime 2021-07-17 10:36
  */
-@Log4j2
 public class ThreadUtilTest {
     @Test
     public void asynchronousDataLoading() {
@@ -39,9 +37,9 @@ public class ThreadUtilTest {
 
     private void testExe(Integer i) {
         try {
-            log.info("开始：{}", i);
+            //log.info("开始：{}", i);
             Thread.sleep(i * 1000);
-            log.info("完成：{}", i);
+            //log.info("完成：{}", i);
         }
         catch (InterruptedException e) {
             e.printStackTrace();
@@ -58,8 +56,8 @@ public class ThreadUtilTest {
             this.add("32");
         }};
         String[] array = list.toArray(new String[0]);
-        log.info("{},{}", list, list.size());
-        log.info(":{};{};", array, array.length);
+        //log.info("{},{}", list, list.size());
+        //log.info(":{};{};", array, array.length);
     }
 
     private List<Integer> getIntegerList() {
@@ -91,8 +89,8 @@ public class ThreadUtilTest {
     }
 
     private void sleep(Integer i) {
-//        log.info("进入{}",i);
-        log.info("任务{}线程：", Thread.currentThread().getId());
+//        //log.info("进入{}",i);
+        //log.info("任务{}线程：", Thread.currentThread().getId());
 
         if (i < 3)
             throw new RuntimeException();
@@ -102,33 +100,33 @@ public class ThreadUtilTest {
         catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("离开{}", Thread.currentThread().getId());
+        //log.info("离开{}", Thread.currentThread().getId());
     }
 
     @Test
     public void testSleep() {
         Runnable runnable = () -> {
             long millis = 10_000;
-            log.info("开始执行:{}毫秒延时。", millis);
+            //log.info("开始执行:{}毫秒延时。", millis);
             if (ThreadUtil.sleep(millis)) {
-                log.info("正常结束。");
+                //log.info("正常结束。");
             }
             else {
-                log.info("线程内异常,中断休眠");
+                //log.info("线程内异常,中断休眠");
             }
         };
         Thread thread = new Thread(runnable);
         thread.start();
-        log.info("3秒后引发中断。");
+        //log.info("3秒后引发中断。");
         if (ThreadUtil.sleep(3_000)) {
-            log.info("引发中断。");
+            //log.info("引发中断。");
             thread.interrupt();
-            log.info("引发中断完成。");
+            //log.info("引发中断完成。");
         }
         long millis = 100_000;
-        log.info("程序完成。");
+        //log.info("程序完成。");
         if (!ThreadUtil.sleep(millis)) {
-            log.info("异常中断休眠");
+            //log.info("异常中断休眠");
         }
     }
 
@@ -144,16 +142,16 @@ public class ThreadUtilTest {
         for (int i1 = 0; i1 < 10; i1++) {
             atomicInt.set(i1);
             Integer i = i1;
-            log.info("开始{}",i);
+            //log.info("开始{}",i);
             Thread thread = new Thread(() -> {
-                log.info("线程开始：{}",Thread.currentThread().getName());
+                //log.info("线程开始：{}",Thread.currentThread().getName());
                 ThreadUtil.sleep(100);
                 list.add(Thread.currentThread().getName()+":"+i+atomicInt.get());
                 ss(i);
             });
             thread.setName("SetName" + i1);
             thread.start();
-            log.info("结束{}",i);
+            //log.info("结束{}",i);
         }
         int j = 0;
         while (j < 10) {
@@ -162,10 +160,10 @@ public class ThreadUtilTest {
             }
             ThreadUtil.sleep(1000);
         }
-        log.info("list={}", list);
+        //log.info("list={}", list);
     }
 
     private void ss(int i) {
-        log.info("id[{}]={}", Thread.currentThread().getName(), i);
+        //log.info("id[{}]={}", Thread.currentThread().getName(), i);
     }
 }

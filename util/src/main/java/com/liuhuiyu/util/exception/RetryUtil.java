@@ -11,7 +11,6 @@ import java.util.concurrent.Callable;
  * @version v1.0.0.0
  * Created DateTime 2021-07-05 15:44
  */
-@Log4j2
 public class RetryUtil {
     /**
      * 多次重试

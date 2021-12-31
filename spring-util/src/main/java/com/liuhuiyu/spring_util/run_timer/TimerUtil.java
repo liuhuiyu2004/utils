@@ -1,7 +1,8 @@
 package com.liuhuiyu.spring_util.run_timer;
 
 
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -14,13 +15,13 @@ import java.lang.reflect.Method;
  * @version v1.0.0.0
  * Created DateTime 2021-03-02 11:23
  */
-@Log4j2
 public class TimerUtil {
+    private static final Logger LOG = LogManager.getLogger(TimerUtil.class);
     public void runTime(Method m, Object obj) throws InvocationTargetException, IllegalAccessException {
         long start = System.currentTimeMillis();
         m.invoke(obj);
         long end = System.currentTimeMillis();
-        log.info("{}执行时间：{}", m.getName(), (end - start));
+        LOG.info("{}执行时间：{}", m.getName(), (end - start));
     }
 
     public Object runTime(ProceedingJoinPoint pjp, RunTimer runTimer) throws Throwable {
@@ -37,7 +38,7 @@ public class TimerUtil {
         Object res = pjp.proceed();
         long end = System.currentTimeMillis();
 
-        log.info("{}.{} {}执行时间：{}", currentMethod.getDeclaringClass().getName(), currentMethod.getName(), runTimer.explain(), (end - start));
+        LOG.info("{}.{} {}执行时间：{}", currentMethod.getDeclaringClass().getName(), currentMethod.getName(), runTimer.explain(), (end - start));
         return res;
     }
 
@@ -62,7 +63,7 @@ public class TimerUtil {
             }
         }
         catch (ReflectiveOperationException e) {
-            log.error(e.toString());
+            LOG.error(e.toString());
         }
     }
 }

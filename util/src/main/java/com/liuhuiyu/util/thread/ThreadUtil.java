@@ -2,18 +2,12 @@ package com.liuhuiyu.util.thread;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.scheduling.concurrent.ExecutorConfigurationSupport;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.concurrent.Executor;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 多线程工具
@@ -22,7 +16,6 @@ import java.util.stream.Stream;
  * @version v1.0.0.0
  * Created DateTime 2021-04-14 14:02
  */
-@Log4j2
 public class ThreadUtil {
     /**
      * 异步List循环(等待返回结果)
@@ -79,10 +72,14 @@ public class ThreadUtil {
             return true;
         }
         catch (InterruptedException e) {
-            Thread.currentThread().interrupt();//如果不加上这一句，那么cd将会都是false，因为在捕捉到InterruptedException异常的时候就会自动的中断标志置为了false
+            Thread.currentThread().interrupt();
+            /*
+如果不加上这一句，那么cd将会都是false，因为在捕捉到InterruptedException异常的时候就会自动的中断标志置为了false
             Boolean c = Thread.interrupted();
             Boolean d = Thread.interrupted();
             log.error("中断引发休眠异常:{};重置中断位{}->{}", e.getMessage(), c, d);
+
+             */
             return false;
         }
     }

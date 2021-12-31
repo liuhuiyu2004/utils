@@ -1,8 +1,7 @@
 package com.liuhuiyu.util.exception;
 
 import com.liuhuiyu.util.thread.ThreadUtil;
-import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -11,14 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2021-07-05 15:59
  */
-@Log4j2
 public class RetryUtilTest {
 //    @Test
 //    public void t1() {
@@ -45,7 +42,7 @@ public class RetryUtilTest {
 //    }
 
     private long getTime() {
-        log.info("gettime");
+//        log.info("gettime");
         return System.currentTimeMillis();
     }
 
@@ -111,7 +108,6 @@ public class RetryUtilTest {
             map.put("res", s(time));
             return false;
         });
-        log.info(map);
     }
 
     @Test
@@ -122,14 +118,14 @@ public class RetryUtilTest {
             return time;
         }, () -> {
             try {
-                log.info("失败次执行");
+//                log.info("失败次执行");
                 Thread.sleep(300);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        log.info(map);
+//        log.info(map);
     }
 
     @Test
@@ -141,7 +137,7 @@ public class RetryUtilTest {
             return time;
         }, () -> {
             try {
-                log.info("失败1次执行");
+//                log.info("失败1次执行");
                 Thread.sleep(500);
             }
             catch (InterruptedException e) {
@@ -149,14 +145,14 @@ public class RetryUtilTest {
             }
         }, () -> {
             try {
-                log.info("失败2次执行");
+//                log.info("失败2次执行");
                 Thread.sleep(500);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        log.info(map);
+//        log.info(map);
     }
 
     private String s(long o) {
@@ -170,7 +166,7 @@ public class RetryUtilTest {
     public void uuid(){
         UUID uuid = UUID.randomUUID();
         String uuidString=UUID.randomUUID().toString().replace("-","").toUpperCase();
-        log.info("{}【{}】",uuidString,uuidString.length());
+//        log.info("{}【{}】",uuidString,uuidString.length());
 
     }
     @Test
@@ -178,29 +174,29 @@ public class RetryUtilTest {
 
         LocalDateTime time=LocalDateTime.now().plusSeconds(5);
         ThreadUtil.sleep(2000);
-        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
+//        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
         ThreadUtil.sleep(2000);
-        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
+//        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
         ThreadUtil.sleep(2000);
-        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
+//        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
     }
     @Test
     public void duration(){
         LocalDateTime time=LocalDateTime.now();
         LocalDateTime time2=LocalDateTime.now().plusSeconds(1005);
-        log.info("{}",Duration.between(time, time2).getSeconds());
-        log.info("{}",Duration.between(time2, time).getSeconds());
+//        log.info("{}",Duration.between(time, time2).getSeconds());
+//        log.info("{}",Duration.between(time2, time).getSeconds());
     }
     @Test
     public void du(){
         Duration duration = Duration.between(LocalDateTime.now(),LocalDate.now().plusDays(1).atStartOfDay());
         Duration duration2 = Duration.between(LocalDate.now().plusDays(1).atStartOfDay(), LocalDateTime.now());
-        log.info("({}秒{})",duration.getSeconds()/3600,duration2.getSeconds()/3600);
+//        log.info("({}秒{})",duration.getSeconds()/3600,duration2.getSeconds()/3600);
     }
     @Test
     public void timeToString(){
         LocalDateTime localDateTime=LocalDateTime.now().plusSeconds(30);
-        log.info(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+//        log.info(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
     }
 }

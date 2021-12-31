@@ -11,11 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.function.Consumer;
 
 /**
@@ -45,10 +48,23 @@ public class BaseControllerTest {
         this.printInfo("html end");
     }
 
-    protected void printJsonResult(@NotNull ResultActions resultActions) throws UnsupportedEncodingException {
+    String characterEncoding = "UTF-8";
+
+    public void setCharacterEncoding(String characterEncoding) {
+        this.characterEncoding = characterEncoding;
+    }
+
+    protected void printJsonResult(@NotNull ResultActions resultActions) throws Exception {
         this.responseInfo(resultActions);
         this.printInfo("json信息");
-        log.info(resultActions.andReturn().getResponse().getContentAsString());
+//        log.info(resultActions.andReturn().getResponse().getContentAsString());
+        resultActions.andReturn().getResponse().setCharacterEncoding(this.characterEncoding);
+        ResultHandler handler = result -> {
+            log.info(result.getResponse().getContentAsString());
+        };
+        resultActions.andDo(handler);
+
+
         this.printInfo("json end");
     }
 

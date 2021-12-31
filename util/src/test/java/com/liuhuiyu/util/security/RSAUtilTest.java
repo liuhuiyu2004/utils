@@ -1,7 +1,7 @@
 package com.liuhuiyu.util.security;
 
-import lombok.extern.log4j.Log4j2;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
@@ -14,14 +14,13 @@ import java.util.Map;
  * @version v1.0.0.0
  * Created DateTime 2021-02-18 9:22
  */
-@Log4j2
 public class RSAUtilTest {
 
     @Test
     public void createKeys() {
         int keySize = 512;
         Map<String, String> map = RsaUtil.createKeys(keySize);
-        log.info(map);
+        //log.info(map);
     }
 
     @Test
@@ -29,7 +28,7 @@ public class RSAUtilTest {
         int keySize = 512;
         Map<String, String> map = RsaUtil.createKeys(keySize);
         RSAPublicKey key = RsaUtil.getPublicKey(map.get(RsaUtil.MAP_KEY_PUBLIC));
-        log.info(key);
+        //log.info(key);
     }
 
     @Test
@@ -37,7 +36,7 @@ public class RSAUtilTest {
         int keySize = 512;
         Map<String, String> map = RsaUtil.createKeys(keySize);
         RSAPrivateKey key = RsaUtil.getPrivateKey(map.get(RsaUtil.MAP_KEY_PRIVATE));
-        log.info(key);
+        //log.info(key);
     }
 
     @Test
@@ -46,7 +45,7 @@ public class RSAUtilTest {
         String info = "abcd";
         Map<String, String> map = RsaUtil.createKeys(keySize);
         String encryptInfo = RsaUtil.publicEncrypt(info, RsaUtil.getPublicKey(map.get(RsaUtil.MAP_KEY_PUBLIC)));
-        log.info(encryptInfo);
+        //log.info(encryptInfo);
     }
 
     @Test
@@ -55,9 +54,9 @@ public class RSAUtilTest {
         String info = "abcd";
         Map<String, String> map = RsaUtil.createKeys(keySize);
         String encryptInfo = RsaUtil.publicEncrypt(info, RsaUtil.getPublicKey(map.get(RsaUtil.MAP_KEY_PUBLIC)));
-        log.info(encryptInfo);
+        //log.info(encryptInfo);
         String decryptInfo=RsaUtil.privateDecrypt(encryptInfo,RsaUtil.getPrivateKey(map.get(RsaUtil.MAP_KEY_PRIVATE)));
-        log.info(decryptInfo);
+        //log.info(decryptInfo);
     }
 
     @Test
@@ -66,7 +65,7 @@ public class RSAUtilTest {
         String info = "abcd";
         Map<String, String> map = RsaUtil.createKeys(keySize);
         String encryptInfo = RsaUtil.privateEncrypt(info, RsaUtil.getPrivateKey(map.get(RsaUtil.MAP_KEY_PRIVATE)));
-        log.info(encryptInfo);
+        //log.info(encryptInfo);
     }
 
     @Test
@@ -75,8 +74,8 @@ public class RSAUtilTest {
         String info = "abcd";
         Map<String, String> map = RsaUtil.createKeys(keySize);
         String encryptInfo = RsaUtil.privateEncrypt(info, RsaUtil.getPrivateKey(map.get(RsaUtil.MAP_KEY_PRIVATE)));
-        log.info(encryptInfo);
+        //log.info(encryptInfo);
         String decryptInfo=RsaUtil.publicDecrypt(encryptInfo,RsaUtil.getPublicKey(map.get(RsaUtil.MAP_KEY_PUBLIC)));
-        log.info(decryptInfo);
+        //log.info(decryptInfo);
     }
 }

@@ -1,6 +1,5 @@
 package com.liuhuiyu.util;
 
-import junit.framework.TestCase;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -8,12 +7,8 @@ import lombok.extern.log4j.Log4j2;
  * @version v1.0.0.0
  * Created DateTime 2020-12-29 9:16
  */
-@Log4j2
-public class HttpUtilTest extends TestCase {
+public class HttpUtilTest {
 
-    public void testA1() {
-        log.info("Run OK");
-    }
 //    private volatile boolean s;
 //    private volatile String b(){
 //
@@ -33,6 +28,6 @@ public class HttpUtilTest extends TestCase {
     public void testStringToInt() {
         String s = "123s";
         Integer i = Integer.getInteger(s, 101);
-        log.info("i = {}", i);
+//        log.info("i = {}", i);
     }
 }
