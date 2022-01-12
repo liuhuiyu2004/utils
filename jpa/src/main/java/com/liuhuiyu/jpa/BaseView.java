@@ -216,7 +216,7 @@ public abstract class BaseView {
      * @param whereFull 查询填充
      * @return java.lang.Long
      */
-    private <T> Long selectCount(T input, String sql, WhereFull<T> whereFull){
+    protected <T> Long selectCount(T input, String sql, WhereFull<T> whereFull){
         StringBuilder sqlBuilder = new StringBuilder(sql);
         sqlBuilder.append(" WHERE(1=1)");
         Map<String, Object> parameterMap = new HashMap<>(1);
