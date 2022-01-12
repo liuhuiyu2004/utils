@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.repository.query.Jpa21Utils;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 import java.util.function.Consumer;
@@ -186,4 +187,43 @@ public abstract class BaseView {
             return Optional.of(list.get(0)[0]);
         }
     }
+
+    /**
+     * 快速 sql 查询
+     * @author LiuHuiYu
+     * Created DateTime 2022-01-12 10:16
+     * @param input     查询入参
+     * @param sql       原始语句
+     * @param whereFull 查询填充
+     * @param b         DaoOperator
+     * @return java.util.List<R>
+     */
+    protected <T, R> List<R> selectList(T input, String sql, WhereFull<T> whereFull, DaoOperator<R> b) {
+        Map<String, Object> parameterMap = new HashMap<>(1);
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(sql);
+        sqlBuilder.append(" WHERE(1=1)");
+        whereFull.full(input, sqlBuilder, parameterMap);
+        return this.getResultList(b, sqlBuilder.toString(), parameterMap);
+    }
+
+    /**
+     * 统计查询
+     * @author LiuHuiYu
+     * Created DateTime 2022-01-12 10:48
+     * @param input     查询入参
+     * @param sql       原始语句
+     * @param whereFull 查询填充
+     * @return java.lang.Long
+     */
+    private <T> Long selectCount(T input, String sql, WhereFull<T> whereFull){
+        StringBuilder sqlBuilder = new StringBuilder(sql);
+        sqlBuilder.append(" WHERE(1=1)");
+        Map<String, Object> parameterMap = new HashMap<>(1);
+        whereFull.full(input, sqlBuilder, parameterMap);
+        final Optional<Object> singleResult = this.getSingleResult(sqlBuilder.toString(), parameterMap);
+        return singleResult.map(o -> ((BigDecimal) o).longValue()).orElse(0L);
+    }
+
+
 }

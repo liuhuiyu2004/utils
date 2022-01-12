@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.function.Function;
 
 /**
@@ -88,6 +89,12 @@ public class ObjectArray {
             }
             else if (obj instanceof Number) {
                 return ((Number) obj).intValue() == 1;
+            }
+            else if (obj instanceof String) {
+                String v = (String) obj;
+                return "y".equals(v.toLowerCase(Locale.ROOT)) ||
+                        "true".equals(v.toLowerCase(Locale.ROOT)) ||
+                        !"0".equals(v.toLowerCase(Locale.ROOT));
             }
             else {
                 return Boolean.parseBoolean(obj.toString());
