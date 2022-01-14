@@ -28,7 +28,7 @@ public class ObjectArray {
 
     public Object get() {
         if (this.index >= objects.length) {
-            throw new RuntimeException("获取的数据数量" + this.index + "超出了原始数据长度" + this.objects.length);
+            throw new RuntimeException("当前要获取的数据数量" + (this.index + 1) + "超出了原始数据数量" + this.objects.length);
         }
         return objects[this.index++];
     }
@@ -112,7 +112,7 @@ public class ObjectArray {
                 return (BigDecimal) obj;
             }
             else if (obj instanceof Number) {
-                return new BigDecimal(((Number) obj).toString());
+                return new BigDecimal((obj).toString());
             }
             else {
                 return new BigDecimal(obj.toString());

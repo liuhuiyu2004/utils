@@ -14,7 +14,7 @@ public class FileUtil {
     public static String getExt(String fileName) {
         String name = getFullFileName(fileName);
         int index = separatorIndex(name);
-        return (index+1) >= name.length() ? "" : name.substring(index + 1);
+        return (index + 1) >= name.length() ? "" : name.substring(index + 1);
     }
 
     private static int separatorIndex(String fileName) {
