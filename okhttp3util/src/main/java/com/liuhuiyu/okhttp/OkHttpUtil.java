@@ -36,6 +36,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 /**
+ * 早期编写的比较过时，现在都在使用 OkHttpUtil2
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2021-01-09 15:06
