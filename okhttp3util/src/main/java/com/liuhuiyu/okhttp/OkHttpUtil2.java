@@ -31,7 +31,7 @@ public class OkHttpUtil2 {
     private MultipartBody.Builder multipartBody;
     private MethodModel methodModel;
     private RequestBody requestBody;
-
+    
     /**
      * 提供已经包装的OkHttp3原型
      *
@@ -333,7 +333,6 @@ public class OkHttpUtil2 {
             String resData;
             try (Response response = this.execute()) {
                 resData=Objects.requireNonNull(response.body()).string();
-//                return Objects.requireNonNull(response.body()).string();
             }
             return resData;
         }
@@ -417,5 +416,4 @@ public class OkHttpUtil2 {
         asynchronousExecuteToString((str) -> consumer.accept(ArrangeTransformUtil.executeMap(() -> str)), onFailure);
     }
     //endregion
-
 }

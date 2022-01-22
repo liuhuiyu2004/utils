@@ -2,10 +2,12 @@ package com.liuhuiyu.util.map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.internal.Primitives;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.naming.CompositeName;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.security.Key;
 import java.sql.Timestamp;
@@ -30,6 +32,7 @@ public class MapUtil {
     public void setThrowException(boolean throwException) {
         this.throwException = throwException;
     }
+
     //region 静态方法
 
     /**
@@ -250,7 +253,6 @@ public class MapUtil {
     }
 
 
-
     //endregion
     public static Map<String, Object> mapOfJsonString(String jsonString) {
         try {
@@ -262,6 +264,21 @@ public class MapUtil {
         catch (JsonSyntaxException e) {
             throw new RuntimeException("无法解析成Map格式数据");
         }
+    }
+
+    /**
+     * 将Map序列化成指定类
+     *
+     * @param map      map
+     * @param classOfT T.class
+     * @param <T>      得到的类
+     * @return T
+     * @author LiuHuiYu
+     * Created DateTime 2022-01-22 16:42
+     */
+    public static <T> T fromMap(Map<String, Object> map, Class<T> classOfT) {
+        String json = new Gson().toJson(map);
+        return new Gson().fromJson(json, classOfT);
     }
 
     public static Map<String, Object> mapDoubleToInt(Map<?, ?> resultMap) {
