@@ -1,10 +1,12 @@
 package com.liuhuiyu.util.map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Primitives;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;
 
 import javax.naming.CompositeName;
 import java.lang.reflect.Type;
@@ -279,6 +281,36 @@ public class MapUtil {
     public static <T> T fromMap(Map<String, Object> map, Class<T> classOfT) {
         String json = new Gson().toJson(map);
         return new Gson().fromJson(json, classOfT);
+    }
+
+    /**
+     * 将Map序列化成指定类
+     *
+     * @param map      map
+     * @param classOfT T.class
+     * @param <T>      得到的类
+     * @return T
+     * @author LiuHuiYu
+     * Created DateTime 2022-01-22 16:42
+     */
+    public static <T> T fromMap(Map<String, Object> map, Class<T> classOfT, GsonAdapter[] typeAdapter) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        for (GsonAdapter gsonAdapter : typeAdapter) {
+            gsonBuilder.registerTypeAdapter(gsonAdapter.type, gsonAdapter.typeAdapter);
+        }
+        Gson gson = gsonBuilder.create();
+        String json = gson.toJson(map);
+        return new Gson().fromJson(json, classOfT);
+    }
+
+    public static class GsonAdapter {
+        Type type;
+        Object typeAdapter;
+
+        public GsonAdapter(Type type, Object typeAdapter) {
+            this.type = type;
+            this.typeAdapter = typeAdapter;
+        }
     }
 
     public static Map<String, Object> mapDoubleToInt(Map<?, ?> resultMap) {
