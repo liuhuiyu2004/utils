@@ -14,7 +14,7 @@ import java.util.function.Function;
  * Created DateTime 2020-09-10 8:41
  */
 public class LhyAssert {
-    static Function<String,RuntimeException> exceptionProxy;
+    static Function<String, RuntimeException> exceptionProxy;
 
     private static RuntimeException throwEx(String message) {
         if (exceptionProxy == null) {
@@ -32,7 +32,7 @@ public class LhyAssert {
      * @author LiuHuiYu
      * Created DateTime 2021-12-10 14:43
      */
-    public static void exceptionProxy(Function<String,RuntimeException> proxy) {
+    public static void exceptionProxy(Function<String, RuntimeException> proxy) {
         exceptionProxy = proxy;
     }
     //region assertTrue
@@ -98,6 +98,7 @@ public class LhyAssert {
     //endregion
 
     //region 枚举模式拦截
+
     /**
      * 对象不为空则抛出异常
      *
@@ -109,6 +110,7 @@ public class LhyAssert {
             throw new LhyException(resultEnum);
         }
     }
+
     /**
      * 对象为空则抛出异常
      *
@@ -118,6 +120,7 @@ public class LhyAssert {
     public static void assertNotNull(Object object, ResultEnum resultEnum) {
         assertTrue(object != null, resultEnum);
     }
+
     /**
      * 对象不为空则抛出异常
      *
@@ -128,4 +131,14 @@ public class LhyAssert {
         assertTrue(object == null, resultEnum);
     }
     //endregion
+
+
+    public static void assertLen(String value, int min, int max, String message) {
+        assertNotNull(value, message + "未设定");
+        assertTrue(value.length()>=min && value.length()<=max,message+"(长度范围["+min+"-"+max+"])");
+    }
+    public static void assertLen(String value, int min, int max, RuntimeException exception) {
+        assertNotNull(value,exception);
+        assertTrue(value.length()>=min && value.length()<=max,exception);
+    }
 }
