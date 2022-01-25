@@ -135,10 +135,13 @@ public class LhyAssert {
 
     public static void assertLen(String value, int min, int max, String message) {
         assertNotNull(value, message + "未设定");
-        assertTrue(value.length()>=min && value.length()<=max,message+"(长度范围["+min+"-"+max+"])");
+        assertTrue(
+                (min <= 0 || value.length() >= min) &&
+                        (max < 0 || value.length() <= max), message + "(长度范围[" + min + "-" + max + "])");
     }
+
     public static void assertLen(String value, int min, int max, RuntimeException exception) {
-        assertNotNull(value,exception);
-        assertTrue(value.length()>=min && value.length()<=max,exception);
+        assertNotNull(value, exception);
+        assertTrue(value.length() >= min && value.length() <= max, exception);
     }
 }
