@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * Created DateTime 2021-07-17 10:36
  */
 public class ThreadUtilTest {
+
     @Test
     public void asynchronousDataLoading() {
         List<Integer> list = new ArrayList<>(5);

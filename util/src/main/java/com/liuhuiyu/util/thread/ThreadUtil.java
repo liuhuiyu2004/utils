@@ -83,4 +83,8 @@ public class ThreadUtil {
             return false;
         }
     }
+
+    public static void concurrent(){
+
+    }
 }

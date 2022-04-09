@@ -1,5 +1,6 @@
 package com.liuhuiyu.test;
 
+import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -41,7 +42,8 @@ public abstract class BaseServiceTest {
     protected void printObject(Object obj) {
         if (obj == null) {
             log.info("Obj=null");
-        } else {
+        }
+        else {
             log.info(obj.toString());
         }
     }
@@ -57,6 +59,15 @@ public abstract class BaseServiceTest {
 
         log.info("总页数：" + pageImpl.getTotalPages());
         printList(pageImpl.getContent());
+    }
+
+    protected void printJson(Object obj) {
+        if (obj == null) {
+            log.info("Obj=null");
+        }
+        else {
+            log.info(new Gson().toJson(obj));
+        }
     }
 }
 
