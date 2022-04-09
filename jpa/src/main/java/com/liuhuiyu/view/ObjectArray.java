@@ -2,6 +2,8 @@ package com.liuhuiyu.view;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Clob;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -41,6 +43,27 @@ public class ObjectArray {
         return getT((obj) -> {
             if (obj instanceof String) {
                 return (String) obj;
+            }
+            else if (obj instanceof Clob) {
+                Clob clob = (Clob) obj;
+                StringBuilder stringBuilder = new StringBuilder();
+                try {
+                    final long length = clob.length();
+                    int len = 1024;
+                    for (int pos = 1; pos <= length; pos += len) {
+                        len = (length - pos) >= len ? len : (int) (length - pos);
+                        if (len > 0) {
+                            stringBuilder.append(clob.getSubString(pos, len));
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+                catch (SQLException ignored) {
+
+                }
+                return stringBuilder.toString();
             }
             else {
                 return obj.toString();
@@ -129,6 +152,9 @@ public class ObjectArray {
         return getT((obj) -> {
             if (obj instanceof Timestamp) {
                 return (Timestamp) obj;
+            }
+            if ("oracle.sql.TIMESTAMP".equals(obj.getClass().getName())) {
+                return Timestamp.valueOf(obj.toString());
             }
             else {
                 return defValue;

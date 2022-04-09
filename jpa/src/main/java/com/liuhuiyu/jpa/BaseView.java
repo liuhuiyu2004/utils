@@ -190,13 +190,14 @@ public abstract class BaseView {
 
     /**
      * 快速 sql 查询
-     * @author LiuHuiYu
-     * Created DateTime 2022-01-12 10:16
+     *
      * @param input     查询入参
      * @param sql       原始语句
      * @param whereFull 查询填充
      * @param b         DaoOperator
      * @return java.util.List<R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-01-12 10:16
      */
     protected <T, R> List<R> selectList(T input, String sql, WhereFull<T> whereFull, DaoOperator<R> b) {
         Map<String, Object> parameterMap = new HashMap<>(1);
@@ -209,14 +210,15 @@ public abstract class BaseView {
 
     /**
      * 统计查询
-     * @author LiuHuiYu
-     * Created DateTime 2022-01-12 10:48
+     *
      * @param input     查询入参
      * @param sql       原始语句
      * @param whereFull 查询填充
      * @return java.lang.Long
+     * @author LiuHuiYu
+     * Created DateTime 2022-01-12 10:48
      */
-    protected <T> Long selectCount(T input, String sql, WhereFull<T> whereFull){
+    protected <T> Long selectCount(T input, String sql, WhereFull<T> whereFull) {
         StringBuilder sqlBuilder = new StringBuilder(sql);
         sqlBuilder.append(" WHERE(1=1)");
         Map<String, Object> parameterMap = new HashMap<>(1);
@@ -225,5 +227,22 @@ public abstract class BaseView {
         return singleResult.map(o -> ((BigDecimal) o).longValue()).orElse(0L);
     }
 
-
+    /**
+     * 统计查询
+     *
+     * @param sql          sql语句
+     * @param parameterMap 参数
+     * @return java.lang.Long
+     * @author LiuHuiYu
+     * Created DateTime 2022-02-15 16:54
+     */
+    protected Long selectCount(String sql, Map<String, Object> parameterMap) {
+        DaoOperator<Long> longDaoOperator = (o) -> {
+            Object obj = o.getClass().isArray() ? ((Object[]) o)[0] : o;
+            return obj instanceof Number ? ((Number) obj).longValue() : 0L;
+        };
+        return getFirstResult(longDaoOperator, sql, parameterMap).orElse(0L);
+//        final Optional<Long> firstResult = getFirstResult(longDaoOperator, sql, parameterMap);
+//        return firstResult.orElse(0L);
+    }
 }
