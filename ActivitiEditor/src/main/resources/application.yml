@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: active-dev
+    include:
+      - include-activiti
+      - include-datasource   #数据库
+      - include-logging      #日志
+    group:
+      active-dev:
+      active-prod:
+
+server.port: 9999

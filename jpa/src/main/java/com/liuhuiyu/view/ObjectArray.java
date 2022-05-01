@@ -50,8 +50,8 @@ public class ObjectArray {
                 try {
                     final long length = clob.length();
                     int len = 1024;
-                    for (int pos = 1; pos <= length; pos += len) {
-                        len = (length - pos) >= len ? len : (int) (length - pos);
+                    for (long pos = 1; pos <= length; pos += len) {
+                        len = (length - (pos-1)) >= len ? len : (int) (length - (pos-1));
                         if (len > 0) {
                             stringBuilder.append(clob.getSubString(pos, len));
                         }
