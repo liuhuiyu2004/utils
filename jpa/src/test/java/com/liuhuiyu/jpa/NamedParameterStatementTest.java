@@ -1,6 +1,7 @@
 package com.liuhuiyu.jpa;
 
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -15,8 +16,8 @@ import static org.junit.Assert.*;
  * @version v1.0.0.0
  * Created DateTime 2021-09-08 11:48
  */
-@Log4j2
 public class NamedParameterStatementTest {
+    private static final Logger LOG= LogManager.getLogger(NamedParameterStatementTest.class);
     @Test
     public void s() {
         Map<Integer, String> paramsMap = new HashMap<>();
@@ -39,7 +40,8 @@ public class NamedParameterStatementTest {
             paramsMap.put(idx++, m.group(m.groupCount()));
             sql = sql.replace(m.group(), "?");
         }
-        log.info(sql);
+        LOG.info(sql);
+        LOG.info("{}",paramsMap.size());
 //        sql = sql.replaceAll(regex, "=?");
 //        log.info(sql);
     }
@@ -57,9 +59,9 @@ public class NamedParameterStatementTest {
                 "where (t.rw = 1)";
         this.paramsMap=new HashMap<>();
         String outSql=parseSql2(sql);
-        log.info("sql={}",sql);
-        log.info("outSql={}",outSql);
-        log.info("paramsMap={}",paramsMap);
+        LOG.info("sql={}",sql);
+        LOG.info("outSql={}",outSql);
+        LOG.info("paramsMap={}",paramsMap);
     }
     private Map<Integer, String> paramsMap;
 

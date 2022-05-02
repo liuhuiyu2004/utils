@@ -3,7 +3,6 @@ package com.liuhuiyu;
 import static org.junit.Assert.assertTrue;
 
 import com.liuhuiyu.jpa.DaoOperator;
-import lombok.Data;
 import org.junit.Test;
 
 /**
@@ -25,7 +24,7 @@ public class AppTest {
         return daoOperator.objectToT(obj);
     }
 
-    @Data
+
     static class Abc {
         int index;
         String name;

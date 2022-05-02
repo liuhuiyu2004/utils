@@ -1,7 +1,5 @@
 package com.liuhuiyu.jpa;
 
-import lombok.extern.log4j.Log4j2;
-import org.springframework.data.jpa.repository.query.Jpa21Utils;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;

@@ -1,7 +1,5 @@
 package com.liuhuiyu.jpa;
 
-import lombok.extern.log4j.Log4j2;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
