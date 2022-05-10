@@ -1,0 +1,17 @@
+server:
+  port: 9999
+logging:
+  level:
+    #    root: info
+    com.liuhuiyu.httpdemo.controller:
+      api: error
+      web: warn
+        #    com:
+        #      liuhuiyu:
+        #        httpdemo:
+        ##          HttpDemoApplication: trace
+        #          controller:
+        #            api: error
+        #            web: warn
+      # trace<debug<info<warn<error<fatal
+#        demo: trace
