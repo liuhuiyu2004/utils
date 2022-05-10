@@ -11,7 +11,6 @@ import java.util.Locale;
  */
 public class Operating {
 
-
     /**
      * 操作人id
      */

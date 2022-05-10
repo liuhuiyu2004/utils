@@ -24,4 +24,26 @@ public interface IOperating {
      * Created DateTime 2022-01-20 15:29
      */
     void setOperating(Operating operating);
+
+    /**
+     * 是否是添加信息
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-10 16:22
+     * @return boolean
+     */
+    boolean isAdd();
+    /**
+     * 是否是修改信息
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-10 16:22
+     * @return boolean
+     */
+    boolean isUpdate();
+    /**
+     * 是否是删除信息
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-10 16:22
+     * @return boolean
+     */
+    boolean isDelete();
 }
