@@ -21,6 +21,9 @@ public class OracleBaseViewTest extends OracleBaseView {
     }
 
     public PageImpl<String> findPage(DaoOperator<String> b, IPaging t, String sql, WhereFull<IPaging> fullWhere) {
-        return new PageImplBuilder<>(b, t, sql, fullWhere).baseWhere(" WHERE(1=1)").order("").buildPage();
+        return new PageImplBuilder<>(b, t, sql, fullWhere)
+                .baseWhere(" WHERE(1=1)")
+                .order("")
+                .buildPage();
     }
 }

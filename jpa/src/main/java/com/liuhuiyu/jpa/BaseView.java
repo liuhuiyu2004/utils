@@ -1,6 +1,5 @@
 package com.liuhuiyu.jpa;
 
-
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -44,7 +43,7 @@ public abstract class BaseView {
      * Created DateTime 2021-03-25 10:45
      */
     protected void actionPreparedStatement(String sql, Consumer<PreparedStatement> callFunctions) {
-        actionConnection(connection -> {
+        actionConnection((connection) -> {
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 callFunctions.accept(preparedStatement);
             }
@@ -226,6 +225,27 @@ public abstract class BaseView {
     }
 
     /**
+     * 返回第一行信息
+     *
+     * @param input     查询条件
+     * @param sql       原始语句
+     * @param whereFull 条件生成
+     * @param b         结果转化
+     * @return java.util.Optional<R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-09 16:16
+     */
+    protected <T, R> Optional<R> getFirstResult(T input, String sql, WhereFull<T> whereFull, DaoOperator<R> b) {
+        List<R> list = this.selectList(input, sql, whereFull, b);
+        if (list.size() == 0) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(list.get(0));
+        }
+    }
+
+    /**
      * 统计查询
      *
      * @param sql          sql语句
@@ -240,7 +260,140 @@ public abstract class BaseView {
             return obj instanceof Number ? ((Number) obj).longValue() : 0L;
         };
         return getFirstResult(longDaoOperator, sql, parameterMap).orElse(0L);
-//        final Optional<Long> firstResult = getFirstResult(longDaoOperator, sql, parameterMap);
-//        return firstResult.orElse(0L);
+    }
+
+    /**
+     * 查询建造者
+     *
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-09 16:18
+     */
+    public class SelectBuilder<T, R> {
+        private final String sql;
+        private DaoOperator<R> b;
+        private Map<String, Object> parameterMap;
+
+        private T input;
+        private WhereFull<T> whereFull;
+
+        /**
+         * 建议 数量查询 使用
+         *
+         * @param sql 原始语句
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 16:21
+         */
+        public SelectBuilder(String sql) {
+            this.b = null;
+            this.sql = sql;
+        }
+
+        /**
+         * 建议查询sql结果的时候使用
+         *
+         * @param daoOperator 解析函数
+         * @param sql         原生语句
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 16:22
+         */
+        public SelectBuilder(DaoOperator<R> daoOperator, String sql) {
+            this.b = daoOperator;
+            this.sql = sql;
+        }
+
+        /**
+         * 设置返回信息解析
+         *
+         * @param daoOperator 解析函数
+         * @return com.liuhuiyu.jpa.BaseView.SelectBuilder<T, R>
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 15:50
+         */
+        public SelectBuilder<T, R> daoOperator(DaoOperator<R> daoOperator) {
+            this.b = daoOperator;
+            return this;
+        }
+
+        /**
+         * 设置 参数列表
+         *
+         * @param parameterMap 参数列表
+         * @return com.liuhuiyu.jpa.BaseView.SelectBuilder<T, R>
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 15:51
+         */
+        public SelectBuilder<T, R> parameterMap(Map<String, Object> parameterMap) {
+            if (this.input != null || this.whereFull != null) {
+                throw new RuntimeException("此方法与 whereFull 方法互斥不能同时使用");
+            }
+            this.parameterMap = parameterMap;
+            return this;
+        }
+
+        /**
+         * 设置条件查询解析
+         *
+         * @param input     入参
+         * @param whereFull 解析条件
+         * @return com.liuhuiyu.jpa.BaseView.SelectBuilder<T, R>
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 15:51
+         */
+        public SelectBuilder<T, R> whereFull(T input, WhereFull<T> whereFull) {
+            if (this.parameterMap != null) {
+                throw new RuntimeException("此方法与 parameterMap 方法互斥不能同时使用");
+            }
+            this.input = input;
+            this.whereFull = whereFull;
+            return this;
+        }
+
+        /**
+         * 统计查询
+         *
+         * @return java.lang.Long
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 16:12
+         */
+        public Long buildCount() {
+            if (input == null) {
+                return selectCount(input, sql, whereFull);
+            }
+            else {
+                return selectCount(sql, parameterMap);
+            }
+        }
+
+        /**
+         * 列表查询
+         *
+         * @return java.util.List<R>
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 16:12
+         */
+        public List<R> buildList() {
+            if (input == null) {
+                return selectList(input, sql, whereFull, b);
+            }
+            else {
+                return getResultList(this.b, this.sql, this.parameterMap);
+            }
+        }
+
+        /**
+         * 第一条记录查询
+         *
+         * @return java.util.Optional<R>
+         * @author LiuHuiYu
+         * Created DateTime 2022-05-09 16:12
+         */
+        public Optional<R> buildFirst() {
+            if (input == null) {
+                return getFirstResult(input, sql, whereFull, b);
+            }
+            else {
+                return getFirstResult(this.b, this.sql, this.parameterMap);
+            }
+        }
     }
 }
