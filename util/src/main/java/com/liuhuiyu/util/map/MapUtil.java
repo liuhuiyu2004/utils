@@ -5,8 +5,16 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Primitives;
 import com.google.gson.reflect.TypeToken;
+import com.liuhuiyu.util.asserts.LhyAssert;
+import com.liuhuiyu.util.exception.ResultException;
+import com.liuhuiyu.util.functional.MapToT;
+import com.liuhuiyu.util.model.Result;
 import org.apache.commons.beanutils.BeanUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import javax.naming.CompositeName;
 import java.lang.reflect.Type;
@@ -557,6 +565,66 @@ public class MapUtil {
         else {
             return resList;
         }
+    }
+
+    public Map<String, Object> getMap(String key) {
+        return getMap(key, new HashMap<>(0));
+    }
+
+    public Map<String, Object> getMap(String key, Map<String, Object> defValue) {
+        Object obj = map.get(key);
+        if (obj == null) {
+            return defValue;
+        }
+        else {
+            try {
+                return mapObjectToStringKeyMap(obj);
+            }
+            catch (Exception ignored) {
+                return defValue;
+            }
+        }
+    }
+
+    public <T> PageImpl<T> getPageImpl(String key, MapToT<T> mapToT) {
+        PageImpl<T> def = new PageImpl<>(new ArrayList<>(0));
+        return getPageImpl(key, mapToT, def);
+    }
+
+    public <T> PageImpl<T> getPageImpl(String key, MapToT<T> mapToT, PageImpl<T> defValue) {
+        Object obj = map.get(key);
+        if (obj == null) {
+            return defValue;
+        }
+        else {
+            try {
+                Map<String, Object> map = mapObjectToStringKeyMap(obj);
+                return mapToPageImpl(map, mapToT);
+            }
+            catch (Exception ignored) {
+                return defValue;
+            }
+        }
+    }
+
+    /**
+     * 获取ResultMap模型中的分页数据
+     *
+     * @param map    原始map数据
+     * @param mapToT 转换函数
+     * @param <T>    泛型
+     * @return org.springframework.data.domain.PageImpl<T>
+     * @author LiuHuiYu
+     * Created DateTime 2021-11-29 17:18
+     */
+    public static <T> @NotNull PageImpl<T> mapToPageImpl(Map<String, Object> map, MapToT<T> mapToT) {
+        MapUtil mapUtil = new MapUtil(map);
+        int number = mapUtil.getIntegerValue("number", 0);
+        int size = mapUtil.getIntegerValue("size", 0);
+        PageRequest pageable = PageRequest.of(number, size);
+        long totalElements = mapUtil.getLongValue("totalElements", 0L);
+        List<T> list = mapUtil.getListValue("content", obj -> mapToT.mapToT(MapUtil.mapObjectToStringKeyMap(obj)));
+        return new PageImpl<>(list, pageable, totalElements);
     }
 
     public static class ResInfo<T> {
