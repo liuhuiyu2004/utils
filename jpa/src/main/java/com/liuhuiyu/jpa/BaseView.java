@@ -270,9 +270,9 @@ public abstract class BaseView {
      */
     public class SelectBuilder<T, R> {
         private final String sql;
-        private DaoOperator<R> b;
-        private Map<String, Object> parameterMap;
+        private final DaoOperator<R> b;
 
+        private Map<String, Object> parameterMap;
         private T input;
         private WhereFull<T> whereFull;
 
@@ -288,6 +288,7 @@ public abstract class BaseView {
             this.sql = sql;
         }
 
+
         /**
          * 建议查询sql结果的时候使用
          *
@@ -299,19 +300,6 @@ public abstract class BaseView {
         public SelectBuilder(DaoOperator<R> daoOperator, String sql) {
             this.b = daoOperator;
             this.sql = sql;
-        }
-
-        /**
-         * 设置返回信息解析
-         *
-         * @param daoOperator 解析函数
-         * @return com.liuhuiyu.jpa.BaseView.SelectBuilder<T, R>
-         * @author LiuHuiYu
-         * Created DateTime 2022-05-09 15:50
-         */
-        public SelectBuilder<T, R> daoOperator(DaoOperator<R> daoOperator) {
-            this.b = daoOperator;
-            return this;
         }
 
         /**
@@ -357,10 +345,10 @@ public abstract class BaseView {
          */
         public Long buildCount() {
             if (input == null) {
-                return selectCount(input, sql, whereFull);
+                return selectCount(sql, parameterMap);
             }
             else {
-                return selectCount(sql, parameterMap);
+                return selectCount(input, sql, whereFull);
             }
         }
 
@@ -372,11 +360,14 @@ public abstract class BaseView {
          * Created DateTime 2022-05-09 16:12
          */
         public List<R> buildList() {
+            if (b == null) {
+                throw new NullPointerException("缺少转换函数");
+            }
             if (input == null) {
-                return selectList(input, sql, whereFull, b);
+                return getResultList(this.b, this.sql, this.parameterMap);
             }
             else {
-                return getResultList(this.b, this.sql, this.parameterMap);
+                return selectList(input, sql, whereFull, b);
             }
         }
 
@@ -387,12 +378,16 @@ public abstract class BaseView {
          * @author LiuHuiYu
          * Created DateTime 2022-05-09 16:12
          */
+
         public Optional<R> buildFirst() {
+            if (b == null) {
+                throw new NullPointerException("缺少转换函数");
+            }
             if (input == null) {
-                return getFirstResult(input, sql, whereFull, b);
+                return getFirstResult(this.b, this.sql, this.parameterMap);
             }
             else {
-                return getFirstResult(this.b, this.sql, this.parameterMap);
+                return getFirstResult(input, sql, whereFull, b);
             }
         }
     }
