@@ -1,21 +1,17 @@
-package com.liuhuiyu.util.model;
+package com.liuhuiyu.jpa.oracle.util;
 
-import com.liuhuiyu.util.date.LocalDateUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
  * 时间范围结构
- * @deprecated 此结构已经迁移到了 jpa包中
+ *
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2021-09-08 9:44
  */
-@Deprecated
 public class DateBetween {
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
