@@ -2,10 +2,12 @@ package com.liuhuiyu.util.list;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 链式多条件执行并返回结果
  * 多个条件符合的情况下只执行第一个符合条件的表达式并返回结果
+ *
  * @author LiuHuiYu
  * Created DateTime 2022-05-21 15:41
  */
@@ -13,67 +15,134 @@ public class IfRun<T, R> {
     private final T t;
     private R defineValue;
     private RuntimeException exception;
-    private Function<T, R> f;
+    private Function<T, R> defineFunction;
+    private Function<T, R> function;
+    private Supplier<R> supplier;
+    private Supplier<R> defineSupplier;
+
+    public IfRun() {
+        this.t = null;
+    }
 
     /**
      * 链式多条件执行并返回结果，如果都没有执行将返回默认
+     *
+     * @param t 输出参数
      * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:16
-     * @param t 输出参数
      */
     public IfRun(T t) {
         this.t = t;
     }
+
     /**
      * 链式多条件执行并返回结果，如果都没有执行将返回默认
-     * @author LiuHuiYu
-     * Created DateTime 2022-05-21 16:15
+     *
      * @param t           输入参数
      * @param defineValue 默认值
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-21 16:15
      */
     public IfRun(T t, R defineValue) {
         this.t = t;
         this.defineValue = defineValue;
     }
+
     /**
      * 链式多条件执行并返回结果，如果都没有执行将抛出异常
-     * @author LiuHuiYu
-     * Created DateTime 2022-05-21 16:17
+     *
      * @param t         输入参数
      * @param exception 抛出异常
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-21 16:17
      */
     public IfRun(T t, RuntimeException exception) {
         this.t = t;
         this.exception = exception;
     }
+
     /**
-     * 添加执行
+     * 链式多条件执行并返回结果，如果都没有执行将执行默认函数
+     *
+     * @param t              输入参数
+     * @param defineFunction 默认执行
      * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:17
+     */
+    public IfRun(T t, Function<T, R> defineFunction) {
+        this.t = t;
+        this.defineFunction = defineFunction;
+    }
+
+    /**
+     * 链式多条件执行并返回结果，如果都没有执行将执行默认函数
+     *
+     * @param t              输入参数
+     * @param defineSupplier 默认执行
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-21 16:17
+     */
+    public IfRun(T t, Supplier<R> defineSupplier) {
+        this.t = t;
+        this.defineSupplier = defineSupplier;
+    }
+
+    /**
+     * 添加执行
+     *
      * @param b 判断是否执行
      * @param f 要执行的函数
-     * @return com.liuhuiyu.util.list.IfRun<T,R>
+     * @return com.liuhuiyu.util.list.IfRun<T, R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-21 16:17
      */
     public IfRun<T, R> add(Boolean b, Function<T, R> f) {
-        if (this.f == null && b) {
-            this.f = f;
+        if (this.supplier == null && this.function == null && b) {
+            this.function = f;
         }
         return this;
     }
+
+    /**
+     * 添加执行
+     *
+     * @param b        判断是否执行
+     * @param supplier 要执行的函数
+     * @return com.liuhuiyu.util.list.IfRun<T, R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-21 16:17
+     */
+    public IfRun<T, R> add(Boolean b, Supplier<R> supplier) {
+        if (this.supplier == null && this.function == null && b) {
+            this.supplier = supplier;
+        }
+        return this;
+    }
+
     /**
      * 获取执行结果
+     *
+     * @return java.util.Optional<R>
      * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:18
-     * @return java.util.Optional<R>
      */
     public Optional<R> run() {
-        if (this.f != null) {
-            return Optional.of(f.apply(t));
+        if (this.function != null) {
+            return Optional.of(function.apply(t));
         }
-        else if (defineValue != null) {
+        if (this.supplier != null) {
+            return Optional.of(supplier.get());
+        }
+        else if (this.defineFunction != null) {
+            return Optional.of(this.defineFunction.apply(t));
+        }
+        else if (this.defineSupplier != null) {
+            return Optional.of(this.defineSupplier.get());
+        }
+        else if (this.defineValue != null) {
             return Optional.of(defineValue);
         }
-        else if (exception != null) {
+        else if (this.exception != null) {
             throw exception;
         }
         return Optional.empty();
