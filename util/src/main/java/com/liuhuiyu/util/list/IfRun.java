@@ -20,6 +20,10 @@ public class IfRun<T, R> {
     private Supplier<R> supplier;
     private Supplier<R> defineSupplier;
 
+    public static <T, R> IfRun<T, R> ifRun(T t) {
+        return new IfRun<>(t);
+    }
+
     public IfRun() {
         this.t = null;
     }
@@ -84,6 +88,22 @@ public class IfRun<T, R> {
      */
     public IfRun(T t, Supplier<R> defineSupplier) {
         this.t = t;
+        this.defineSupplier = defineSupplier;
+    }
+
+    public void setDefineValue(R defineValue) {
+        this.defineValue = defineValue;
+    }
+
+    public void setRuntimeException(RuntimeException exception) {
+        this.exception = exception;
+    }
+
+    public void setDefineFunction(Function<T, R> defineFunction) {
+        this.defineFunction = defineFunction;
+    }
+
+    public void setDefineSupplier(Supplier<R> defineSupplier) {
         this.defineSupplier = defineSupplier;
     }
 
