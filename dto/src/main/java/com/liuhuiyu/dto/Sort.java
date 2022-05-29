@@ -3,6 +3,8 @@ package com.liuhuiyu.dto;
 import java.util.Locale;
 
 /**
+ * 排序规则
+ *
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2022-05-02 7:42
@@ -12,9 +14,24 @@ public class Sort {
     private String name;
     private Direction direction;
 
+    /**
+     * 初始化排序
+     *
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-28 15:04
+     */
     public Sort() {
     }
 
+    /**
+     * 初始化排序
+     *
+     * @param index     索引
+     * @param name      字段名称
+     * @param direction 排序方向
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-28 15:05
+     */
     public Sort(int index, String name, Direction direction) {
         this.index = index;
         this.name = name;
@@ -47,6 +64,7 @@ public class Sort {
 
     /**
      * 排序方向
+     *
      * @author LiuHuiYu
      * Created DateTime 2022-05-02 7:45
      */
@@ -76,7 +94,7 @@ public class Sort {
                 return valueOf(value.toUpperCase(Locale.US));
             }
             catch (Exception var2) {
-                throw new IllegalArgumentException(String.format("Invalid value '%s' for orders given! Has to be either 'desc' or 'asc' (case insensitive).", value), var2);
+                return ASC;
             }
         }
     }
