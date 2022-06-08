@@ -36,7 +36,7 @@ public abstract class OracleBaseView extends BaseView {
      */
     protected <T> Long count(T t, String sql, String baseWhere, WhereFull<T> fullWhere) {
         StringBuilder sqlBuilder = new StringBuilder(sql);
-        sqlBuilder.append(baseWhere);
+        sqlBuilder.append(SPACE).append(baseWhere);
         Map<String, Object> parameterMap = new HashMap<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
         OracleDaoUtil.countOracleSql(sqlBuilder);
@@ -60,16 +60,17 @@ public abstract class OracleBaseView extends BaseView {
      */
     protected <T extends IPaging, R> List<R> pageList(DaoOperator<R> b, T t, String sql, String baseWhere, String order, WhereFull<T> fullWhere) {
         StringBuilder sqlBuilder = new StringBuilder(sql);
-        sqlBuilder.append(baseWhere);
+        sqlBuilder.append(SPACE).append(baseWhere);
         Map<String, Object> parameterMap = new HashMap<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
-        sqlBuilder.append(" ").append(order);
+        sqlBuilder.append(SPACE).append(order);
         OracleDaoUtil.paginationOracleSql(sqlBuilder, t.getPaging());
         return super.getResultList(b, sqlBuilder.toString(), parameterMap);
     }
 
     /**
      * 分页查询建造者
+     *
      * @author LiuHuiYu
      * Created DateTime 2022-05-02 8:33
      */
@@ -86,22 +87,26 @@ public abstract class OracleBaseView extends BaseView {
             this.t = t;
             this.sql = sql;
             this.fullWhere = fullWhere;
-            this.order="";
-            this.baseWhere=" WHERE(1=1) ";
+            this.order = "";
+            this.baseWhere = " WHERE(1=1) ";
         }
 
-        public PageImplBuilder<T,R> order(String order) {
+        public PageImplBuilder<T, R> order(String order) {
             this.order = order;
             return this;
         }
-        public PageImplBuilder<T,R> baseWhere(String baseWhere) {
+
+        public PageImplBuilder<T, R> baseWhere(String baseWhere) {
             this.baseWhere = baseWhere;
             return this;
         }
-        public PageImpl<R> buildPage(){
+
+        public PageImpl<R> buildPage() {
             return page(b, t, sql, baseWhere, order, fullWhere);
         }
     }
+
+    public static final String SPACE = " ";
 
     /**
      * 获取列表数据
@@ -120,10 +125,10 @@ public abstract class OracleBaseView extends BaseView {
      */
     protected <T extends IPaging, R> List<R> list(DaoOperator<R> b, T t, String sql, String baseWhere, String order, WhereFull<T> fullWhere) {
         StringBuilder sqlBuilder = new StringBuilder(sql);
-        sqlBuilder.append(baseWhere);
+        sqlBuilder.append(SPACE).append(baseWhere);
         Map<String, Object> parameterMap = new HashMap<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
-        sqlBuilder.append(" ").append(order);
+        sqlBuilder.append(SPACE).append(order);
         return super.getResultList(b, sqlBuilder.toString(), parameterMap);
     }
 
@@ -161,4 +166,30 @@ public abstract class OracleBaseView extends BaseView {
         return new PageImpl<>(gatekeeperCarLogDtoList, t.getPaging().getPageRequest(), total);
     }
 
+    /**
+     * 模糊匹配 like值
+     *
+     * @param value 值
+     * @return java.lang.String
+     * @author LiuHuiYu
+     * Created DateTime 2022-06-02 18:44
+     */
+    protected static String likeValue(String value) {
+        return likeValue(value, true, true, true);
+    }
+
+    /**
+     * like值
+     *
+     * @param value 值
+     * @param trim  去掉首尾空格
+     * @param head  头部模糊匹配
+     * @param tail  尾部模糊匹配
+     * @return java.lang.String
+     * @author LiuHuiYu
+     * Created DateTime 2022-06-02 18:43
+     */
+    protected static String likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
+        return (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
+    }
 }

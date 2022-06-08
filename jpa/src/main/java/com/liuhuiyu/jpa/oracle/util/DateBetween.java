@@ -10,8 +10,10 @@ import java.time.format.DateTimeFormatter;
  *
  * @author LiuHuiYu
  * @version v1.0.0.0
+ * @deprecated 不需要那么麻烦了，直接使用
  * Created DateTime 2021-09-08 9:44
  */
+@Deprecated
 public class DateBetween {
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;

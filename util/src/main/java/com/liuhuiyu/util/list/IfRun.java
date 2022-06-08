@@ -114,9 +114,24 @@ public class IfRun<T, R> {
      * @param f 要执行的函数
      * @return com.liuhuiyu.util.list.IfRun<T, R>
      * @author LiuHuiYu
+     * @deprecated 使用ifRun函数
      * Created DateTime 2022-05-21 16:17
      */
+    @Deprecated
     public IfRun<T, R> add(Boolean b, Function<T, R> f) {
+        return this.ifRun(b, f);
+    }
+
+    /**
+     * 添加执行
+     *
+     * @param b 判断是否执行
+     * @param f 要执行的函数
+     * @return com.liuhuiyu.util.list.IfRun<T, R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-21 16:17
+     */
+    public IfRun<T, R> ifRun(Boolean b, Function<T, R> f) {
         if (this.supplier == null && this.function == null && b) {
             this.function = f;
         }
@@ -131,8 +146,23 @@ public class IfRun<T, R> {
      * @return com.liuhuiyu.util.list.IfRun<T, R>
      * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:17
+     * @deprecated 使用ifRun函数
      */
+    @Deprecated
     public IfRun<T, R> add(Boolean b, Supplier<R> supplier) {
+        return this.ifRun(b, supplier);
+    }
+
+    /**
+     * 添加执行
+     *
+     * @param b        判断是否执行
+     * @param supplier 要执行的函数
+     * @return com.liuhuiyu.util.list.IfRun<T, R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-21 16:17
+     */
+    public IfRun<T, R> ifRun(Boolean b, Supplier<R> supplier) {
         if (this.supplier == null && this.function == null && b) {
             this.supplier = supplier;
         }
@@ -167,4 +197,29 @@ public class IfRun<T, R> {
         }
         return Optional.empty();
     }
+
+    /**
+     * 没有可用将执行
+     *
+     * @param other 要执行的函数
+     * @return R
+     * @author LiuHuiYu
+     * Created DateTime 2022-06-06 16:45
+     */
+    public R elseRun(Supplier<? extends R> other) {
+        return run().orElseGet(other);
+    }
+
+    /**
+     * 没有返回结构将抛出异常
+     *
+     * @param exceptionSupplier 将返回要抛出的异常的供应商
+     * @return R
+     * @author LiuHuiYu
+     * Created DateTime 2022-06-06 16:51
+     */
+    public <X extends Throwable> R orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        return run().orElseThrow(exceptionSupplier);
+    }
+
 }
