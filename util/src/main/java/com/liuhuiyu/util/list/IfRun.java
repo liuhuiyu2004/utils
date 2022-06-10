@@ -222,4 +222,7 @@ public class IfRun<T, R> {
         return run().orElseThrow(exceptionSupplier);
     }
 
+    public R orElse(R r){
+        return run().orElse(r);
+    }
 }

@@ -1,6 +1,7 @@
 package com.liuhuiyu.dto;
 
 /**
+ * 操作接口
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2022-05-02 7:49
