@@ -9,7 +9,6 @@ package com.liuhuiyu.dto;
 class OperatingTest {
     public void create() {
         Operating operating = new Operating();
-        operating.setRowStatus(Operating.RowStatus.A);
         System.out.println(operating);
     }
 }

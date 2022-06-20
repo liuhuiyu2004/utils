@@ -1,5 +1,7 @@
 package com.liuhuiyu.dto;
 
+import org.springframework.util.ObjectUtils;
+
 import java.util.Locale;
 
 /**
@@ -16,13 +18,13 @@ public class Operating {
      */
     private String operatorId;
     /**
+     * 操作模式名称（用户自定义）
+     */
+    private String modelName;
+    /**
      * 记录行状态
      */
     private RowStatus rowStatus;
-    /**
-     * 变更模式名称（用户自定义）
-     */
-    private String modelName;
 
     public Operating() {
     }
@@ -35,12 +37,16 @@ public class Operating {
         this.modelName = modelName;
     }
 
-    public RowStatus getRowStatus() {
-        return rowStatus;
-    }
-
-    public void setRowStatus(RowStatus rowStatus) {
-        this.rowStatus = rowStatus;
+    /**
+     * 判定是否是指定模式
+     *
+     * @param modelName 模式名称
+     * @return boolean
+     * @author LiuHuiYu
+     * Created DateTime 2022-06-13 8:55
+     */
+    public boolean isModel(String modelName) {
+        return ObjectUtils.nullSafeEquals(this.modelName, modelName);
     }
 
     public String getOperatorId() {
@@ -49,6 +55,14 @@ public class Operating {
 
     public void setOperatorId(String operatorId) {
         this.operatorId = operatorId;
+    }
+
+    public RowStatus getRowStatus() {
+        return rowStatus;
+    }
+
+    public void setRowStatus(RowStatus rowStatus) {
+        this.rowStatus = rowStatus;
     }
 
     /**
@@ -103,4 +117,5 @@ public class Operating {
             }
         }
     }
+
 }
