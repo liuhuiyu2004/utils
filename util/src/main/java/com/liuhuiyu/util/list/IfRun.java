@@ -177,25 +177,29 @@ public class IfRun<T, R> {
      * Created DateTime 2022-05-21 16:18
      */
     public Optional<R> run() {
+        R r;
         if (this.function != null) {
-            return Optional.of(function.apply(t));
+            r = function.apply(t);
         }
-        if (this.supplier != null) {
-            return Optional.of(supplier.get());
+        else if (this.supplier != null) {
+            r = supplier.get();
         }
         else if (this.defineFunction != null) {
-            return Optional.of(this.defineFunction.apply(t));
+            r = this.defineFunction.apply(t);
         }
         else if (this.defineSupplier != null) {
-            return Optional.of(this.defineSupplier.get());
+            r = this.defineSupplier.get();
         }
         else if (this.defineValue != null) {
-            return Optional.of(defineValue);
+            r = defineValue;
         }
         else if (this.exception != null) {
             throw exception;
         }
-        return Optional.empty();
+        else {
+            return Optional.empty();
+        }
+        return r == null ? Optional.empty() : Optional.of(r);
     }
 
     /**
@@ -222,7 +226,7 @@ public class IfRun<T, R> {
         return run().orElseThrow(exceptionSupplier);
     }
 
-    public R orElse(R r){
+    public R orElse(R r) {
         return run().orElse(r);
     }
 }
