@@ -1,6 +1,5 @@
 package com.liuhuiyu.util.thread;
 
-import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -66,6 +65,7 @@ public class ThreadUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-08-20 14:43
      */
+    @SuppressWarnings("All")
     public static boolean sleep(long millis) {
         try {
             Thread.sleep(millis);
@@ -78,7 +78,6 @@ public class ThreadUtil {
             Boolean c = Thread.interrupted();
             Boolean d = Thread.interrupted();
             log.error("中断引发休眠异常:{};重置中断位{}->{}", e.getMessage(), c, d);
-
              */
             return false;
         }

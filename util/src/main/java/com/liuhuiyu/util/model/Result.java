@@ -5,7 +5,6 @@ import com.liuhuiyu.util.exception.ResultException;
 import com.liuhuiyu.util.functional.MapToT;
 import com.liuhuiyu.util.functional.ObjectToT;
 import com.liuhuiyu.util.map.MapUtil;
-import lombok.Data;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageImpl;
@@ -21,7 +20,6 @@ import java.util.Map;
  * @version v1.0.0.0
  * Created DateTime 2020-07-08 11:44
  */
-@Data
 public class Result<T> implements Serializable {
     public static final int OK = 0;
     public static final int ERROR = -1;
@@ -63,6 +61,30 @@ public class Result<T> implements Serializable {
         this.msg = msg;
     }
 
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     public boolean isSuccess() {
         return this.flag.equals(OK);
     }
@@ -100,9 +122,9 @@ public class Result<T> implements Serializable {
         return new Result<>(null, OK, "");
     }
 
-    private static String FLAG_KEY = "flag";
-    private static String MSG_KEY = "msg";
-    private static String DATA_KEY = "data";
+    private static final String FLAG_KEY = "flag";
+    private static final String MSG_KEY = "msg";
+    private static final String DATA_KEY = "data";
 
     @Deprecated
     public static <T> @NotNull Result<T> ofMap(Map<String, Object> map, Class<T> clazz) {
