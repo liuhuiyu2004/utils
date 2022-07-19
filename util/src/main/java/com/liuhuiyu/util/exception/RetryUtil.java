@@ -1,6 +1,5 @@
 package com.liuhuiyu.util.exception;
 
-import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.Callable;
 
@@ -65,6 +64,8 @@ public class RetryUtil {
      * 失败重试
      *
      * @param num           重试次数
+     * @param loop          循环执行
+     * @param callable      执行调用
      * @param callFunctions [0]重拾函数，>0 失败后按照失败次数顺序执行 （失败1 执行【1】）
      * @author LiuHuiYu
      * Created DateTime 2021-07-05 17:13
@@ -77,7 +78,7 @@ public class RetryUtil {
                     return callable.call();
                 }
                 catch (Exception e) {
-                    if (pointer > callFunctions.length) {
+                    if (pointer >= callFunctions.length - 1) {
                         if (loop) {
                             pointer = 0;
                         }
