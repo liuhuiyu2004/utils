@@ -2,12 +2,8 @@ package com.liuhuiyu.util.list;
 
 import org.junit.jupiter.api.Test;
 
-import javax.validation.constraints.Null;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0

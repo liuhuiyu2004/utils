@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author LiuHuiYu
@@ -73,7 +74,7 @@ public class RetryUtilTest {
         System.out.println(param1 + param2);
 
         // 其他一些操作，但是没有得到预期的返回结果，或者抛出异常
-        boolean isException = true;
+        boolean isException = ThreadLocalRandom.current().nextBoolean();
         if (isException && retryTimes > 0) {
             method(--retryTimes, param1, param2);
         }
@@ -98,7 +99,7 @@ public class RetryUtilTest {
     public void retry() {
         Map<String, Object> map = new HashMap<>(1);
         long time = System.currentTimeMillis();
-        RetryUtil.retry(3, () -> {
+        final Boolean res = RetryUtil.retry(3, () -> {
             try {
                 Thread.sleep(600);
             }
@@ -108,15 +109,15 @@ public class RetryUtilTest {
             map.put("res", s(time));
             return false;
         });
+        System.out.println(res);
+        System.out.println(map);
     }
 
     @Test
     public void retry2() {
         Map<String, Object> map = new HashMap<>(1);
         long time = System.currentTimeMillis();
-        RetryUtil.retry(10, () -> {
-            return time;
-        }, () -> {
+        final Long retry = RetryUtil.retry(10, () -> time, () -> {
             try {
 //                log.info("失败次执行");
                 Thread.sleep(300);
@@ -125,14 +126,15 @@ public class RetryUtilTest {
                 e.printStackTrace();
             }
         });
-//        log.info(map);
+        System.out.println(map);
+        System.out.println(retry);
     }
 
     @Test
     public void retry3() {
         Map<String, Object> map = new HashMap<>(1);
         long time = System.currentTimeMillis();
-        RetryUtil.retry(3, () -> {
+        final Long res = RetryUtil.retry(3, () -> {
             map.put("res", s(time));
             return time;
         }, () -> {
@@ -152,7 +154,84 @@ public class RetryUtilTest {
                 e.printStackTrace();
             }
         });
-//        log.info(map);
+        System.out.println(res);
+    }
+
+    @Test
+    public void retry4() {
+        Map<String, Object> map = new HashMap<>(1);
+        long time = System.currentTimeMillis();
+        final Long res = RetryUtil.retry(() -> {
+                    map.put("res", s(time));
+                    return time;
+                },
+                () -> {
+                    try {
+//                log.info("失败1次执行");
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
+        System.out.println(res);
+    }
+
+    @Test
+    public void retry5() {
+        Map<String, Object> map = new HashMap<>(1);
+        long time = System.currentTimeMillis();
+        final Long res = RetryUtil.retry(10, true, () -> {
+                    map.put("res", s(time));
+                    return time;
+                },
+                () -> {
+                    try {
+//                log.info("失败1次执行");
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                },
+                () -> {
+                    try {
+//                log.info("失败1次执行");
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                },
+                () -> {
+                    try {
+//                log.info("失败1次执行");
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                },
+                () -> {
+                    try {
+//                log.info("失败1次执行");
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                },
+                () -> {
+                    try {
+//                log.info("失败1次执行");
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                );
+        System.out.println(res);
     }
 
     private String s(long o) {
@@ -162,17 +241,19 @@ public class RetryUtilTest {
         }
         return "" + time;
     }
+
     @Test
-    public void uuid(){
+    public void uuid() {
         UUID uuid = UUID.randomUUID();
-        String uuidString=UUID.randomUUID().toString().replace("-","").toUpperCase();
+        String uuidString = UUID.randomUUID().toString().replace("-", "").toUpperCase();
 //        log.info("{}【{}】",uuidString,uuidString.length());
 
     }
-    @Test
-    public void testTime(){
 
-        LocalDateTime time=LocalDateTime.now().plusSeconds(5);
+    @Test
+    public void testTime() {
+
+        LocalDateTime time = LocalDateTime.now().plusSeconds(5);
         ThreadUtil.sleep(2000);
 //        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
         ThreadUtil.sleep(2000);
@@ -180,22 +261,25 @@ public class RetryUtilTest {
         ThreadUtil.sleep(2000);
 //        log.info("2秒后比较{}",time.isBefore(LocalDateTime.now()));
     }
+
     @Test
-    public void duration(){
-        LocalDateTime time=LocalDateTime.now();
-        LocalDateTime time2=LocalDateTime.now().plusSeconds(1005);
+    public void duration() {
+        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time2 = LocalDateTime.now().plusSeconds(1005);
 //        log.info("{}",Duration.between(time, time2).getSeconds());
 //        log.info("{}",Duration.between(time2, time).getSeconds());
     }
+
     @Test
-    public void du(){
-        Duration duration = Duration.between(LocalDateTime.now(),LocalDate.now().plusDays(1).atStartOfDay());
+    public void du() {
+        Duration duration = Duration.between(LocalDateTime.now(), LocalDate.now().plusDays(1).atStartOfDay());
         Duration duration2 = Duration.between(LocalDate.now().plusDays(1).atStartOfDay(), LocalDateTime.now());
 //        log.info("({}秒{})",duration.getSeconds()/3600,duration2.getSeconds()/3600);
     }
+
     @Test
-    public void timeToString(){
-        LocalDateTime localDateTime=LocalDateTime.now().plusSeconds(30);
+    public void timeToString() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(30);
 //        log.info(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
     }
