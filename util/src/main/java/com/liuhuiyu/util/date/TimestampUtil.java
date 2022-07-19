@@ -77,23 +77,7 @@ public class TimestampUtil {
      * Created DateTime 2022-01-06 15:37
      */
     public static boolean isTimestampString(String value) {
-        try {
-            String tempV = value;
-            if (tempV.length() == FORMAT_YEAR_MONTH_DAY.length()) {
-                tempV += " 23:59:59";
-            }
-            else if (tempV.length() == FORMAT_YEAR_MONTH_DAY_HOUR.length()) {
-                tempV += ":59:59";
-            }
-            else if (tempV.length() == FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE.length()) {
-                tempV += ":59";
-            }
-            Timestamp.valueOf(tempV);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+        return endTime(value) != null;
     }
 
     public static String toString(Timestamp timestamp, String format) {
