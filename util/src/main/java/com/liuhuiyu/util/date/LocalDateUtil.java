@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 本地日期时间工具
@@ -51,14 +50,14 @@ public class LocalDateUtil {
      */
     public static final String DATE_DELIMITER_REGEX = "[-/\\\\]";
 
-    public static final int YEAR_PRECISION = 1;
-    public static final int MONTH_PRECISION = 2;
-    public static final int DAY_PRECISION = 3;
-    public static final int HOUR_PRECISION = 4;
-    public static final int MINUTE_PRECISION = 5;
-    public static final int SECOND_PRECISION = 6;
-    public static final int NANO_PRECISION = 7;
-    public static final int DEFINE_YEAR = 1977;
+    public static final int PRECISION_YEAR = 1;
+    public static final int PRECISION_MONTH = 2;
+    public static final int PRECISION_DAY = 3;
+    public static final int PRECISION_HOUR = 4;
+    public static final int PRECISION_MINUTE = 5;
+    public static final int PRECISION_SECOND = 6;
+    public static final int PRECISION_NANO = 7;
+    public static final int DEFINE_YEAR = 1970;
     public static final int DEFINE_MONTH = 1;
     public static final int DEFINE_DAY = 1;
     public static final int DEFINE_HOUR = 0;
@@ -88,7 +87,7 @@ public class LocalDateUtil {
      * Created DateTime 2022-09-05 10:46
      */
     public static LocalDate stringToDate(String value, LocalDate defValue) {
-        return stringToDate(value, defValue, DAY_PRECISION);
+        return stringToDate(value, defValue, PRECISION_DAY);
     }
 
     /**
@@ -102,9 +101,9 @@ public class LocalDateUtil {
     public static LocalDate stringToDate(String value, LocalDate defValue, int precision) {
         final String[] split = value.split(DATE_DELIMITER_REGEX);
         try {
-            int year = getValue(split, 0, precision < YEAR_PRECISION, DEFINE_YEAR);
-            int month = getValue(split, 1, precision < MONTH_PRECISION, DEFINE_MONTH);
-            int day = getValue(split, 2, precision < DAY_PRECISION, DEFINE_DAY);
+            int year = getValue(split, 0, precision < PRECISION_YEAR, DEFINE_YEAR);
+            int month = getValue(split, 1, precision < PRECISION_MONTH, DEFINE_MONTH);
+            int day = getValue(split, 2, precision < PRECISION_DAY, DEFINE_DAY);
             return LocalDate.of(year, month, day);
         }
         catch (Exception ignored) {
@@ -134,7 +133,7 @@ public class LocalDateUtil {
      * Created DateTime 2022-09-05 14:15
      */
     public static LocalTime stringToTime(String value, LocalTime defValue) {
-        return stringToTime(value, defValue, MINUTE_PRECISION);
+        return stringToTime(value, defValue, PRECISION_MINUTE);
     }
 
     /**
@@ -150,10 +149,10 @@ public class LocalDateUtil {
     public static LocalTime stringToTime(String value, LocalTime defValue, int precision) {
         final String[] split = value.split(TIME_DELIMITER_REGEX);
         try {
-            int hour = getValue(split, 0, precision < HOUR_PRECISION, DEFINE_HOUR);
-            int minute = getValue(split, 1, precision < MINUTE_PRECISION, DEFINE_MINUTE);
-            int second = getValue(split, 2, precision < SECOND_PRECISION, DEFINE_SECOND);
-            int nanoOfSecond = getValue(split, 3, precision < NANO_PRECISION, DEFINE_NANO);
+            int hour = getValue(split, 0, precision < PRECISION_HOUR, DEFINE_HOUR);
+            int minute = getValue(split, 1, precision < PRECISION_MINUTE, DEFINE_MINUTE);
+            int second = getValue(split, 2, precision < PRECISION_SECOND, DEFINE_SECOND);
+            int nanoOfSecond = getValue(split, 3, precision < PRECISION_NANO, DEFINE_NANO);
             return LocalTime.of(hour, minute, second, nanoOfSecond);
         }
         catch (Exception ignored) {
@@ -183,7 +182,7 @@ public class LocalDateUtil {
      * Created DateTime 2022-09-05 14:04
      */
     public static LocalDateTime stringToDateTime(String value, LocalDateTime defDateTime) {
-        return stringToDateTime(value, defDateTime, DAY_PRECISION);
+        return stringToDateTime(value, defDateTime, PRECISION_DAY);
     }
 
     /**
@@ -213,7 +212,7 @@ public class LocalDateUtil {
             LocalTime localTime = (LocalTime) ExecutionFunction.begin(splitBase)
                     .notSucceedExecution(v -> stringToTime(v[1], null, precision))
                     .notSucceedExecution(v -> {
-                        LhyAssert.assertTrue(precision < HOUR_PRECISION, "");
+                        LhyAssert.assertTrue(precision < PRECISION_HOUR, "");
                         return LocalTime.MIN;
                     })
                     .orElse(null);

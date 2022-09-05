@@ -6,7 +6,7 @@
 
     <groupId>com.liuhuiyu</groupId>
     <artifactId>util</artifactId>
-    <version>2021.2.0</version>
+    <version>2022.1.0</version>
     <packaging>jar</packaging>
 
     <name>liuhuiyu-util</name>
@@ -137,7 +137,6 @@
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.4</version>
         </dependency>
-
         <!-- region引入log4j2依赖 -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

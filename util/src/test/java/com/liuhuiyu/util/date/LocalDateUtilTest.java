@@ -1,7 +1,6 @@
 package com.liuhuiyu.util.date;
 
 
-import org.apache.juli.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -33,11 +32,11 @@ public class LocalDateUtilTest {
         String dateStr = "2021-02-11 9";
         LocalDateTime time4 = LocalDateUtil.stringToDateTime(dateStr);
         LOG.error(time4);
-        LocalDateTime time3 = LocalDateUtil.stringToDateTime(dateStr, LocalDateTime.now(), LocalDateUtil.MINUTE_PRECISION);
+        LocalDateTime time3 = LocalDateUtil.stringToDateTime(dateStr, LocalDateTime.now(), LocalDateUtil.PRECISION_MINUTE);
         LOG.error(time3);
-        LocalDateTime time2 = LocalDateUtil.stringToDateTime(dateStr, LocalDateTime.now(), LocalDateUtil.HOUR_PRECISION);
+        LocalDateTime time2 = LocalDateUtil.stringToDateTime(dateStr, LocalDateTime.now(), LocalDateUtil.PRECISION_HOUR);
         LOG.error(time2);
-        LocalDateTime time1 = LocalDateUtil.stringToDateTime(dateStr, LocalDateTime.now(), LocalDateUtil.DAY_PRECISION);
+        LocalDateTime time1 = LocalDateUtil.stringToDateTime(dateStr, LocalDateTime.now(), LocalDateUtil.PRECISION_DAY);
         LOG.error(time1);
     }
 
@@ -50,13 +49,13 @@ public class LocalDateUtilTest {
             LOG.error("原始:{}",localTime);
             localTime = LocalDateUtil.stringToTime(v,LocalTime.now());
             LOG.error("当前时间:{}",localTime);
-            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.HOUR_PRECISION);
+            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.PRECISION_HOUR);
             LOG.error("小时精度:{}",localTime);
-            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.MINUTE_PRECISION);
+            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.PRECISION_MINUTE);
             LOG.error("分钟精度:{}",localTime);
-            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.SECOND_PRECISION);
+            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.PRECISION_SECOND);
             LOG.error("秒精度:{}",localTime);
-            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.NANO_PRECISION);
+            localTime = LocalDateUtil.stringToTime(v,LocalTime.now(),LocalDateUtil.PRECISION_NANO);
             LOG.error("纳秒精度:{}",localTime);
         }
     }
