@@ -1,12 +1,13 @@
 package com.liuhuiyu.util.date;
 
 import com.liuhuiyu.util.asserts.LhyAssert;
+import com.liuhuiyu.util.list.ExecutionFunction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 本地日期时间工具
@@ -16,6 +17,11 @@ import java.time.format.DateTimeParseException;
  * Created DateTime 2021-05-22 14:39
  */
 public class LocalDateUtil {
+    public static final String FORMAT_YEAR_MONTH_DAY = "yyyy-MM-dd";
+    public static final String FORMAT_YEAR_MONTH_DAY_HOUR = "yyyy-MM-dd HH";
+    public static final String FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE = "yyyy-MM-dd HH:mm";
+    public static final String FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND = "yyyy-MM-dd HH:mm:ss";
+
     public static String dateToString(LocalDate date, String format) {
         return date.format(DateTimeFormatter.ofPattern(format));
     }
@@ -28,51 +34,203 @@ public class LocalDateUtil {
         return date.format(DateTimeFormatter.ofPattern(format));
     }
 
-    public static LocalDateTime stringToDateTime(String dateTimeStr) {
-        return stringToDateTime(dateTimeStr,null);
+    //region 常量
+    /**
+     * 时间分隔符
+     * Created DateTime 2022-09-05 10:56
+     */
+    public static final String TIME_DELIMITER_REGEX = ":";
+    /**
+     * 日期时间分隔符
+     * Created DateTime 2022-09-05 10:56
+     */
+    public static final String DATE_TIME_DELIMITER_REGEX = " ";
+    /**
+     * 日期分隔符
+     * Created DateTime 2022-09-05 10:56
+     */
+    public static final String DATE_DELIMITER_REGEX = "[-/\\\\]";
+
+    public static final int YEAR_PRECISION = 1;
+    public static final int MONTH_PRECISION = 2;
+    public static final int DAY_PRECISION = 3;
+    public static final int HOUR_PRECISION = 4;
+    public static final int MINUTE_PRECISION = 5;
+    public static final int SECOND_PRECISION = 6;
+    public static final int NANO_PRECISION = 7;
+    public static final int DEFINE_YEAR = 1977;
+    public static final int DEFINE_MONTH = 1;
+    public static final int DEFINE_DAY = 1;
+    public static final int DEFINE_HOUR = 0;
+    public static final int DEFINE_MINUTE = 0;
+    public static final int DEFINE_SECOND = 0;
+    public static final int DEFINE_NANO = 0;
+    //endregion
+
+    /**
+     * 字符串转日期
+     *
+     * @param value 字符串
+     * @return java.time.LocalDate
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 10:46
+     */
+    public static LocalDate stringToDate(String value) {
+        return stringToDate(value, LocalDate.of(DEFINE_YEAR, DEFINE_MONTH, DEFINE_DAY));
     }
 
-    public static LocalDateTime stringToDateTime(String dateTimeStr, LocalDateTime defDateTime) {
+    /**
+     * 字符串转日期
+     *
+     * @param value 字符串
+     * @return java.time.LocalDate
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 10:46
+     */
+    public static LocalDate stringToDate(String value, LocalDate defValue) {
+        return stringToDate(value, defValue, DAY_PRECISION);
+    }
+
+    /**
+     * 字符串转日期
+     *
+     * @param value 字符串
+     * @return java.time.LocalDate
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 10:46
+     */
+    public static LocalDate stringToDate(String value, LocalDate defValue, int precision) {
+        final String[] split = value.split(DATE_DELIMITER_REGEX);
         try {
-            LhyAssert.assertNotNull(dateTimeStr, new DateTimeParseException("格式错误", "yyyy-mm-dd hh:MM:ss", -1));
-            final String dateTimeSeparator = " ";
-            final String dateSeparator = "-";
-            final String timeSeparator = ":";
-            int year, month, dayOfMonth, hour = 0, minute = 0, second = 0;
-            //字段拆解
-            String[] dateTimeCut = dateTimeStr.split(dateTimeSeparator);
-            LhyAssert.assertTrue(dateTimeCut.length <= 2 && dateTimeCut.length > 0, new DateTimeParseException("格式错误", "yyyy-mm-dd hh:MM:ss", -1));
-            String[] dateStr = dateTimeCut[0].split(dateSeparator);
-            LhyAssert.assertTrue(dateStr.length == 3, new DateTimeParseException("格式错误", "yyyy-mm-dd hh:MM:ss", -1));
-            try {
-                year = Integer.parseInt(dateStr[0]);
-                month = Integer.parseInt(dateStr[1]);
-                dayOfMonth = Integer.parseInt(dateStr[2]);
-            }
-            catch (NumberFormatException e) {
-                throw new DateTimeParseException("格式错误", "yyyy-mm-dd hh:MM:ss", -1);
-            }
-            if (dateTimeCut.length == 2) {
-                String[] timeStr = dateTimeCut[1].split(timeSeparator);
-                if (timeStr.length >= 1) {
-                    hour = Integer.parseInt(timeStr[0]);
-                }
-                if (timeStr.length >= 2) {
-                    minute = Integer.parseInt(timeStr[1]);
-                }
-                if (timeStr.length >= 3) {
-                    second = Integer.parseInt(timeStr[2]);
-                }
-            }
-            return LocalDateTime.of(year, month, dayOfMonth, hour, minute, second);
+            int year = getValue(split, 0, precision < YEAR_PRECISION, DEFINE_YEAR);
+            int month = getValue(split, 1, precision < MONTH_PRECISION, DEFINE_MONTH);
+            int day = getValue(split, 2, precision < DAY_PRECISION, DEFINE_DAY);
+            return LocalDate.of(year, month, day);
         }
-        catch (Exception e) {
-            if (defDateTime == null) {
-                throw e;
-            }
-            else {
-                return defDateTime;
-            }
+        catch (Exception ignored) {
+            return defValue;
         }
+    }
+
+    /**
+     * 字符串转时间
+     *
+     * @param value 字符串
+     * @return java.time.LocalTime
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 14:15
+     */
+    public static LocalTime stringToTime(String value) {
+        return stringToTime(value, LocalTime.of(DEFINE_HOUR, DEFINE_MINUTE, DEFINE_SECOND, DEFINE_NANO));
+    }
+
+    /**
+     * 字符串转时间
+     *
+     * @param value    字符串
+     * @param defValue 默认值
+     * @return java.time.LocalTime
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 14:15
+     */
+    public static LocalTime stringToTime(String value, LocalTime defValue) {
+        return stringToTime(value, defValue, MINUTE_PRECISION);
+    }
+
+    /**
+     * 字符串转时间
+     *
+     * @param value     字符串
+     * @param defValue  默认值
+     * @param precision 解析精度
+     * @return java.time.LocalTime
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 14:15
+     */
+    public static LocalTime stringToTime(String value, LocalTime defValue, int precision) {
+        final String[] split = value.split(TIME_DELIMITER_REGEX);
+        try {
+            int hour = getValue(split, 0, precision < HOUR_PRECISION, DEFINE_HOUR);
+            int minute = getValue(split, 1, precision < MINUTE_PRECISION, DEFINE_MINUTE);
+            int second = getValue(split, 2, precision < SECOND_PRECISION, DEFINE_SECOND);
+            int nanoOfSecond = getValue(split, 3, precision < NANO_PRECISION, DEFINE_NANO);
+            return LocalTime.of(hour, minute, second, nanoOfSecond);
+        }
+        catch (Exception ignored) {
+            return defValue;
+        }
+    }
+
+    /**
+     * 字符串转日期时间
+     *
+     * @param value 字符串(默认精确解析到日)
+     * @return java.time.LocalDateTime
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 14:04
+     */
+    public static LocalDateTime stringToDateTime(String value) {
+        return stringToDateTime(value, LocalDateTime.of(DEFINE_YEAR, DEFINE_MONTH, DEFINE_DAY, DEFINE_HOUR, DEFINE_MINUTE, DEFINE_SECOND, DEFINE_NANO));
+    }
+
+    /**
+     * 字符串转日期时间
+     *
+     * @param value       字符串(默认精确解析到日)
+     * @param defDateTime 解析失败默认值
+     * @return java.time.LocalDateTime
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 14:04
+     */
+    public static LocalDateTime stringToDateTime(String value, LocalDateTime defDateTime) {
+        return stringToDateTime(value, defDateTime, DAY_PRECISION);
+    }
+
+    /**
+     * 字符串转日期时间
+     *
+     * @param value       字符串
+     * @param defDateTime 解析失败默认值
+     * @param precision   解析精度
+     *                    <pre>YEAR_PRECISION:年</pre>
+     *                    <pre>MONTH_PRECISION:月</pre>
+     *                    <pre>DAY_PRECISION:日</pre>
+     *                    <pre>HOUR_PRECISION:时</pre>
+     *                    <pre>MINUTE_PRECISION:分</pre>
+     *                    <pre>SECOND_PRECISION:秒</pre>
+     *                    <pre>NANO_PRECISION:纳秒</pre>
+     * @return java.time.LocalDateTime
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 14:04
+     */
+    public static LocalDateTime stringToDateTime(String value, LocalDateTime defDateTime, int precision) {
+        final String[] splitBase = value.split(DATE_TIME_DELIMITER_REGEX);
+        try {
+            LocalDate localDate = (LocalDate) ExecutionFunction.begin(splitBase)
+                    .notSucceedExecution(v -> stringToDate(v[0], null, precision))
+                    .orElse(null);
+            LhyAssert.assertNotNull(localDate, "");
+            LocalTime localTime = (LocalTime) ExecutionFunction.begin(splitBase)
+                    .notSucceedExecution(v -> stringToTime(v[1], null, precision))
+                    .notSucceedExecution(v -> {
+                        LhyAssert.assertTrue(precision < HOUR_PRECISION, "");
+                        return LocalTime.MIN;
+                    })
+                    .orElse(null);
+            LhyAssert.assertNotNull(localTime, "");
+            return LocalDateTime.of(localDate, localTime);
+        }
+        catch (Exception ignored) {
+            return defDateTime;
+        }
+    }
+
+    private static int getValue(String[] split, int index, boolean precisionVerify, int defValue) {
+        return (int) ExecutionFunction.begin(split)
+                .notSucceedExecution(v -> Integer.parseInt(split[index]))
+                .notSucceedExecution((v) -> {
+                    LhyAssert.assertTrue(precisionVerify, "");
+                    return defValue;
+                }).get();
     }
 }

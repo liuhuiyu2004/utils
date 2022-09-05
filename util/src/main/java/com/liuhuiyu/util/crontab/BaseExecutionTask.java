@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Created DateTime 2022-03-29 10:36
  */
 public abstract class BaseExecutionTask {
-    private static final Logger LOG= LogManager.getLogger(BaseExecutionTask.class);
+    private static final Logger LOG = LogManager.getLogger(BaseExecutionTask.class);
     static final ThreadPoolTaskExecutor THREAD_POOL = ExecutorBuilder.create().maxPoolSize(30).threadName("task-loop-").builder();
 
     private ScheduledExecutorService ses;
@@ -27,13 +27,25 @@ public abstract class BaseExecutionTask {
     private long period;
     private TimeUnit unit;
     private ScheduledFuture<?> scheduledFuture;
+    CrontabReg appStartupRunner;
 
     public BaseExecutionTask(CrontabReg appStartupRunner, Boolean ignore) {
-        if (ignore) {
-            return;
+        this.appStartupRunner = appStartupRunner;
+        if (!ignore) {
+            reg();
         }
+
+    }
+
+    /**
+     * 后期注册
+     *
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-01 19:33
+     */
+    public void reg() {
         LOG.debug("注册自己的名称：{}", this.getClass().getName());
-        appStartupRunner.reg(this.getClass().getName(), this);
+        this.appStartupRunner.reg(this.getClass().getName(), this);
         this.runnable = () -> {
             try {
                 this.execution();
