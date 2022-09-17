@@ -12,7 +12,7 @@ import com.liuhuiyu.util.model.Result;
 import org.apache.commons.beanutils.BeanUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;
+//import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 

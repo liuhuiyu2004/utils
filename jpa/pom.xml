@@ -18,15 +18,16 @@
     <junit.versions>4.13.2</junit.versions>
     <annotations.versions>23.0.0</annotations.versions>
     <com.liuhuiyu.dto.versions>2021.1.0</com.liuhuiyu.dto.versions>
+    <spring.versions>2.1.6.RELEASE</spring.versions>
   </properties>
 
 
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.6.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
-  </parent>
+<!--  <parent>-->
+<!--    <groupId>org.springframework.boot</groupId>-->
+<!--    <artifactId>spring-boot-starter-parent</artifactId>-->
+<!--    <version>2.1.6.RELEASE</version>-->
+<!--    <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+<!--  </parent>-->
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -37,6 +38,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <version>${spring.versions}</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>
