@@ -1,9 +1,0 @@
-logging:
-  level:
-    root: info
-    cc:
-      rehome:
-        zhanjiang:
-          data_center:
-            root: debug
-            DataCenterApp: warn
