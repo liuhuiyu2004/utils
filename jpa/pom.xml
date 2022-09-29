@@ -1,81 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.liuhuiyu</groupId>
-  <artifactId>jpa</artifactId>
-  <version>2021.1.0</version>
+    <groupId>com.liuhuiyu</groupId>
+    <artifactId>jpa</artifactId>
+    <version>2021.1.0</version>
 
-  <name>jpa</name>
-  <url>http://www.liuhuiyu.com</url>
+    <name>jpa</name>
+    <url>http://www.liuhuiyu.com</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <junit.versions>4.13.2</junit.versions>
-    <annotations.versions>23.0.0</annotations.versions>
-    <com.liuhuiyu.dto.versions>2021.1.0</com.liuhuiyu.dto.versions>
-    <spring.versions>2.1.6.RELEASE</spring.versions>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <junit.versions>4.13.2</junit.versions>
+        <annotations.versions>23.0.0</annotations.versions>
+        <com.liuhuiyu.dto.versions>2021.1.0</com.liuhuiyu.dto.versions>
+        <spring.versions>2.1.6.RELEASE</spring.versions>
+        <log4j2.version>2.18.0</log4j2.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.versions}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.versions}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${annotations.versions}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>dto</artifactId>
+            <version>${com.liuhuiyu.dto.versions}</version>
+        </dependency>
+        <!-- region引入log4j2依赖 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- endregion -->
+    </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.0</version>
+                <!-- 绑定source插件到Maven的生命周期,并在生命周期后执行绑定的source的goal -->
+                <executions>
+                    <execution>
+                        <!-- 绑定source插件到Maven的生命周期 -->
+                        <phase>compile</phase>
+                        <!--在生命周期后执行绑定的source插件的goals -->
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-<!--  <parent>-->
-<!--    <groupId>org.springframework.boot</groupId>-->
-<!--    <artifactId>spring-boot-starter-parent</artifactId>-->
-<!--    <version>2.1.6.RELEASE</version>-->
-<!--    <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
-<!--  </parent>-->
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.versions}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <version>${spring.versions}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-      <version>${annotations.versions}</version>
-    </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.liuhuiyu</groupId>-->
-<!--      <artifactId>spring-util</artifactId>-->
-<!--      <version>1.0.0</version>-->
-<!--    </dependency>-->
-    <dependency>
-      <groupId>com.liuhuiyu</groupId>
-      <artifactId>dto</artifactId>
-      <version>${com.liuhuiyu.dto.versions}</version>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.0</version>
-        <!-- 绑定source插件到Maven的生命周期,并在生命周期后执行绑定的source的goal -->
-        <executions>
-          <execution>
-            <!-- 绑定source插件到Maven的生命周期 -->
-            <phase>compile</phase>
-            <!--在生命周期后执行绑定的source插件的goals -->
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-    </plugins>
-  </build>
+        </plugins>
+    </build>
 </project>
