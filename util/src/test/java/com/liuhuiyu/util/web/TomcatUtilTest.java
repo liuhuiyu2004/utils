@@ -18,7 +18,7 @@ class TomcatUtilTest {
 
     @Test
     public void getTomcatPort() {
-        final Integer port = TomcatUtil.getTomcatPort().orElse(0);
+        final Integer port = TomcatUtil.getTomcatPort(0);
         LOG.info("端口：{}", port);
     }
 

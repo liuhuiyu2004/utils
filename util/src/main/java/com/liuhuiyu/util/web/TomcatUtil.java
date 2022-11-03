@@ -13,6 +13,9 @@ import java.util.Set;
  * Created DateTime 2022-09-29 10:50
  */
 public class TomcatUtil {
+
+    public static final int NULL_PORT = -1;
+
     /**
      * 获取tomcat启动端口
      *
@@ -36,6 +39,7 @@ public class TomcatUtil {
             return Optional.empty();
         }
     }
+
     /**
      * 获取tomcat启动端口
      *
@@ -72,6 +76,28 @@ public class TomcatUtil {
         }
         return Optional.empty();
     }
+
+    public static Optional<Integer> getTomcatPort3() {
+        MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            QueryExp protocol = Query.match(Query.attr("protocol"), Query.value("HTTP/1.1"));
+            ObjectName name = new ObjectName("*:type=Connector,*");
+            Set<ObjectName> objectNames = beanServer.queryNames(name, protocol);
+
+            for (ObjectName objectName : objectNames) {
+                String catalina = objectName.getDomain();
+                if ("Catalina".equals(catalina)) {
+                    return Optional.of(Integer.parseInt(objectName.getKeyProperty("port")));
+                }
+            }
+
+        }
+        catch (Exception e) {
+            return Optional.empty();
+        }
+        return Optional.empty();
+    }
+
     /**
      * 获取tomcat启动端口
      *
@@ -79,12 +105,20 @@ public class TomcatUtil {
      * @author LiuHuiYu
      * Created DateTime 2022-09-29 10:51
      */
-    public static Optional<Integer> getTomcatPort(){
-        final Optional<Integer> tomcatPort1 = getTomcatPort1();
-        if(tomcatPort1.isPresent()){
-            return tomcatPort1;
-        }else{
-            return getTomcatPort2();
+    public static Integer getTomcatPort(Integer defPort) {
+        return getTomcatPort1()
+                .orElseGet(() -> getTomcatPort2()
+                        .orElseGet(() -> getTomcatPort3()
+                                .orElse(defPort)));
+    }
+
+    public static Optional<Integer> getTomcatPort() {
+        Integer port = getTomcatPort(NULL_PORT);
+        if (port.equals(NULL_PORT)) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(port);
         }
     }
 }
