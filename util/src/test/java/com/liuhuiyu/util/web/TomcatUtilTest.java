@@ -4,10 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
@@ -18,7 +14,7 @@ class TomcatUtilTest {
 
     @Test
     public void getTomcatPort() {
-        final Integer port = TomcatUtil.getTomcatPort(0);
+        final Integer port = TomcatUtil.getTomcatPort().orElse(0);
         LOG.info("端口：{}", port);
     }
 

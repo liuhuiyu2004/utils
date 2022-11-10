@@ -56,7 +56,7 @@ public class TomcatUtil {
         if (mBeanServer == null) {
             return Optional.empty();
         }
-        Set<ObjectName> objectNames = null;
+        Set<ObjectName> objectNames;
         try {
             objectNames = mBeanServer.queryNames(new ObjectName("Catalina:type=Connector,*"), null);
             if (objectNames == null || objectNames.size() <= 0) {
