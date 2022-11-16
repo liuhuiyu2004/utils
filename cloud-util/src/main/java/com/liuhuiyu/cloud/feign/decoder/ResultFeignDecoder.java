@@ -32,13 +32,21 @@ import java.util.stream.Collectors;
  * Created DateTime 2022-09-17 15:11
  */
 public class ResultFeignDecoder implements Decoder {
+    public static final String RESULT_DATA_FIELD_NAME = "data";
+    public static final String PAGE_IMPL_CLASS_NAME = "org.springframework.data.domain.PageImpl";
+    public static final String PAGE_IMPL_CONTENT_FIELD_NAME = "content";
+    public static final String PAGE_IMPL_NUMBER_FIELD_NAME = "number";
+    public static final String PAGE_IMPL_SIZE_FIELD_NAME = "size";
+    public static final String PAGE_IMPL_TOTAL_ELEMENTS_FIELD_NAME = "totalElements";
+
     @Override
     public Object decode(Response response, Type type) throws IOException, FeignException {
+
         if (response.body() == null) {
             throw new DecodeException(response.status(), "没有返回有效的数据", response.request());
         }
 
-        final InputStreamReader reader =(InputStreamReader) response.body().asReader(Util.UTF_8);
+        final InputStreamReader reader = (InputStreamReader) response.body().asReader(Util.UTF_8);
         String bodyStr = Util.toString(reader);
         //对结果进行转换
         final Map<String, Object> map = MapUtil.mapOfJsonString(bodyStr);
@@ -48,19 +56,20 @@ public class ResultFeignDecoder implements Decoder {
             // 获取接口接收类型
             JavaType javaType = TypeFactory.defaultInstance().constructType(type);
             // 判断是否分页对象
-            if (type.getTypeName().contains("org.springframework.data.domain.PageImpl")) {
+            if (type.getTypeName().contains(PAGE_IMPL_CLASS_NAME)) {
                 // 获取分页泛型类型
                 JavaType boundType = javaType.getBindings().getBoundType(0);
                 // 获取数据
-                Object data = map.get("data");
+                Object data = map.get(RESULT_DATA_FIELD_NAME);
                 // 结果集转Map
                 Map<String, Object> dataMap = MapUtil.mapObjectToStringKeyMap(data);
                 // 获取数据结果集
                 List<Object> content = new ArrayList<>();
-                if (dataMap.get("content") instanceof Collection<?>) {
-                    Collection<?> list = (Collection<?>) dataMap.get("content");
+                if (dataMap.get(PAGE_IMPL_CONTENT_FIELD_NAME) instanceof Collection<?>) {
+                    Collection<?> list = (Collection<?>) dataMap.get(PAGE_IMPL_CONTENT_FIELD_NAME);
                     content.addAll(list);
-                } else {
+                }
+                else {
                     throw new LhyException("无法解析非List数据");
                 }
                 // 数据转换
@@ -69,22 +78,24 @@ public class ResultFeignDecoder implements Decoder {
                         ObjectMapper objectMapper = new ObjectMapper();
                         String json = new Gson().toJson(v);
                         return objectMapper.readValue(json, boundType);
-                    } catch (JsonProcessingException e) {
+                    }
+                    catch (JsonProcessingException e) {
                         throw new LhyException("无法解析List数据转换");
                     }
                 }).collect(Collectors.toList());
                 // 封装PageImpl
                 MapUtil mapUtil = new MapUtil(MapUtil.mapObjectToStringKeyMap(result.getData()));
-                int number = mapUtil.getIntegerValue("number", 0);
-                int size = mapUtil.getIntegerValue("size", 0);
+                int number = mapUtil.getIntegerValue(PAGE_IMPL_NUMBER_FIELD_NAME, 0);
+                int size = mapUtil.getIntegerValue(PAGE_IMPL_SIZE_FIELD_NAME, 0);
                 PageRequest pageable = PageRequest.of(number, size);
-                long totalElements = mapUtil.getLongValue("totalElements", 0L);
+                long totalElements = mapUtil.getLongValue(PAGE_IMPL_TOTAL_ELEMENTS_FIELD_NAME, 0L);
                 return new PageImpl<>(collect, pageable, totalElements);
             }
             // 其他类型转换
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(new Gson().toJson(result.getData()) , javaType);
-        }else {
+            return mapper.readValue(new Gson().toJson(result.getData()), javaType);
+        }
+        else {
             throw new LhyException(result.getMsg());
         }
     }

@@ -17,8 +17,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <liuhuiyu.util.version>2022.1.0</liuhuiyu.util.version>
         <spring-data-commons.version>2.6.4</spring-data-commons.version>
-        <jackson-databind.version>2.13.4</jackson-databind.version>
+        <jackson-databind.version>2.13.4.1</jackson-databind.version>
         <feign-core.version>10.12</feign-core.version>
+        <junit.version>5.7.2</junit.version>
     </properties>
 
     <dependencies>
@@ -58,6 +59,26 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--region 测试-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>test2</artifactId>
+            <version>2022.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!--endregion-->
     </dependencies>
 
     <build>
