@@ -1,5 +1,7 @@
 package com.liuhuiyu.util.list;
 
+import com.liuhuiyu.util.functional.Execution;
+
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -19,6 +21,8 @@ public class IfRun<T, R> {
     private Function<T, R> function;
     private Supplier<R> supplier;
     private Supplier<R> defineSupplier;
+
+    private Execution execution;
 
     public static <T, R> IfRun<T, R> ifRun(T t) {
         return new IfRun<>(t);
@@ -184,6 +188,10 @@ public class IfRun<T, R> {
         else if (this.supplier != null) {
             r = supplier.get();
         }
+        else if (this.execution != null) {
+            this.execution.run();
+            return Optional.empty();
+        }
         else if (this.defineFunction != null) {
             r = this.defineFunction.apply(t);
         }
@@ -228,5 +236,16 @@ public class IfRun<T, R> {
 
     public R orElse(R r) {
         return run().orElse(r);
+    }
+
+    public static IfRun<Void, Void> ifRun() {
+        return new IfRun<>();
+    }
+
+    public IfRun<T, R> ifRun(Boolean b, Execution execution) {
+        if (this.supplier == null && this.function == null && b) {
+            this.execution = execution;
+        }
+        return this;
     }
 }
