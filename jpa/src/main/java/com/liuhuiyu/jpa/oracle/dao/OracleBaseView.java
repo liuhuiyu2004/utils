@@ -6,6 +6,7 @@ import com.liuhuiyu.jpa.DaoOperator;
 import com.liuhuiyu.jpa.WhereFull;
 import com.liuhuiyu.jpa.oracle.util.OracleDaoUtil;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -43,6 +44,8 @@ public abstract class OracleBaseView extends BaseView {
         return super.selectCount(sqlBuilder.toString(), parameterMap);
     }
 
+    public static final String BLANK_BASE_WHERE = " ";
+
     /**
      * 获取分页列表数据
      *
@@ -59,6 +62,9 @@ public abstract class OracleBaseView extends BaseView {
      * Created DateTime 2022-04-25 10:29
      */
     protected <T extends IPaging, R> List<R> pageList(DaoOperator<R> b, T t, String sql, String baseWhere, String order, WhereFull<T> fullWhere) {
+        if (!StringUtils.hasText(baseWhere) && !BLANK_BASE_WHERE.equals(baseWhere)) {
+            baseWhere = "WHERE(1=1)";
+        }
         StringBuilder sqlBuilder = new StringBuilder(sql);
         sqlBuilder.append(SPACE).append(baseWhere);
         Map<String, Object> parameterMap = new HashMap<>(0);
