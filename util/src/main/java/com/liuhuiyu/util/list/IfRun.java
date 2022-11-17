@@ -16,13 +16,14 @@ import java.util.function.Supplier;
 public class IfRun<T, R> {
     private final T t;
     private R defineValue;
+
     private RuntimeException exception;
     private Function<T, R> defineFunction;
-    private Function<T, R> function;
-    private Supplier<R> supplier;
     private Supplier<R> defineSupplier;
-
-    private Execution execution;
+    private Optional<R> resOptional;
+//    private Function<T, R> function;
+//    private Supplier<R> supplier;
+//    private Runnable execution;
 
     public static <T, R> IfRun<T, R> ifRun(T t) {
         return new IfRun<>(t);
@@ -136,10 +137,14 @@ public class IfRun<T, R> {
      * Created DateTime 2022-05-21 16:17
      */
     public IfRun<T, R> ifRun(Boolean b, Function<T, R> f) {
-        if (this.supplier == null && this.function == null && b) {
-            this.function = f;
+        if (isRun(b)) {
+            this.resOptional = Optional.ofNullable(f.apply(t));
         }
         return this;
+    }
+
+    private boolean isRun(Boolean b) {
+        return b && null == this.resOptional;
     }
 
     /**
@@ -167,8 +172,11 @@ public class IfRun<T, R> {
      * Created DateTime 2022-05-21 16:17
      */
     public IfRun<T, R> ifRun(Boolean b, Supplier<R> supplier) {
-        if (this.supplier == null && this.function == null && b) {
-            this.supplier = supplier;
+//        if (this.supplier == null && this.function == null && b) {
+//            this.supplier = supplier;
+//        }
+        if (isRun(b)) {
+            this.resOptional = Optional.ofNullable(supplier.get());
         }
         return this;
     }
@@ -182,15 +190,18 @@ public class IfRun<T, R> {
      */
     public Optional<R> run() {
         R r;
-        if (this.function != null) {
-            r = function.apply(t);
-        }
-        else if (this.supplier != null) {
-            r = supplier.get();
-        }
-        else if (this.execution != null) {
-            this.execution.run();
-            return Optional.empty();
+//        if (this.function != null) {
+//            r = function.apply(t);
+//        }
+//        else if (this.supplier != null) {
+//            r = supplier.get();
+//        }
+//        else if (this.execution != null) {
+//            this.execution.run();
+//            return Optional.empty();
+//        }
+        if (!isRun(true)) {
+            return this.resOptional;
         }
         else if (this.defineFunction != null) {
             r = this.defineFunction.apply(t);
@@ -242,10 +253,15 @@ public class IfRun<T, R> {
         return new IfRun<>();
     }
 
-    public IfRun<T, R> ifRun(Boolean b, Execution execution) {
-        if (this.supplier == null && this.function == null && b) {
-            this.execution = execution;
+    public IfRun<T, R> ifRun(Boolean b, Runnable execution) {
+        if (this.isRun(b)) {
+            execution.run();
+            this.resOptional = Optional.empty();
         }
+//        if (this.supplier == null && this.function == null && b) {
+//            this.execution = execution;
+//
+//        }
         return this;
     }
 }
