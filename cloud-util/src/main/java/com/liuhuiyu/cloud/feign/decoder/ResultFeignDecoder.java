@@ -95,6 +95,7 @@ public class ResultFeignDecoder implements Decoder {
             }
             // 其他类型转换
             ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper.readValue(new Gson().toJson(result.getData()), javaType);
         }
         else {
