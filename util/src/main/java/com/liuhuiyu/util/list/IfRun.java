@@ -1,7 +1,5 @@
 package com.liuhuiyu.util.list;
 
-import com.liuhuiyu.util.functional.Execution;
-
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -21,9 +19,6 @@ public class IfRun<T, R> {
     private Function<T, R> defineFunction;
     private Supplier<R> defineSupplier;
     private Optional<R> resOptional;
-//    private Function<T, R> function;
-//    private Supplier<R> supplier;
-//    private Runnable execution;
 
     public static <T, R> IfRun<T, R> ifRun(T t) {
         return new IfRun<>(t);
