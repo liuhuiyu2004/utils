@@ -2,6 +2,7 @@ package com.liuhuiyu.cloud.feign.decoder;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -76,6 +77,7 @@ public class ResultFeignDecoder implements Decoder {
                 List<Object> collect = content.stream().map(v -> {
                     try {
                         ObjectMapper objectMapper = new ObjectMapper();
+                        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                         String json = new Gson().toJson(v);
                         return objectMapper.readValue(json, boundType);
                     }
