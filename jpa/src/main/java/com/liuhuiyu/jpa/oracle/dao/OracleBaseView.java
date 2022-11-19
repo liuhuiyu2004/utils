@@ -110,6 +110,14 @@ public abstract class OracleBaseView extends BaseView {
         public PageImpl<R> buildPage() {
             return page(b, t, sql, baseWhere, order, fullWhere);
         }
+
+        public List<R> buildList() {
+            return list(b, t, sql, baseWhere, order, fullWhere);
+        }
+
+        public long buildCount() {
+            return count(t, sql, baseWhere, fullWhere);
+        }
     }
 
     public static final String SPACE = " ";
@@ -120,7 +128,7 @@ public abstract class OracleBaseView extends BaseView {
      * @param b         获取数据后的转换
      * @param t         获取条件
      * @param sql       基础查询语句
-     * @param baseWhere 基础查询条件
+     * @param baseWhere 基础查询条件（如果无条件此处使用 BLANK_BASE_WHERE）
      * @param order     排序
      * @param fullWhere 填充查询条件
      * @param <R>       返回分页的数据类型
