@@ -1,5 +1,6 @@
 package com.liuhuiyu.jpa.oracle.dao;
 
+import com.google.common.base.Joiner;
 import com.liuhuiyu.dto.IPaging;
 import com.liuhuiyu.jpa.BaseView;
 import com.liuhuiyu.jpa.DaoOperator;
@@ -205,5 +206,43 @@ public abstract class OracleBaseView extends BaseView {
      */
     protected static String likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
         return (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
+    }
+
+
+    static abstract class SqlCommandPackage<T> {
+        protected T findDto;
+        protected StringBuilder sqlBuilder;
+        protected Map<String, Object> parameterMap;
+        protected Joiner joiner = Joiner.on(",").skipNulls();
+
+        public SqlCommandPackage(T findDto, StringBuilder sqlBuilder, Map<String, Object> parameterMap) {
+            this.findDto = findDto;
+            this.sqlBuilder = sqlBuilder;
+            this.parameterMap = parameterMap;
+        }
+
+        protected void inPackage(String parameterName, String fieldName, String[] data, Boolean notIn, Boolean isNull) {
+            if (data != null && data.length > 0) {
+                String[] names = new String[data.length];
+                sqlBuilder.append("AND((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
+                for (int i = 0; i < data.length; i++) {
+                    names[i] = ":" + parameterName + i;
+                    parameterMap.put(parameterName + i, data[i]);
+                }
+                sqlBuilder.append(joiner.join(names)).append("))");
+                if (isNull) {
+                    sqlBuilder.append("OR(").append(fieldName).append(" is null)");
+                }
+                sqlBuilder.append(")");
+            }
+        }
+
+        /**
+         * 命令封装
+         *
+         * @author LiuHuiYu
+         * Created DateTime 2022-11-19 21:32
+         */
+        abstract void commandPackage();
     }
 }

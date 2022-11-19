@@ -20,6 +20,7 @@
         <com.liuhuiyu.dto.versions>2021.1.0</com.liuhuiyu.dto.versions>
         <spring.versions>2.1.6.RELEASE</spring.versions>
         <log4j2.version>2.18.0</log4j2.version>
+        <guava.version>31.1-jre</guava.version>
     </properties>
     <dependencies>
         <dependency>
@@ -57,6 +58,12 @@
             <scope>compile</scope>
         </dependency>
         <!-- endregion -->
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
