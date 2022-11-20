@@ -209,7 +209,7 @@ public abstract class OracleBaseView extends BaseView {
     }
 
 
-    static abstract class SqlCommandPackage<T> {
+    protected static abstract class SqlCommandPackage<T> {
         protected T findDto;
         protected StringBuilder sqlBuilder;
         protected Map<String, Object> parameterMap;
@@ -243,6 +243,6 @@ public abstract class OracleBaseView extends BaseView {
          * @author LiuHuiYu
          * Created DateTime 2022-11-19 21:32
          */
-        abstract void commandPackage();
+        public abstract void commandPackage();
     }
 }
