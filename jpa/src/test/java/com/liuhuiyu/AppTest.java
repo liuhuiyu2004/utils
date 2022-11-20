@@ -1,14 +1,16 @@
 package com.liuhuiyu;
 
-import static org.junit.Assert.assertTrue;
-
 import com.liuhuiyu.jpa.DaoOperator;
-import org.junit.Test;
+import com.liuhuiyu.test.TestBase;
+import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
+
 
 /**
  * Unit test for simple App.
  */
-public class AppTest {
+public class AppTest extends TestBase {
     /**
      * Rigorous Test :-)
      */
@@ -16,11 +18,10 @@ public class AppTest {
     public void shouldAnswerWithTrue() {
         Object obj = new Object[]{1, "abc"};
         Abc abc = new Abc(obj);
-        Abc def=objToClass(Abc::new,obj);
-        assertTrue(true);
+        Abc def = objToClass(Abc::new, obj);
     }
 
-    private <T> T objToClass(DaoOperator<T> daoOperator,Object obj){
+    private <T> T objToClass(DaoOperator<T> daoOperator, Object obj) {
         return daoOperator.objectToT(obj);
     }
 
@@ -34,5 +35,10 @@ public class AppTest {
             index = (int) objects[0];
             name = objects[1].toString();
         }
+    }
+
+    @Test
+    public void out() {
+        LOG.info(String.join(";\n", Collections.nCopies(6, "{}")), 1, 2, 3, 4, 5, 6);
     }
 }

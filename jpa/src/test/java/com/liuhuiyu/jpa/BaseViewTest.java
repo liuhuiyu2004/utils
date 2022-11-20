@@ -1,7 +1,5 @@
 package com.liuhuiyu.jpa;
 
-import junit.framework.TestCase;
-
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;

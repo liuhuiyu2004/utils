@@ -2,14 +2,13 @@ package com.liuhuiyu.jpa;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.*;
 
 /**
  * @author LiuHuiYu
@@ -17,7 +16,8 @@ import static org.junit.Assert.*;
  * Created DateTime 2021-09-08 11:48
  */
 public class NamedParameterStatementTest {
-    private static final Logger LOG= LogManager.getLogger(NamedParameterStatementTest.class);
+    private static final Logger LOG = LogManager.getLogger(NamedParameterStatementTest.class);
+
     @Test
     public void s() {
         Map<Integer, String> paramsMap = new HashMap<>();
@@ -41,14 +41,14 @@ public class NamedParameterStatementTest {
             sql = sql.replace(m.group(), "?");
         }
         LOG.info(sql);
-        LOG.info("{}",paramsMap.size());
+        LOG.info("{}", paramsMap.size());
 //        sql = sql.replaceAll(regex, "=?");
 //        log.info(sql);
     }
 
     @Test
-    public void testParseSql2(){
-        String sql="select count(1)\n" +
+    public void testParseSql2() {
+        String sql = "select count(1)\n" +
                 "from (SELECT t.ID,c.yzbh,t.RY_ZJHM,t.RY_XM,c.bmmc,t.RL_XSD,t.RL_ZPSJ,t.DZ_NAME,t.RL_IMG,t.RL_ZP_IMG_D,t.RL_ZP_IMG_X,\n" +
                 "             row_number() over (partition by t.RYID order by RL_ZPSJ desc) rw\n" +
                 "      FROM RL_YX_RLZP_LOG t\n" +
@@ -57,12 +57,13 @@ public class NamedParameterStatementTest {
                 "        and (t.hk_8700_sjlx = ':ffff')\n" +
                 "        and (t.RY_ZJHM LIKE :identificationNumber)) t\n" +
                 "where (t.rw = 1)";
-        this.paramsMap=new HashMap<>();
-        String outSql=parseSql2(sql);
-        LOG.info("sql={}",sql);
-        LOG.info("outSql={}",outSql);
-        LOG.info("paramsMap={}",paramsMap);
+        this.paramsMap = new HashMap<>();
+        String outSql = parseSql2(sql);
+        LOG.info("sql={}", sql);
+        LOG.info("outSql={}", outSql);
+        LOG.info("paramsMap={}", paramsMap);
     }
+
     private Map<Integer, String> paramsMap;
 
     private String parseSql2(String query) {

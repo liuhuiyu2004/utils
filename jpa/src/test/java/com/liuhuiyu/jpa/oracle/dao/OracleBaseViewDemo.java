@@ -41,11 +41,26 @@ public class OracleBaseViewDemo extends OracleBaseView {
 
 
     public PageImpl<Object> findPage(IPaging pagingFind) {
-        return createPageImplBuilder(pagingFind).buildPage();
+        return new PageImplBuilder<>((o) -> new Object(), pagingFind, "SELECT * FROM AA T", this::fullWhere)
+                .setCountSql("SELECT count(0) FROM AA T")
+                .baseWhere("")
+                .order("").buildPage();
+    }
+
+    public PageImpl<Object> findPage2(IPaging pagingFind) {
+        return super.page((o) -> new Object(), pagingFind, "SELECT * FROM AA T", "WHERE(1=1)", "ORDER T.C", this::fullWhere);
+    }
+
+    public PageImpl<Object> findPage3(IPaging pagingFind) {
+        return super.page((o) -> new Object(), pagingFind, "SELECT * FROM BB T", "WHERE(T.C=2)", "ORDER T.B", this::fullWhere);
     }
 
     public Long findCount(IPaging pagingFind) {
         return createPageImplBuilder(pagingFind).buildCount();
+    }
+
+    public Long findCount2(IPaging pagingFind) {
+        return super.count(pagingFind, "SELECT * from AA T", "WHERE(1=1)", this::fullWhere);
     }
 
     private PageImplBuilder<IPaging, Object> createPageImplBuilder(IPaging pagingFind) {
@@ -89,6 +104,7 @@ public class OracleBaseViewDemo extends OracleBaseView {
         private void in0() {
             super.inPackage("in1", "t.fieldIn1", new String[]{"a"}, false, false);
         }
+
         private void in1() {
             super.inPackage("in2", "t.fieldIn2", new String[]{"b"}, true, true);
         }

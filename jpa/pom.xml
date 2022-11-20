@@ -18,25 +18,28 @@
         <junit.versions>4.13.2</junit.versions>
         <annotations.versions>23.0.0</annotations.versions>
         <com.liuhuiyu.dto.versions>2021.1.0</com.liuhuiyu.dto.versions>
+        <com.liuhuiyu.test.versions>2022.1.0</com.liuhuiyu.test.versions>
         <spring.versions>2.1.6.RELEASE</spring.versions>
         <log4j2.version>2.18.0</log4j2.version>
         <guava.version>31.1-jre</guava.version>
     </properties>
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.versions}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>${spring.versions}</version>
             <exclusions>
                 <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-api</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -63,6 +66,12 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>test2</artifactId>
+            <version>${com.liuhuiyu.test.versions}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

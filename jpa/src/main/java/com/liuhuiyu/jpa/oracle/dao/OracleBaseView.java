@@ -25,6 +25,10 @@ public abstract class OracleBaseView extends BaseView {
         super(dataSource);
     }
 
+    //region 查询
+
+    public static final String BLANK_BASE_WHERE = " ";
+
     /**
      * 数量查询
      *
@@ -37,15 +41,20 @@ public abstract class OracleBaseView extends BaseView {
      * Created DateTime 2022-02-21 16:24
      */
     protected <T> Long count(T t, String sql, String baseWhere, WhereFull<T> fullWhere) {
+        return count(t, sql, baseWhere, fullWhere, false);
+    }
+
+    protected <T> Long count(T t, String sql, String baseWhere, WhereFull<T> fullWhere, boolean sqlPrototype) {
         StringBuilder sqlBuilder = new StringBuilder(sql);
+        if (!sqlPrototype) {
+            OracleDaoUtil.countOracleSql(sqlBuilder);
+        }
         sqlBuilder.append(SPACE).append(baseWhere);
         Map<String, Object> parameterMap = new HashMap<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
-        OracleDaoUtil.countOracleSql(sqlBuilder);
         return super.selectCount(sqlBuilder.toString(), parameterMap);
     }
 
-    public static final String BLANK_BASE_WHERE = " ";
 
     /**
      * 获取分页列表数据
@@ -66,59 +75,13 @@ public abstract class OracleBaseView extends BaseView {
         if (!StringUtils.hasText(baseWhere) && !BLANK_BASE_WHERE.equals(baseWhere)) {
             baseWhere = "WHERE(1=1)";
         }
+        Map<String, Object> parameterMap = new HashMap<>(0);
         StringBuilder sqlBuilder = new StringBuilder(sql);
         sqlBuilder.append(SPACE).append(baseWhere);
-        sqlBuilder.append(SPACE).append(order);
-        Map<String, Object> parameterMap = new HashMap<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
+        sqlBuilder.append(SPACE).append(order);
         OracleDaoUtil.paginationOracleSql(sqlBuilder, t.getPaging());
         return super.getResultList(b, sqlBuilder.toString(), parameterMap);
-    }
-
-    /**
-     * 分页查询建造者
-     *
-     * @author LiuHuiYu
-     * Created DateTime 2022-05-02 8:33
-     */
-    public class PageImplBuilder<T extends IPaging, R> {
-        private final DaoOperator<R> b;
-        private final T t;
-        private final String sql;
-        private final WhereFull<T> fullWhere;
-        private String order;
-        private String baseWhere;
-
-        public PageImplBuilder(DaoOperator<R> b, T t, String sql, WhereFull<T> fullWhere) {
-            this.b = b;
-            this.t = t;
-            this.sql = sql;
-            this.fullWhere = fullWhere;
-            this.order = "";
-            this.baseWhere = " WHERE(1=1) ";
-        }
-
-        public PageImplBuilder<T, R> order(String order) {
-            this.order = order;
-            return this;
-        }
-
-        public PageImplBuilder<T, R> baseWhere(String baseWhere) {
-            this.baseWhere = baseWhere;
-            return this;
-        }
-
-        public PageImpl<R> buildPage() {
-            return page(b, t, sql, baseWhere, order, fullWhere);
-        }
-
-        public List<R> buildList() {
-            return list(b, t, sql, baseWhere, order, fullWhere);
-        }
-
-        public long buildCount() {
-            return count(t, sql, baseWhere, fullWhere);
-        }
     }
 
     public static final String SPACE = " ";
@@ -163,7 +126,26 @@ public abstract class OracleBaseView extends BaseView {
      * Created DateTime 2022-04-09 11:41
      */
     protected <T extends IPaging, R> PageImpl<R> page(DaoOperator<R> b, T t, String sql, String baseWhere, String order, WhereFull<T> fullWhere) {
-        Long total = this.count(t, sql, baseWhere, fullWhere);
+        return page(b, t, sql, null, baseWhere, order, fullWhere);
+    }
+
+    /**
+     * 分页数据查询
+     *
+     * @param b         查询结果转换实例的实现
+     * @param t         分页查询条件
+     * @param sql       基础语句
+     * @param baseWhere 基础查询（带where）
+     * @param order     排序(带 order by)
+     * @param fullWhere void fullWhere(T find, StringBuilder sqlBuilder, Map<String, Object> parameterMap) 实现
+     * @param <R>       返回分页的数据类型
+     * @param <T>       分页查询的条件
+     * @return org.springframework.data.domain.PageImpl<R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-04-09 11:41
+     */
+    protected <T extends IPaging, R> PageImpl<R> page(DaoOperator<R> b, T t, String sql, String countSql, String baseWhere, String order, WhereFull<T> fullWhere) {
+        Long total = this.count(t, StringUtils.hasText(countSql) ? countSql : sql, baseWhere, fullWhere, StringUtils.hasText(countSql));
         final List<R> gatekeeperCarLogDtoList;
         if (total == 0) {
             gatekeeperCarLogDtoList = Collections.emptyList();
@@ -180,6 +162,9 @@ public abstract class OracleBaseView extends BaseView {
         }
         return new PageImpl<>(gatekeeperCarLogDtoList, t.getPaging().getPageRequest(), total);
     }
+    //endregion
+
+    //region 辅助功能 已经准备作废
 
     /**
      * 模糊匹配 like值
@@ -210,6 +195,68 @@ public abstract class OracleBaseView extends BaseView {
     @Deprecated
     protected static String likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
         return (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
+    }
+    //endregion
+
+    /**
+     * 分页查询建造者
+     *
+     * @author LiuHuiYu
+     * Created DateTime 2022-05-02 8:33
+     */
+    public class PageImplBuilder<T extends IPaging, R> {
+        private final DaoOperator<R> b;
+        private final T t;
+        private final String sql;
+        private String countSql;
+        private final WhereFull<T> fullWhere;
+        private String order;
+        private String baseWhere;
+
+        public PageImplBuilder(DaoOperator<R> b, T t, String sql, WhereFull<T> fullWhere) {
+            this.b = b;
+            this.t = t;
+            this.sql = sql;
+            this.fullWhere = fullWhere;
+            this.order = "";
+            this.baseWhere = " WHERE(1=1) ";
+            this.countSql = null;
+        }
+
+        /**
+         * 设置独立的count查询语句
+         *
+         * @param countSql count查询语句
+         * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.PageImplBuilder<T, R>
+         * @author LiuHuiYu
+         * Created DateTime 2022-11-20 9:36
+         */
+        public PageImplBuilder<T, R> setCountSql(String countSql) {
+            this.countSql = countSql;
+            return this;
+        }
+
+        public PageImplBuilder<T, R> order(String order) {
+            this.order = order;
+            return this;
+        }
+
+        public PageImplBuilder<T, R> baseWhere(String baseWhere) {
+            this.baseWhere = baseWhere;
+            return this;
+        }
+
+        public PageImpl<R> buildPage() {
+            return page(b, t, sql, countSql, baseWhere, order, fullWhere);
+        }
+
+        public List<R> buildList() {
+            return list(b, t, sql, baseWhere, order, fullWhere);
+        }
+
+        public long buildCount() {
+            return count(t, StringUtils.hasText(countSql) ? countSql : sql, baseWhere, fullWhere, StringUtils.hasText(countSql));
+        }
     }
 
     /**
@@ -250,19 +297,19 @@ public abstract class OracleBaseView extends BaseView {
          * @author LiuHuiYu
          * Created DateTime 2022-11-20 8:28
          */
-        protected void inPackage(String parameterName, String fieldName, T[] data, Boolean notIn, Boolean isNull) {
+        protected <P> void inPackage(String parameterName, String fieldName, P[] data, Boolean notIn, Boolean isNull) {
             if (data != null && data.length > 0) {
                 String[] names = new String[data.length];
-                sqlBuilder.append("AND((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
+                this.sqlBuilder.append("AND((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
                 for (int i = 0; i < data.length; i++) {
                     names[i] = ":" + parameterName + i;
-                    parameterMap.put(parameterName + i, data[i]);
+                    this.parameterMap.put(parameterName + i, data[i]);
                 }
-                sqlBuilder.append(joiner.join(names)).append("))");
+                this.sqlBuilder.append(joiner.join(names)).append("))");
                 if (isNull) {
                     sqlBuilder.append("OR(").append(fieldName).append(" is null)");
                 }
-                sqlBuilder.append(")");
+                this.sqlBuilder.append(")");
             }
         }
 
