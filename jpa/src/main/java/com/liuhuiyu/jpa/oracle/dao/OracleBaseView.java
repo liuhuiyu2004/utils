@@ -183,6 +183,7 @@ public abstract class OracleBaseView extends BaseView {
 
     /**
      * 模糊匹配 like值
+     * 建议构建继承SqlCommandPackage的类，使用SqlCommandPackage实现。
      *
      * @param value 值
      * @return java.lang.String
@@ -196,6 +197,7 @@ public abstract class OracleBaseView extends BaseView {
 
     /**
      * like值
+     * 建议构建继承SqlCommandPackage的类，使用SqlCommandPackage实现。
      *
      * @param value 值
      * @param trim  去掉首尾空格
