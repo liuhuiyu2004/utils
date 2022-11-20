@@ -68,9 +68,9 @@ public abstract class OracleBaseView extends BaseView {
         }
         StringBuilder sqlBuilder = new StringBuilder(sql);
         sqlBuilder.append(SPACE).append(baseWhere);
+        sqlBuilder.append(SPACE).append(order);
         Map<String, Object> parameterMap = new HashMap<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
-        sqlBuilder.append(SPACE).append(order);
         OracleDaoUtil.paginationOracleSql(sqlBuilder, t.getPaging());
         return super.getResultList(b, sqlBuilder.toString(), parameterMap);
     }
@@ -189,6 +189,7 @@ public abstract class OracleBaseView extends BaseView {
      * @author LiuHuiYu
      * Created DateTime 2022-06-02 18:44
      */
+    @Deprecated
     protected static String likeValue(String value) {
         return likeValue(value, true, true, true);
     }
@@ -204,24 +205,50 @@ public abstract class OracleBaseView extends BaseView {
      * @author LiuHuiYu
      * Created DateTime 2022-06-02 18:43
      */
+    @Deprecated
     protected static String likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
         return (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
     }
 
-
+    /**
+     * SQL原生封装
+     *
+     * @author LiuHuiYu
+     * Created DateTime 2022-11-20 8:26
+     */
     protected static abstract class SqlCommandPackage<T> {
         protected T findDto;
         protected StringBuilder sqlBuilder;
         protected Map<String, Object> parameterMap;
         protected Joiner joiner = Joiner.on(",").skipNulls();
 
+        /**
+         * SQL原生封装 构建函数
+         *
+         * @param findDto      查询条件
+         * @param sqlBuilder   sqlBuilder
+         * @param parameterMap 参数
+         * @author LiuHuiYu
+         * Created DateTime 2022-11-20 8:27
+         */
         public SqlCommandPackage(T findDto, StringBuilder sqlBuilder, Map<String, Object> parameterMap) {
             this.findDto = findDto;
             this.sqlBuilder = sqlBuilder;
             this.parameterMap = parameterMap;
         }
 
-        protected void inPackage(String parameterName, String fieldName, String[] data, Boolean notIn, Boolean isNull) {
+        /**
+         * 封装 in 条件
+         *
+         * @param parameterName 参数名称头
+         * @param fieldName     字段名称
+         * @param data          查询的数据
+         * @param notIn         使用 not in
+         * @param isNull        包含空 OR(fieldName is null)
+         * @author LiuHuiYu
+         * Created DateTime 2022-11-20 8:28
+         */
+        protected void inPackage(String parameterName, String fieldName, T[] data, Boolean notIn, Boolean isNull) {
             if (data != null && data.length > 0) {
                 String[] names = new String[data.length];
                 sqlBuilder.append("AND((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
@@ -235,6 +262,34 @@ public abstract class OracleBaseView extends BaseView {
                 }
                 sqlBuilder.append(")");
             }
+        }
+
+
+        /**
+         * 模糊匹配 like值
+         *
+         * @param value 值
+         * @author LiuHuiYu
+         * Created DateTime 2022-06-02 18:44
+         */
+        protected void likeValue(String parameterName, String fieldName, String value) {
+            likeValue(parameterName, fieldName, value, true, true, true);
+        }
+
+        /**
+         * like值
+         *
+         * @param value 值
+         * @param trim  去掉首尾空格
+         * @param head  头部模糊匹配
+         * @param tail  尾部模糊匹配
+         * @author LiuHuiYu
+         * Created DateTime 2022-06-02 18:43
+         */
+        protected void likeValue(String parameterName, String fieldName, String value, Boolean trim, Boolean head, Boolean tail) {
+            final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
+            this.sqlBuilder.append("AND(").append(parameterName).append(" LIKE :").append(fieldName).append(")");
+            this.parameterMap.put(fieldName, s);
         }
 
         /**
