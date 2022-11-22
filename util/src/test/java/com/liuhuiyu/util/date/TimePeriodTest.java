@@ -1,18 +1,17 @@
 package com.liuhuiyu.util.date;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.BeforeEach;
+import com.liuhuiyu.test.TestBase;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2022-05-28 16:14
  */
-class TimePeriodTest {
-    private static final Logger LOG = LogManager.getLogger(TimePeriodTest.class);
+class TimePeriodTest extends TestBase {
 
     @Test
     public void testNull() {
@@ -29,6 +28,18 @@ class TimePeriodTest {
     @Test
     public void testTime() {
         TimePeriod timePeriod = new TimePeriod("2012-05-06", "2012-03-07");
+        LOG.info("{}-{}", timePeriod.getBeginTime(), timePeriod.getEndTime());
+    }
+
+    @Test
+    public void testTime2() {
+        TimePeriod timePeriod = new TimePeriod(null, Timestamp.valueOf(LocalDateTime.now()));
+        LOG.info("{}-{}", timePeriod.getBeginTime(), timePeriod.getEndTime());
+    }
+
+    @Test
+    public void testTime3() {
+        TimePeriod timePeriod = new TimePeriod(Timestamp.valueOf(LocalDateTime.now().plusHours(1)), Timestamp.valueOf(LocalDateTime.now()));
         LOG.info("{}-{}", timePeriod.getBeginTime(), timePeriod.getEndTime());
     }
 }

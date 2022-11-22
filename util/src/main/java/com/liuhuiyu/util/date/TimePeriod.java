@@ -26,6 +26,17 @@ public class TimePeriod {
         }
     }
 
+    public TimePeriod(Timestamp beginTime, Timestamp endTime) {
+        if (beginTime == null || endTime == null) {
+            this.beginTime = null;
+            this.endTime = null;
+        }
+        else {
+            this.beginTime = beginTime.before(endTime) ? beginTime : endTime;
+            this.endTime = beginTime.after(endTime) ? beginTime : endTime;
+        }
+    }
+
     public Timestamp getBeginTime() {
         return beginTime;
     }
