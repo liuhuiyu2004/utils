@@ -37,6 +37,14 @@ public class TimePeriod {
         }
     }
 
+    public TimePeriod stringCreate(String beginTime, String endTime) {
+        return new TimePeriod(beginTime, endTime);
+    }
+
+    public TimePeriod timestampCreate(String beginTime, String endTime) {
+        return new TimePeriod(beginTime, endTime);
+    }
+
     public Timestamp getBeginTime() {
         return beginTime;
     }
