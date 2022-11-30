@@ -12,7 +12,7 @@ import java.util.Locale;
  * Created DateTime 2022-05-02 7:49
  */
 public class Operating {
-
+    public static final String NONE = "";
     /**
      * 操作人id
      */
@@ -27,6 +27,9 @@ public class Operating {
     private RowStatus rowStatus;
 
     public Operating() {
+        this.operatorId = NONE;
+        this.modelName = NONE;
+        this.rowStatus = RowStatus.U;
     }
 
     public String getModelName() {
