@@ -10,10 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author LiuHuiYu
@@ -162,6 +159,21 @@ public abstract class OracleBaseView extends BaseView {
         }
         return new PageImpl<>(gatekeeperCarLogDtoList, t.getPaging().getPageRequest(), total);
     }
+
+    protected <T extends IPaging, R> Optional<R> getFirstResult(DaoOperator<R> b, T t, String sql, String baseWhere, String order, WhereFull<T> fullWhere) {
+        StringBuilder sqlBuilder = new StringBuilder(sql);
+        sqlBuilder.append(SPACE).append(baseWhere);
+        Map<String, Object> parameterMap = new HashMap<>(0);
+        fullWhere.full(t, sqlBuilder, parameterMap);
+        sqlBuilder.append(SPACE).append(order);
+        final List<R> resultList = super.getResultList(b, sqlBuilder.toString(), parameterMap);
+        if (resultList.size() == 0) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(resultList.get(0));
+        }
+    }
     //endregion
 
     //region 辅助功能 已经准备作废
@@ -257,6 +269,10 @@ public abstract class OracleBaseView extends BaseView {
         public long buildCount() {
             return count(t, StringUtils.hasText(countSql) ? countSql : sql, baseWhere, fullWhere, StringUtils.hasText(countSql));
         }
+
+        public Optional<R> buildFirstResult() {
+            return getFirstResult(b, t, sql, baseWhere, order, fullWhere);
+        }
     }
 
     /**
@@ -284,6 +300,19 @@ public abstract class OracleBaseView extends BaseView {
             this.findDto = findDto;
             this.sqlBuilder = sqlBuilder;
             this.parameterMap = parameterMap;
+        }
+
+        /**
+         * 封装 in 条件
+         *
+         * @param parameterName 参数名称头
+         * @param fieldName     字段名称
+         * @param data          查询的数据
+         * @author LiuHuiYu
+         * Created DateTime 2022-11-20 8:28
+         */
+        protected <P> void inPackage(String parameterName, String fieldName, P[] data) {
+            inPackage(parameterName, fieldName, data, false, false);
         }
 
         /**
