@@ -27,8 +27,10 @@ class TimePeriodTest extends TestBase {
 
     @Test
     public void testTime() {
-        TimePeriod timePeriod = new TimePeriod("2012-05-06", "2012-03-07");
-        LOG.info("{}-{}", timePeriod.getBeginTime(), timePeriod.getEndTime());
+        TimePeriod timePeriod = new TimePeriod("2022-11-30", "2022-11-30");
+        LOG.info("{} - {}", timePeriod.getBeginTime(), timePeriod.getEndTime());
+        Timestamp nowTime = new Timestamp(System.currentTimeMillis());
+        LOG.info("{} in {}", nowTime, timePeriod.isInTimePeriod(nowTime));
     }
 
     @Test

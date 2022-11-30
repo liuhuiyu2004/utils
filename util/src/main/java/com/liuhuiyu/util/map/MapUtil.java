@@ -266,13 +266,15 @@ public class MapUtil {
     //endregion
     public static Map<String, Object> mapOfJsonString(String jsonString) {
         try {
-            Gson gson = new Gson();
-            Map<String, Object> resultMap = gson.fromJson(jsonString, new TypeToken<Map<String, Object>>() {
+            Map<String, Object> resultMap = new Gson().fromJson(jsonString, new TypeToken<Map<String, Object>>() {
             }.getType());
             return mapDoubleToInt(resultMap);
         }
         catch (JsonSyntaxException e) {
             throw new RuntimeException("无法解析成Map格式数据");
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

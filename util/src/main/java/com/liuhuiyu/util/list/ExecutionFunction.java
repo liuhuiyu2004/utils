@@ -36,6 +36,10 @@ public class ExecutionFunction<T, R> {
         return new ExecutionFunction<>(t);
     }
 
+    public static <R> ExecutionFunction<Void, R> begin() {
+        return new ExecutionFunction<>(null);
+    }
+
     /**
      * 没有成功就执行
      *
@@ -56,7 +60,26 @@ public class ExecutionFunction<T, R> {
         }
         return this;
     }
-
+    /**
+     * 没有成功就执行
+     *
+     * @param supplier 执行函数
+     * @return com.liuhuiyu.util.date.LocalDateUtil.ExecutionFunction<T, R>
+     * @author LiuHuiYu
+     * Created DateTime 2022-09-05 9:56
+     */
+    public ExecutionFunction<T, R> notSucceedExecution(Supplier<R> supplier) {
+        if (!this.hasExecutedSuccess()) {
+            try {
+                R r = supplier.get();
+                this.optionalR = Optional.of(Optional.ofNullable(r));
+            }
+            catch (Exception ex) {
+                this.exception = new RuntimeException(ex);
+            }
+        }
+        return this;
+    }
     /**
      * 已执行成功
      *

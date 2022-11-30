@@ -45,6 +45,18 @@ public class TimePeriod {
         return new TimePeriod(beginTime, endTime);
     }
 
+    /**
+     * 时间点在当前时间段内部（不包含边界）
+     *
+     * @param timestamp 检测时间点
+     * @return boolean
+     * @author LiuHuiYu
+     * Created DateTime 2022-11-29 10:49
+     */
+    public boolean isInTimePeriod(Timestamp timestamp) {
+        return beginTime.before(timestamp) && endTime.after(timestamp);
+    }
+
     public Timestamp getBeginTime() {
         return beginTime;
     }
