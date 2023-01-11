@@ -344,6 +344,33 @@ public abstract class OracleBaseView extends BaseView {
 
 
         /**
+         * 封装 数据段互相包含（开区间 位置相同）条件
+         *
+         * @param minParameterName 最小值参数名
+         * @param maxParameterName 最大值参数名
+         * @param minFieldName     最小值字段
+         * @param maxFieldName     最大值字段
+         * @param minValue         最小值
+         * @param maxValue         最大值
+         * @author LiuHuiYu
+         * Created DateTime 2022-12-01 10:23
+         */
+        protected <P> void inclusion(String minParameterName, String maxParameterName, String minFieldName, String maxFieldName, P minValue, P maxValue) {
+            this.sqlBuilder.append("and (");
+            this.sqlBuilder.append("((").append(minFieldName).append(" < :").append(minParameterName).append(") and (")
+                    .append(maxFieldName).append(" > :").append(minParameterName).append("))");
+            this.sqlBuilder.append("or");
+            this.sqlBuilder.append("((").append(minFieldName).append(" < :").append(maxParameterName).append(") and (")
+                    .append(maxFieldName).append(" > :").append(maxParameterName).append("))");
+            this.sqlBuilder.append("or");
+            this.sqlBuilder.append("((").append(minFieldName).append(" >= :").append(minParameterName).append(") and (")
+                    .append(maxFieldName).append(" <= :").append(maxParameterName).append("))");
+            this.sqlBuilder.append(")");
+            this.parameterMap.put(minParameterName, minValue);
+            this.parameterMap.put(maxParameterName, maxValue);
+        }
+
+        /**
          * 模糊匹配 like值
          *
          * @param value 值

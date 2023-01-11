@@ -39,6 +39,9 @@ public class OracleBaseViewDemo extends OracleBaseView {
         return createPageImplBuilder(pagingFind).buildList();
     }
 
+    public Object findOne(IPaging pagingFind) {
+        return createPageImplBuilder(pagingFind).buildFirstResult();
+    }
 
     public PageImpl<Object> findPage(IPaging pagingFind) {
         return new PageImplBuilder<>((o) -> new Object(), pagingFind, "SELECT * FROM AA T", this::fullWhere)
@@ -102,11 +105,22 @@ public class OracleBaseViewDemo extends OracleBaseView {
         }
 
         private void in0() {
-            super.inPackage("in1", "t.fieldIn1", new String[]{"a"}, false, false);
+            super.inPackage("inA", "t.fieldInA", new String[]{"a"});
+            super.inPackage("inB", "t.fieldInB", new String[]{"b"});
+            //等效代码
+            super.inPackage("inB", "t.fieldInB", new String[]{"a"}, false, false);
         }
 
         private void in1() {
             super.inPackage("in2", "t.fieldIn2", new String[]{"b"}, true, true);
+        }
+
+        private void inclusion1() {
+            super.inclusion("minValue", "maxValue", "t.min_value", "t.max_value", 50, 100);
+        }
+
+        private void inclusion2() {
+            super.inclusion("minV", "maxV", "t.min_v", "t.max_v", 0.7, 1);
         }
 
         @Override
@@ -116,6 +130,8 @@ public class OracleBaseViewDemo extends OracleBaseView {
             this.like2();
             this.in0();
             this.in1();
+            this.inclusion1();
+            this.inclusion2();
         }
     }
 }

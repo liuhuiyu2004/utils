@@ -38,6 +38,7 @@ public class OracleBaseViewTest extends TestBase {
         final Long count = instance.findCount(paging);
         final Long count2 = instance.findCount2(paging);
         final List<Object> list = instance.findList(paging);
+        final Object one = instance.findOne(paging);
         final PageImpl<Object> page = instance.findPage(paging);
         final PageImpl<Object> page2 = instance.findPage2(paging);
         final PageImpl<Object> page3 = instance.findPage3(paging);
