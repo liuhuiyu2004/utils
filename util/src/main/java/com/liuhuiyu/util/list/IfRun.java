@@ -185,16 +185,6 @@ public class IfRun<T, R> {
      */
     public Optional<R> run() {
         R r;
-//        if (this.function != null) {
-//            r = function.apply(t);
-//        }
-//        else if (this.supplier != null) {
-//            r = supplier.get();
-//        }
-//        else if (this.execution != null) {
-//            this.execution.run();
-//            return Optional.empty();
-//        }
         if (!isRun(true)) {
             return this.resOptional;
         }
@@ -237,6 +227,7 @@ public class IfRun<T, R> {
      * Created DateTime 2022-06-06 16:51
      */
     public <X extends Throwable> R orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        final Optional<R> run = run();
         return run().orElseThrow(exceptionSupplier);
     }
 
@@ -253,10 +244,6 @@ public class IfRun<T, R> {
             execution.run();
             this.resOptional = Optional.empty();
         }
-//        if (this.supplier == null && this.function == null && b) {
-//            this.execution = execution;
-//
-//        }
         return this;
     }
 }
