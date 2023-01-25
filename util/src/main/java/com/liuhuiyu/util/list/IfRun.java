@@ -132,14 +132,32 @@ public class IfRun<T, R> {
      * Created DateTime 2022-05-21 16:17
      */
     public IfRun<T, R> ifRun(Boolean b, Function<T, R> f) {
-        if (isRun(b)) {
+        if (isAllowExecution(b)) {
             this.resOptional = Optional.ofNullable(f.apply(t));
         }
         return this;
     }
 
-    private boolean isRun(Boolean b) {
-        return b && null == this.resOptional;
+    /**
+     * 允许执行方法（之前没有任何可用的执行方法）
+     *
+     * @param b 执行条件
+     * @return boolean
+     * @author LiuHuiYu
+     * Created DateTime 2023-01-24 14:09
+     */
+    private boolean isAllowExecution(Boolean b) {
+        return b && !isAlreadyExecution();
+    }
+    /**
+     * 已经有执行的函数了
+     * @author LiuHuiYu
+     * Created DateTime 2023-01-24 14:10
+     * @return boolean
+     */
+    @SuppressWarnings("all")
+    private boolean isAlreadyExecution() {
+        return null != this.resOptional;
     }
 
     /**
@@ -170,7 +188,7 @@ public class IfRun<T, R> {
 //        if (this.supplier == null && this.function == null && b) {
 //            this.supplier = supplier;
 //        }
-        if (isRun(b)) {
+        if (this.isAllowExecution(b)) {
             this.resOptional = Optional.ofNullable(supplier.get());
         }
         return this;
@@ -184,18 +202,18 @@ public class IfRun<T, R> {
      * Created DateTime 2022-05-21 16:18
      */
     public Optional<R> run() {
-        R r;
-        if (!isRun(true)) {
+        if (this.isAlreadyExecution()) {
             return this.resOptional;
         }
         else if (this.defineFunction != null) {
-            r = this.defineFunction.apply(t);
+            this.resOptional = Optional.ofNullable(this.defineFunction.apply(t));
+            return this.resOptional;
         }
         else if (this.defineSupplier != null) {
-            r = this.defineSupplier.get();
+            this.resOptional = Optional.ofNullable(this.defineSupplier.get());
         }
         else if (this.defineValue != null) {
-            r = defineValue;
+            this.resOptional = Optional.of(defineValue);
         }
         else if (this.exception != null) {
             throw exception;
@@ -203,7 +221,7 @@ public class IfRun<T, R> {
         else {
             return Optional.empty();
         }
-        return r == null ? Optional.empty() : Optional.of(r);
+        return this.resOptional;
     }
 
     /**
@@ -215,7 +233,13 @@ public class IfRun<T, R> {
      * Created DateTime 2022-06-06 16:45
      */
     public R elseRun(Supplier<? extends R> other) {
-        return run().orElseGet(other);
+        this.run();
+        if (this.isAlreadyExecution()) {
+            return this.resOptional.orElse(null);
+        }
+        else {
+            return other.get();
+        }
     }
 
     /**
@@ -227,12 +251,31 @@ public class IfRun<T, R> {
      * Created DateTime 2022-06-06 16:51
      */
     public <X extends Throwable> R orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        final Optional<R> run = run();
-        return run().orElseThrow(exceptionSupplier);
+        this.run();
+        if (this.isAlreadyExecution()) {
+            return this.resOptional.orElse(null);
+        }
+        else {
+            throw exceptionSupplier.get();
+        }
     }
 
+    /**
+     * 如果上面任何一个条件都不满足就返回指定值
+     *
+     * @param r 指定值
+     * @return R
+     * @author LiuHuiYu
+     * Created DateTime 2023-01-24 13:56
+     */
     public R orElse(R r) {
-        return run().orElse(r);
+        this.run();
+        if (this.isAlreadyExecution()) {
+            return this.resOptional.orElse(null);
+        }
+        else {
+            return r;
+        }
     }
 
     public static IfRun<Void, Void> ifRun() {
@@ -240,7 +283,7 @@ public class IfRun<T, R> {
     }
 
     public IfRun<T, R> ifRun(Boolean b, Runnable execution) {
-        if (this.isRun(b)) {
+        if (this.isAllowExecution(b)) {
             execution.run();
             this.resOptional = Optional.empty();
         }
