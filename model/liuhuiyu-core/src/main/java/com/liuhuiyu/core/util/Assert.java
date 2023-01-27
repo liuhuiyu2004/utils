@@ -8,7 +8,6 @@ import java.util.function.Function;
  * Created DateTime 2023-01-17 11:10
  */
 public abstract class Assert {
-
     static Function<String, RuntimeException> exceptionProxy;
 
     private static RuntimeException throwEx(String message) {
