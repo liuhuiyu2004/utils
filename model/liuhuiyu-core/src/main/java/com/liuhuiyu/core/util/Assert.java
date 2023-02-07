@@ -64,6 +64,7 @@ public abstract class Assert {
      * 对象为空则抛出异常
      *
      * @param object 对象
+     * @param message 对象
      */
     public static void assertNotNull(Object object, String message) {
         assertTrue(object != null, message);
@@ -78,6 +79,7 @@ public abstract class Assert {
      * 对象不为空则抛出异常
      *
      * @param object 对象
+     * @param exception 对象
      */
     public static void assertNull(Object object, RuntimeException exception) {
         assertTrue(object == null, exception);
@@ -87,6 +89,7 @@ public abstract class Assert {
      * 对象不为空则抛出异常
      *
      * @param object 对象
+     * @param message 消息
      */
     public static void assertNull(Object object, String message) {
         assertTrue(object == null, message);

@@ -5,9 +5,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
+ * @param <T> 输入
+ * @param <R> 输出
+ *            Created DateTime 2023-01-27 10:23
  * @author LiuHuiYu
  * @version v1.0.0.0
- * Created DateTime 2023-01-27 10:23
  */
 public class IfRun<T, R> {
     private final T t;
@@ -28,8 +30,10 @@ public class IfRun<T, R> {
     /**
      * 链式多条件执行并返回结果，如果都没有执行将返回默认
      *
-     * @param t 输出参数
-     * @return com.liuhuiyu.core.util.IfRun<T, R>
+     * @param t   输出参数
+     * @param <T> 输出参数
+     * @param <R> 输出参数
+     * @return com.liuhuiyu.core.util.IfRun
      * @author LiuHuiYu
      * Created DateTime 2023-01-27 10:31
      */
@@ -52,7 +56,7 @@ public class IfRun<T, R> {
      *
      * @param b        判断是否执行
      * @param supplier 要执行的函数
-     * @return com.liuhuiyu.util.list.IfRun<T, R>
+     * @return com.liuhuiyu.util.list.IfRun
      * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:17
      */
@@ -76,7 +80,7 @@ public class IfRun<T, R> {
      *
      * @param b 判断是否执行
      * @param r 赋予的值
-     * @return com.liuhuiyu.core.util.IfRun<T, R>
+     * @return com.liuhuiyu.core.util.IfRun
      * @author LiuHuiYu
      * Created DateTime 2023-01-27 11:28
      */
@@ -93,7 +97,7 @@ public class IfRun<T, R> {
     /**
      * 获取执行后的信息
      *
-     * @return java.util.Optional<R>
+     * @return java.util.Optional
      * @author LiuHuiYu
      * Created DateTime 2023-01-27 11:11
      */
@@ -105,6 +109,7 @@ public class IfRun<T, R> {
      * 没有返回结构将抛出异常
      *
      * @param exceptionSupplier 将返回要抛出的异常的供应商
+     * @param <X> 将返回要抛出的异常的供应商
      * @return R
      * @author LiuHuiYu
      * Created DateTime 2022-06-06 16:51
@@ -148,7 +153,7 @@ public class IfRun<T, R> {
      * 添加执行
      *
      * @param supplier 要执行的函数
-     * @return com.liuhuiyu.util.list.IfRun<T, R>
+     * @return com.liuhuiyu.util.list.IfRun
      * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:17
      */
