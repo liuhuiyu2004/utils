@@ -2,8 +2,8 @@ com\liuhuiyu\core\lang\id\NanoIdTest.class
 com\liuhuiyu\core\util\IgnoredExceptionTest.class
 com\liuhuiyu\core\time\TimePeriodTest$StringTime.class
 com\liuhuiyu\core\time\TimestampUtilTest.class
-com\liuhuiyu\core\util\AssertTest.class
 com\liuhuiyu\core\lang\id\SnowflakeIdTest.class
+com\liuhuiyu\core\util\IfRunTest.class
+com\liuhuiyu\core\util\AssertTest.class
 com\liuhuiyu\core\time\TimePeriodTest.class
 com\liuhuiyu\core\net\PingTest.class
-com\liuhuiyu\core\util\IfRunTest.class
