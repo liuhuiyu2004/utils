@@ -11,6 +11,13 @@ import java.util.function.Supplier;
  * Created DateTime 2023-02-05 9:53
  */
 public class IgnoredException {
+    /**
+     * 执行中出现异常，忽略不报错并且继续执行（多用于循环体中可忽略的循环执行）
+     *
+     * @param execution 要执行的 Runnable
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-22 21:37
+     */
     public static void run(Runnable execution) {
         try {
             execution.run();
@@ -19,6 +26,14 @@ public class IgnoredException {
         }
     }
 
+    /**
+     * 执行中出现异常，忽略不报错并且继续执行（多用于循环体中可忽略的循环执行）
+     *
+     * @param execution         要执行的 Runnable
+     * @param exceptionFunction 异常出现要执行的 Consumer
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-22 21:37
+     */
     public static void run(Runnable execution, Consumer<Exception> exceptionFunction) {
         try {
             execution.run();
@@ -28,6 +43,15 @@ public class IgnoredException {
         }
     }
 
+    /**
+     * 执行中出现异常，返回默认值
+     *
+     * @param supplier 要执行的 Supplier
+     * @param def      默认值
+     * @return T
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-22 21:38
+     */
     public static <T> T get(Supplier<T> supplier, T def) {
         try {
             return supplier.get();
