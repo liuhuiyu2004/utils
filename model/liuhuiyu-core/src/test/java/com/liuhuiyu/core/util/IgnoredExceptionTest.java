@@ -27,6 +27,17 @@ class IgnoredExceptionTest extends TestBase {
         }, (ex) -> LOG.info("{}:{}", ex.getMessage(), value));
     }
 
+    @DisplayName("忽略异常获取默认值")
+    @ParameterizedTest()
+    @MethodSource("argumentsProvider")
+    public void get(Integer value) {
+        final Integer integer = IgnoredException.get(() -> {
+            Assert.assertTrue(value > 5, "");
+            return value;
+        }, 0);
+        LOG.info("{}->{}", value, integer);
+    }
+
     static Stream<Arguments> argumentsProvider() {
         return Stream.of(
                 Arguments.arguments(1),

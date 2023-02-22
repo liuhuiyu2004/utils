@@ -1,5 +1,6 @@
 package com.liuhuiyu.util.thread;
 
+import com.liuhuiyu.test.TestBase;
 import org.junit.jupiter.api.Test;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  * @version v1.0.0.0
  * Created DateTime 2021-07-17 10:36
  */
-public class ThreadUtilTest {
+public class ThreadUtilTest extends TestBase {
 
     @Test
     public void asynchronousDataLoading() {
@@ -29,7 +30,7 @@ public class ThreadUtilTest {
     @Test
     public void asynchronousDataLoading2() {
         List<Integer> list = new ArrayList<>(5);
-        Collections.addAll(list, 5, 1, 6, 4, 3, 2, 7, 5, 6);
+        Collections.addAll(list, 5, 1, 9, 4, 3, 2, 7, 8, 6);
         for (int i = 0; i < 100; i++) {
             ThreadPoolTaskExecutor threadPoolTaskExecutor = ExecutorBuilder.create().corePoolSize(list.size()).threadName("test-" + i + "-").builder();
             ThreadUtil.asynchronousDataLoading(list, this::testExe, threadPoolTaskExecutor);
@@ -38,9 +39,9 @@ public class ThreadUtilTest {
 
     private void testExe(Integer i) {
         try {
-            //log.info("开始：{}", i);
+            LOG.info("开始：{}", i);
             Thread.sleep(i * 1000);
-            //log.info("完成：{}", i);
+            LOG.info("完成：{}", i);
         }
         catch (InterruptedException e) {
             e.printStackTrace();

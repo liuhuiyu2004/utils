@@ -74,6 +74,7 @@
             <groupId>com.liuhuiyu</groupId>
             <artifactId>test2</artifactId>
             <version>2022.1.0</version>
+            <scope>test</scope>
         </dependency>
         <!--region web 引擎-->
 

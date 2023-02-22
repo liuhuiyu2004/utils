@@ -1,6 +1,7 @@
 package com.liuhuiyu.core.util;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * 执行中出现异常，忽略不报错并且继续执行（多用于循环体中可忽略的循环执行）
@@ -17,12 +18,22 @@ public class IgnoredException {
         catch (Exception ignored) {
         }
     }
+
     public static void run(Runnable execution, Consumer<Exception> exceptionFunction) {
         try {
             execution.run();
         }
         catch (Exception ex) {
             exceptionFunction.accept(ex);
+        }
+    }
+
+    public static <T> T get(Supplier<T> supplier, T def) {
+        try {
+            return supplier.get();
+        }
+        catch (Exception ex) {
+            return def;
         }
     }
 }
