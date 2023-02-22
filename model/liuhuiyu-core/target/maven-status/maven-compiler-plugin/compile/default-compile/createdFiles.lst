@@ -3,6 +3,8 @@ com\liuhuiyu\core\data\change\ChangeData.class
 com\liuhuiyu\core\lang\id\NanoId.class
 com\liuhuiyu\core\time\TimePeriod.class
 com\liuhuiyu\core\data\change\ChangeNoticeManage.class
+com\liuhuiyu\core\thread\EasyThreadFactory.class
+com\liuhuiyu\core\thread\ThreadPoolExecutorBuilder.class
 com\liuhuiyu\core\util\Assert.class
 com\liuhuiyu\core\data\change\ChangeNotice.class
 com\liuhuiyu\core\lang\id\SnowflakeId.class
