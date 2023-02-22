@@ -1,9 +1,11 @@
 package com.liuhuiyu.core.data.change;
 
+import com.liuhuiyu.core.thread.ThreadPoolExecutorBuilder;
 import com.liuhuiyu.core.util.IgnoredException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 更新通知
@@ -14,11 +16,12 @@ import java.util.Map;
  */
 public class ChangeNotice<T> {
     private final Object sender;
-
+    final ExecutorService executorService;
     private final Map<String, IChangeNotice<T>> noticeMap = new HashMap<>(0);
 
     public ChangeNotice(Object sender) {
         this.sender = sender;
+        this.executorService = ThreadPoolExecutorBuilder.create().builder();
     }
 
     /**
@@ -53,19 +56,21 @@ public class ChangeNotice<T> {
      * Created DateTime 2023-02-07 14:04
      */
     public void changeNotice(T data, ChangeData.DataStatus dataStatus, String changeModel) {
-        this.noticeMap.forEach((key, item) -> IgnoredException.run(() -> item.changeNotice(sender, new ChangeData<>(data, dataStatus, changeModel))));
+        this.noticeMap.forEach((key, item) -> IgnoredException.run(() -> this.executorService.execute(() -> item.changeNotice(sender, new ChangeData<>(data, dataStatus, changeModel)))));
     }
+
     /**
      * 数据更新通知
      *
-     * @param data        变更的数据
-     * @param dataStatus  变更数据的状态
+     * @param data       变更的数据
+     * @param dataStatus 变更数据的状态
      * @author LiuHuiYu
      * Created DateTime 2023-02-07 14:04
      */
     public void changeNotice(T data, ChangeData.DataStatus dataStatus) {
         this.changeNotice(data, dataStatus, null);
     }
+
     /**
      * 数据更新通知
      *

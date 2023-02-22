@@ -4,8 +4,6 @@ import com.liuhuiyu.core.util.IgnoredException;
 import com.liuhuiyu.test.TestBase;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -14,6 +12,8 @@ import java.util.Random;
  * Created DateTime 2023-02-07 14:34
  */
 class ChangeNoticeManageTest extends TestBase {
+    public static final int STOP_TIME = 1000;
+
     @Test
     public void test() throws InterruptedException {
         Aa1 aa1 = new Aa1("aa");
@@ -21,12 +21,13 @@ class ChangeNoticeManageTest extends TestBase {
 //        A a = new A(10);
         new B(aa1);
         Random random = new Random();
-        for (int i = 0; i < 10; i++) {
+        int max = 1000;
+        for (int i = 0; i < max; i++) {
 //            a.setAa1Id(random.nextInt(9), random.nextInt(100));
-//            aa1.setId(random.nextInt(100));
-            aa1.setId(0);
-            Thread.sleep(3000);
+            aa1.setId(random.nextInt(100), i);
+//            aa1.setId(0);
         }
+        Thread.sleep(STOP_TIME * max);
     }
 
 
@@ -56,8 +57,8 @@ class ChangeNoticeManageTest extends TestBase {
 //            this.changeNoticeManage = new ChangeNoticeManage<>(changeNotice);
         }
 
-        public void setId(Integer id) {
-            LOG.info("设置{}的值为{}", name, id);
+        public void setId(Integer id, int i) {
+            LOG.info("设置{}[{}]的值为{}", name, i, id);
             this.id = id;
             this.changeNoticeMan.changeNotice(id);
         }
@@ -95,7 +96,14 @@ class ChangeNoticeManageTest extends TestBase {
             @Override
             public void changeNotice(Object sender, ChangeData<Integer> changeData) {
                 Aa1 a = (Aa1) sender;
-                LOG.info("{}:{}数据变更：{}", getKey(), a.getName(), changeData.data);
+                LOG.info("开始{}:{}数据变更：{}", getKey(), a.getName(), changeData.data);
+                try {
+                    Thread.sleep(STOP_TIME);
+                }
+                catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                LOG.info("结束{}:{}数据变更：{}", getKey(), a.getName(), changeData.data);
                 ss();
             }
         }
@@ -103,14 +111,21 @@ class ChangeNoticeManageTest extends TestBase {
         static class Bb1 implements IChangeNotice<Integer> {
             @Override
             public String getKey() {
-                return "VBb";
+                return "VBc";
             }
 
             @Override
             public void changeNotice(Object sender, ChangeData<Integer> changeData) {
                 IgnoredException.run(() -> {
                     Aa1 a = (Aa1) sender;
-                    LOG.info("{}:{}数据变更：{}", getKey(), a.getName(), 16 / changeData.data);
+                    LOG.info("开始{}:{}数据变更：{}", getKey(), a.getName(), changeData.data);
+                    try {
+                        Thread.sleep(STOP_TIME);
+                    }
+                    catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    LOG.info("结束{}:{}数据变更：{}", getKey(), a.getName(), changeData.data);
 //                    throw new OutOfMemoryError("");
                 }, (ex) -> LOG.error("我是异常信息", ex));
             }

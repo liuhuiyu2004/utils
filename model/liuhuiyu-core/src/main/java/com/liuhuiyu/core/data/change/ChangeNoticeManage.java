@@ -2,11 +2,12 @@ package com.liuhuiyu.core.data.change;
 
 /**
  * 更新数据管理
- *
+ * 不建议使用
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2023-02-07 12:45
  */
+@Deprecated
 public class ChangeNoticeManage<T> {
 
     private final ChangeNotice<T> changeNotice;
