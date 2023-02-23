@@ -39,7 +39,7 @@ public class ChangeNoticeVectorImpl<T> implements IChangeNotice<T> {
         this.run();
     }
 
-    static class Data<T> {
+    public static class Data<T> {
         Object sender;
         ChangeData<T> changeData;
 

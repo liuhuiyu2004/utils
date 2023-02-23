@@ -28,7 +28,7 @@ public class ChangeNoticeBaseImpl<T> implements IChangeNotice<T> {
         }
     }
 
-    static class Data<T> {
+    public static class Data<T> {
         Object sender;
         ChangeData<T> changeData;
 
