@@ -484,7 +484,7 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2023-02-23 23:51
              */
             public void eq(String parameterName, String value) {
-                this.sqlCommandPackage.sqlBuilder.append("AND(").append(this.fieldName).append(" = ").append(parameterName).append(")");
+                this.sqlCommandPackage.sqlBuilder.append("AND(").append(this.fieldName).append(" = :").append(parameterName).append(")");
                 this.sqlCommandPackage.parameterMap.put(parameterName, value);
             }
 
