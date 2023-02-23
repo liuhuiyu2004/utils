@@ -310,7 +310,9 @@ public abstract class OracleBaseView extends BaseView {
          * @param data          查询的数据
          * @author LiuHuiYu
          * Created DateTime 2022-11-20 8:28
+         * @deprecated 使用 condition 方法进行操作
          */
+        @Deprecated
         protected <P> void inPackage(String parameterName, String fieldName, P[] data) {
             inPackage(parameterName, fieldName, data, false, false);
         }
@@ -325,7 +327,9 @@ public abstract class OracleBaseView extends BaseView {
          * @param isNull        包含空 OR(fieldName is null)
          * @author LiuHuiYu
          * Created DateTime 2022-11-20 8:28
+         * @deprecated 使用 condition 方法进行操作
          */
+        @Deprecated
         protected <P> void inPackage(String parameterName, String fieldName, P[] data, Boolean notIn, Boolean isNull) {
             if (data != null && data.length > 0) {
                 String[] names = new String[data.length];
@@ -354,7 +358,9 @@ public abstract class OracleBaseView extends BaseView {
          * @param maxValue         最大值
          * @author LiuHuiYu
          * Created DateTime 2022-12-01 10:23
+         * @deprecated 使用 condition 方法进行操作
          */
+        @Deprecated
         protected <P> void inclusion(String minParameterName, String maxParameterName, String minFieldName, String maxFieldName, P minValue, P maxValue) {
             this.sqlBuilder.append("and (");
             this.sqlBuilder.append("((").append(minFieldName).append(" < :").append(minParameterName).append(") and (")
@@ -376,7 +382,9 @@ public abstract class OracleBaseView extends BaseView {
          * @param value 值
          * @author LiuHuiYu
          * Created DateTime 2022-06-02 18:44
+         * @deprecated 使用 condition 方法进行操作
          */
+        @Deprecated
         protected void likeValue(String parameterName, String fieldName, String value) {
             likeValue(parameterName, fieldName, value, true, true, true);
         }
@@ -390,7 +398,9 @@ public abstract class OracleBaseView extends BaseView {
          * @param tail  尾部模糊匹配
          * @author LiuHuiYu
          * Created DateTime 2022-06-02 18:43
+         * @deprecated 使用 condition 方法进行操作
          */
+        @Deprecated
         protected void likeValue(String parameterName, String fieldName, String value, Boolean trim, Boolean head, Boolean tail) {
             final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
             this.sqlBuilder.append("AND(").append(parameterName).append(" LIKE :").append(fieldName).append(")");
@@ -404,5 +414,144 @@ public abstract class OracleBaseView extends BaseView {
          * Created DateTime 2022-11-19 21:32
          */
         public abstract void commandPackage();
+
+        protected Condition<T> condition(String minFieldName, String maxFieldName) {
+            Condition<T> f = new Condition<>(this);
+            f.minFieldName = minFieldName;
+            f.maxFieldName = maxFieldName;
+            return f;
+        }
+
+        /**
+         * 条件生成
+         *
+         * @param fieldName 字段名称
+         * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
+         * @author LiuHuiYu
+         * Created DateTime 2023-02-23 23:56
+         */
+        protected Condition<T> condition(String fieldName) {
+            Condition<T> f = new Condition<>(this);
+            f.fieldName = fieldName;
+            return f;
+        }
+
+        protected static class Condition<T> {
+            final SqlCommandPackage<T> sqlCommandPackage;
+            String fieldName;
+            String minFieldName;
+            String maxFieldName;
+
+            private Condition(SqlCommandPackage<T> sqlCommandPackage) {
+                this.sqlCommandPackage = sqlCommandPackage;
+            }
+
+            /**
+             * like值
+             *
+             * @param value         值
+             * @param parameterName 参数名称
+             * @author LiuHuiYu
+             * Created DateTime 2022-06-02 18:43
+             */
+            public void likeValue(String parameterName, String value) {
+                likeValue(parameterName, value, true, true, true);
+            }
+
+            /**
+             * like值
+             *
+             * @param value         值
+             * @param parameterName 参数名称
+             * @param trim          去掉首尾空格
+             * @param head          头部模糊匹配
+             * @param tail          尾部模糊匹配
+             * @author LiuHuiYu
+             * Created DateTime 2022-06-02 18:43
+             */
+            public void likeValue(String parameterName, String value, Boolean trim, Boolean head, Boolean tail) {
+                final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
+                this.sqlCommandPackage.sqlBuilder.append("AND(").append(this.fieldName).append(" LIKE :").append(parameterName).append(")");
+                this.sqlCommandPackage.parameterMap.put(parameterName, s);
+            }
+
+            /**
+             * 等于
+             *
+             * @param parameterName 参数名
+             * @param value         值
+             * @author LiuHuiYu
+             * Created DateTime 2023-02-23 23:51
+             */
+            public void eq(String parameterName, String value) {
+                this.sqlCommandPackage.sqlBuilder.append("AND(").append(this.fieldName).append(" = ").append(parameterName).append(")");
+                this.sqlCommandPackage.parameterMap.put(parameterName, value);
+            }
+
+            /**
+             * 封装 in 条件
+             *
+             * @param parameterName 参数名称头
+             * @param data          查询的数据
+             * @author LiuHuiYu
+             * Created DateTime 2022-11-20 8:28
+             */
+            public <P> void inPackage(String parameterName, P[] data) {
+                inPackage(parameterName, data, false, false);
+            }
+
+            /**
+             * 封装 in 条件
+             *
+             * @param parameterName 参数名称头
+             * @param data          查询的数据
+             * @param notIn         使用 not in
+             * @param isNull        包含空 OR(fieldName is null)
+             * @author LiuHuiYu
+             * Created DateTime 2022-11-20 8:28
+             */
+            public <P> void inPackage(String parameterName, P[] data, Boolean notIn, Boolean isNull) {
+                if (data != null && data.length > 0) {
+                    Joiner joiner = Joiner.on(",").skipNulls();
+                    String[] names = new String[data.length];
+                    this.sqlCommandPackage.sqlBuilder.append("AND((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
+                    for (int i = 0; i < data.length; i++) {
+                        names[i] = ":" + parameterName + i;
+                        this.sqlCommandPackage.parameterMap.put(parameterName + i, data[i]);
+                    }
+                    this.sqlCommandPackage.sqlBuilder.append(joiner.join(names)).append("))");
+                    if (isNull) {
+                        this.sqlCommandPackage.sqlBuilder.append("OR(").append(fieldName).append(" is null)");
+                    }
+                    this.sqlCommandPackage.sqlBuilder.append(")");
+                }
+            }
+
+            /**
+             * 封装 数据段互相包含（开区间 位置相同）条件
+             *
+             * @param minParameterName 最小值参数名
+             * @param maxParameterName 最大值参数名
+             * @param minValue         最小值
+             * @param maxValue         最大值
+             * @author LiuHuiYu
+             * Created DateTime 2022-12-01 10:23
+             */
+            public <P> void inclusion(String minParameterName, String maxParameterName, P minValue, P maxValue) {
+                this.sqlCommandPackage.sqlBuilder.append("and (");
+                this.sqlCommandPackage.sqlBuilder.append("((").append(minFieldName).append(" < :").append(minParameterName).append(") and (")
+                        .append(maxFieldName).append(" > :").append(minParameterName).append("))");
+                this.sqlCommandPackage.sqlBuilder.append("or");
+                this.sqlCommandPackage.sqlBuilder.append("((").append(minFieldName).append(" < :").append(maxParameterName).append(") and (")
+                        .append(maxFieldName).append(" > :").append(maxParameterName).append("))");
+                this.sqlCommandPackage.sqlBuilder.append("or");
+                this.sqlCommandPackage.sqlBuilder.append("((").append(minFieldName).append(" >= :").append(minParameterName).append(") and (")
+                        .append(maxFieldName).append(" <= :").append(maxParameterName).append("))");
+                this.sqlCommandPackage.sqlBuilder.append(")");
+                this.sqlCommandPackage.parameterMap.put(minParameterName, minValue);
+                this.sqlCommandPackage.parameterMap.put(maxParameterName, maxValue);
+            }
+
+        }
     }
 }
