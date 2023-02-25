@@ -33,12 +33,19 @@ class ChangeNoticeVectorImplTest extends TestBase {
                 throw new RuntimeException(e);
             }
         });
+
+        ChangeNoticeBaseImpl<Integer> changeNoticeBase2 = new ChangeNoticeBaseImpl<>("ccc",this::aaaa);
         aa1.regMan(changeNoticeVector);
         aa1.regMan(changeNoticeBase);
+        aa1.regMan(changeNoticeBase2);
         for (int i = 0; i < 15; i++) {
             aa1.setId(random.nextInt(), i);
         }
         Thread.sleep(100_000);
+    }
+
+    private  void aaaa(ChangeNoticeBaseImpl.Data<Integer> data) {
+        LOG.info("{};{};{}",data.getChangeData().getData(),data.getChangeData().getDataStatus(),data.getChangeData().getChangeModel());
     }
 
 
@@ -63,7 +70,7 @@ class ChangeNoticeVectorImplTest extends TestBase {
         public void setId(Integer id, int i) {
             LOG.info("设置{}[{}]的值为{}", name, i, id);
             this.id = id;
-            this.changeNoticeMan.changeNotice(id);
+            this.changeNoticeMan.changeNotice(id, ChangeData.DataStatus.U,"ssssssssss");
         }
 
         public String getName() {

@@ -75,6 +75,27 @@ public class TimePeriod {
     }
 
     /**
+     * 两个时间段是否交错（任何一个无效，都会返回不交错）
+     *
+     * @param timePeriod 时间段
+     * @return boolean
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-25 11:10
+     */
+    public boolean isTimeStaggered(TimePeriod timePeriod) {
+        if (!timePeriod.isValidTime() || !this.isValidTime()) {
+            return false;
+        }
+        if (this.beginTime.equals(timePeriod.getBeginTime()) && this.endTime.equals(timePeriod.getEndTime())) {
+            return true;
+        }
+        return this.isInTimePeriod(timePeriod.beginTime) ||
+                this.isInTimePeriod(timePeriod.endTime) ||
+                timePeriod.isInTimePeriod(this.beginTime) ||
+                timePeriod.isInTimePeriod(this.endTime);
+    }
+
+    /**
      * 获取开始时间
      *
      * @return java.sql.Timestamp
