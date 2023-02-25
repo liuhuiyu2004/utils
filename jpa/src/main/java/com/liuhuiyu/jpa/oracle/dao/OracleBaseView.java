@@ -415,10 +415,11 @@ public abstract class OracleBaseView extends BaseView {
          */
         public abstract void commandPackage();
 
-        protected Condition<T> condition(String minFieldName, String maxFieldName) {
+        protected Condition<T> conditionAnd(String minFieldName, String maxFieldName) {
             Condition<T> f = new Condition<>(this);
             f.minFieldName = minFieldName;
             f.maxFieldName = maxFieldName;
+            f.condition = " AND ";
             return f;
         }
 
@@ -430,17 +431,40 @@ public abstract class OracleBaseView extends BaseView {
          * @author LiuHuiYu
          * Created DateTime 2023-02-23 23:56
          */
-        protected Condition<T> condition(String fieldName) {
+        protected Condition<T> conditionAnd(String fieldName) {
             Condition<T> f = new Condition<>(this);
             f.fieldName = fieldName;
+            f.condition = " AND ";
+            return f;
+        }
+        protected Condition<T> conditionOr(String minFieldName, String maxFieldName) {
+            Condition<T> f = new Condition<>(this);
+            f.minFieldName = minFieldName;
+            f.maxFieldName = maxFieldName;
+            f.condition = " OR ";
             return f;
         }
 
+        /**
+         * 条件生成
+         *
+         * @param fieldName 字段名称
+         * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
+         * @author LiuHuiYu
+         * Created DateTime 2023-02-23 23:56
+         */
+        protected Condition<T> conditionOr(String fieldName) {
+            Condition<T> f = new Condition<>(this);
+            f.fieldName = fieldName;
+            f.condition = " OR ";
+            return f;
+        }
         protected static class Condition<T> {
             final SqlCommandPackage<T> sqlCommandPackage;
             String fieldName;
             String minFieldName;
             String maxFieldName;
+            String condition;
 
             private Condition(SqlCommandPackage<T> sqlCommandPackage) {
                 this.sqlCommandPackage = sqlCommandPackage;
@@ -471,7 +495,7 @@ public abstract class OracleBaseView extends BaseView {
              */
             public void likeValue(String parameterName, String value, Boolean trim, Boolean head, Boolean tail) {
                 final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
-                this.sqlCommandPackage.sqlBuilder.append("AND(").append(this.fieldName).append(" LIKE :").append(parameterName).append(")");
+                this.sqlCommandPackage.sqlBuilder.append(condition).append("(").append(this.fieldName).append(" LIKE :").append(parameterName).append(")");
                 this.sqlCommandPackage.parameterMap.put(parameterName, s);
             }
 
@@ -484,7 +508,7 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2023-02-23 23:51
              */
             public void eq(String parameterName, String value) {
-                this.sqlCommandPackage.sqlBuilder.append("AND(").append(this.fieldName).append(" = :").append(parameterName).append(")");
+                this.sqlCommandPackage.sqlBuilder.append(condition).append("(").append(this.fieldName).append(" = :").append(parameterName).append(")");
                 this.sqlCommandPackage.parameterMap.put(parameterName, value);
             }
 
@@ -514,7 +538,7 @@ public abstract class OracleBaseView extends BaseView {
                 if (data != null && data.length > 0) {
                     Joiner joiner = Joiner.on(",").skipNulls();
                     String[] names = new String[data.length];
-                    this.sqlCommandPackage.sqlBuilder.append("AND((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
+                    this.sqlCommandPackage.sqlBuilder.append(condition).append("((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
                     for (int i = 0; i < data.length; i++) {
                         names[i] = ":" + parameterName + i;
                         this.sqlCommandPackage.parameterMap.put(parameterName + i, data[i]);
@@ -538,7 +562,7 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2022-12-01 10:23
              */
             public <P> void inclusion(String minParameterName, String maxParameterName, P minValue, P maxValue) {
-                this.sqlCommandPackage.sqlBuilder.append("and (");
+                this.sqlCommandPackage.sqlBuilder.append(condition).append(" (");
                 this.sqlCommandPackage.sqlBuilder.append("((").append(minFieldName).append(" < :").append(minParameterName).append(") and (")
                         .append(maxFieldName).append(" > :").append(minParameterName).append("))");
                 this.sqlCommandPackage.sqlBuilder.append("or");
