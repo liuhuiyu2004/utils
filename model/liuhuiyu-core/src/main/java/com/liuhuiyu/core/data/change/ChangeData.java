@@ -11,6 +11,7 @@ import java.util.Locale;
  */
 public class ChangeData<T> {
     T data;
+    T oldData;
     DataStatus dataStatus;
     String changeModel;
 
@@ -22,7 +23,7 @@ public class ChangeData<T> {
      * Created DateTime 2023-02-07 14:07
      */
     public ChangeData(T data) {
-        this(data, null, null);
+        this(null, data, null, null);
     }
 
     /**
@@ -35,6 +36,20 @@ public class ChangeData<T> {
      * Created DateTime 2023-02-07 14:07
      */
     public ChangeData(T data, DataStatus dataStatus, String changeModel) {
+        this(null, data, dataStatus, changeModel);
+    }
+
+    /**
+     * 变更数据模型
+     *
+     * @param data        数据信息
+     * @param dataStatus  数据状态
+     * @param changeModel 数据模式
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-07 14:07
+     */
+    public ChangeData(T oldData, T data, DataStatus dataStatus, String changeModel) {
+        this.oldData = oldData;
         this.data = data;
         this.dataStatus = dataStatus == null ? DataStatus.U : dataStatus;
         this.changeModel = changeModel == null ? "" : changeModel;
@@ -49,6 +64,10 @@ public class ChangeData<T> {
      */
     public T getData() {
         return data;
+    }
+
+    public T getOldData() {
+        return oldData;
     }
 
     /**
