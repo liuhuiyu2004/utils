@@ -19,4 +19,9 @@ public class MapUtilTest {
 //        log.info(map);
     }
 
+    @Test
+    public void ss(){
+        String s="abv";
+        String s1=MapUtil.cloneObj(s,String.class);
+    }
 }

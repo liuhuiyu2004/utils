@@ -638,4 +638,9 @@ public class MapUtil {
             this.resData = resData;
         }
     }
+
+    public static <T> T cloneObj(T a, Class<T> classOfT) {
+        String json = new Gson().toJson(a);
+        return new Gson().fromJson(json, classOfT);
+    }
 }
