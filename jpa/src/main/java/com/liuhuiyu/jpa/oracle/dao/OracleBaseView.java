@@ -437,6 +437,7 @@ public abstract class OracleBaseView extends BaseView {
             f.condition = " AND ";
             return f;
         }
+
         protected Condition<T> conditionOr(String minFieldName, String maxFieldName) {
             Condition<T> f = new Condition<>(this);
             f.minFieldName = minFieldName;
@@ -459,6 +460,7 @@ public abstract class OracleBaseView extends BaseView {
             f.condition = " OR ";
             return f;
         }
+
         protected static class Condition<T> {
             final SqlCommandPackage<T> sqlCommandPackage;
             String fieldName;
@@ -500,19 +502,6 @@ public abstract class OracleBaseView extends BaseView {
             }
 
             /**
-             * 等于
-             *
-             * @param parameterName 参数名
-             * @param value         值
-             * @author LiuHuiYu
-             * Created DateTime 2023-02-23 23:51
-             */
-            public void eq(String parameterName, String value) {
-                this.sqlCommandPackage.sqlBuilder.append(condition).append("(").append(this.fieldName).append(" = :").append(parameterName).append(")");
-                this.sqlCommandPackage.parameterMap.put(parameterName, value);
-            }
-
-            /**
              * 封装 in 条件
              *
              * @param parameterName 参数名称头
@@ -551,6 +540,17 @@ public abstract class OracleBaseView extends BaseView {
                 }
             }
 
+            public <P> void between(String beginParameterName, P beginValue, String endParameterName, P endValue) {
+                this.sqlCommandPackage.sqlBuilder.append(condition)
+                        .append("(").append(this.fieldName)
+                        .append(" between :").append(beginParameterName)
+                        .append(" and ")
+                        .append(endParameterName)
+                        .append(")");
+                this.sqlCommandPackage.parameterMap.put(beginParameterName, beginValue);
+                this.sqlCommandPackage.parameterMap.put(endParameterName, endValue);
+            }
+
             /**
              * 封装 数据段互相包含（开区间 位置相同）条件
              *
@@ -576,6 +576,103 @@ public abstract class OracleBaseView extends BaseView {
                 this.sqlCommandPackage.parameterMap.put(maxParameterName, maxValue);
             }
 
+            /**
+             * 等于
+             *
+             * @param parameterName 参数名
+             * @param value         值
+             * @author LiuHuiYu
+             * Created DateTime 2023-02-23 23:51
+             */
+            public <P> void eq(String parameterName, P value) {
+                this.sqlCommandPackage.sqlBuilder.append(condition).append("(").append(this.fieldName).append(" = :").append(parameterName).append(")");
+                this.sqlCommandPackage.parameterMap.put(parameterName, value);
+            }
+
+            /**
+             * <> 比较
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
+             * @param parameterName 参数名称
+             * @param value         值
+             */
+            public <P> void ne(String parameterName, P value) {
+                this.generate("<>", parameterName, value);
+            }
+            /**
+             * > 比较
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
+             * @param parameterName 参数名称
+             * @param value         值
+             */
+            public <P> void gt(String parameterName, P value) {
+                this.generate(">", parameterName, value);
+            }
+            /**
+             * < 比较
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
+             * @param parameterName 参数名称
+             * @param value         值
+             */
+            public <P> void lt(String parameterName, P value) {
+                this.generate("<", parameterName, value);
+            }
+            /**
+             * >= 比较
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
+             * @param parameterName 参数名称
+             * @param value         值
+             */
+            public <P> void ge(String parameterName, P value) {
+                this.generate(">=", parameterName, value);
+            }
+            /**
+             * <= 比较
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
+             * @param parameterName 参数名称
+             * @param value         值
+             */
+            public <P> void le(String parameterName, P value) {
+                this.generate("<=", parameterName, value);
+            }
+
+            /**
+             * 为 null
+             *
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
+             */
+            public void isNull() {
+                this.sqlCommandPackage.sqlBuilder
+                        .append(condition)
+                        .append("(").append(this.fieldName)
+                        .append(" is null )");
+            }
+
+            private <P> void generate(String operator, String parameterName, P value) {
+                this.sqlCommandPackage.sqlBuilder
+                        .append(condition)
+                        .append("(").append(this.fieldName)
+                        .append(" ").append(operator)
+                        .append(" = :").append(parameterName).append(")");
+                this.sqlCommandPackage.parameterMap.put(parameterName, value);
+            }
+            /*
+ *           eq 就是 equal等于
+ne就是 not equal不等于
+gt 就是 greater than大于
+lt 就是 less than小于
+ge 就是 greater than or equal 大于等于
+le 就是 less than or equal 小于等于
+in 就是 in 包含（数组）
+isNull 就是 等于null
+*between 就是 在2个条件之间(包括边界值)
+*like就是 模糊查询
+            * */
         }
     }
 }
