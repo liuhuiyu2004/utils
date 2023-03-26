@@ -36,7 +36,7 @@ public class OracleOrder {
     }
 
     public void addOrder(String key, String value) {
-        orderMap.put(key, value);
+        orderMap.put(key.toUpperCase(), value);
     }
 
     public String getOrder(List<Sort> sortList) {
@@ -44,6 +44,7 @@ public class OracleOrder {
         AtomicReference<String> delimiter = new AtomicReference<>("");
         if (sortList != null && sortList.size() > 0) {
             sortList.stream().sorted(Comparator.comparingInt(Sort::getIndex))
+                    .peek(v -> v.setName(v.getName().toUpperCase()))
                     .forEachOrdered(v -> {
                         if (orderMap.containsKey(v.getName())) {
                             orderBuilder

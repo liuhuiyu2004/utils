@@ -35,12 +35,12 @@ class OracleOrderTest extends TestBase {
     static Stream<Arguments> argumentsStream() {
         return Stream.of(
                 Arguments.of("", Stream.of(
-                                Arguments.of("a1", "t.a1"),
+                                Arguments.of("A1", "t.a1"),
                                 Arguments.of("a2", "t.a2"),
                                 Arguments.of("a3", "t.a3")
                         ), Arrays.asList(
                                 new Sort(10, "a1", Sort.Direction.ASC),
-                                new Sort(2, "a3", Sort.Direction.DESC),
+                                new Sort(2, "A3", Sort.Direction.DESC),
                                 new Sort(3, "a7", Sort.Direction.ASC)
                         )
                 ),Arguments.of("", Stream.of(
