@@ -544,7 +544,7 @@ public abstract class OracleBaseView extends BaseView {
                 this.sqlCommandPackage.sqlBuilder.append(condition)
                         .append("(").append(this.fieldName)
                         .append(" between :").append(beginParameterName)
-                        .append(" and ")
+                        .append(" and :")
                         .append(endParameterName)
                         .append(")");
                 this.sqlCommandPackage.parameterMap.put(beginParameterName, beginValue);
@@ -658,7 +658,7 @@ public abstract class OracleBaseView extends BaseView {
                         .append(condition)
                         .append("(").append(this.fieldName)
                         .append(" ").append(operator)
-                        .append(" = :").append(parameterName).append(")");
+                        .append(" :").append(parameterName).append(")");
                 this.sqlCommandPackage.parameterMap.put(parameterName, value);
             }
             /*
