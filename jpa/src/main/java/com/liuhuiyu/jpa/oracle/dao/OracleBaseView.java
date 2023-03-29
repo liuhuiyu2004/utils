@@ -415,6 +415,14 @@ public abstract class OracleBaseView extends BaseView {
          */
         public abstract void commandPackage();
 
+        /**
+         * 功能描述
+         * @author LiuHuiYu
+         * Created DateTime 2023-03-29 9:25
+         * @param minFieldName 最大值字段
+         * @param maxFieldName 最小值字段
+         * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
+         */
         protected Condition<T> conditionAnd(String minFieldName, String maxFieldName) {
             Condition<T> f = new Condition<>(this);
             f.minFieldName = minFieldName;
@@ -468,6 +476,18 @@ public abstract class OracleBaseView extends BaseView {
             String maxFieldName;
             String condition;
 
+            private void checkField() {
+                if (!StringUtils.hasText(fieldName)) {
+                    throw new RuntimeException("未设定字段名称");
+                }
+            }
+
+            private void checkField2() {
+                if (!StringUtils.hasText(minFieldName) || !StringUtils.hasText(maxFieldName)) {
+                    throw new RuntimeException("双字段名称设定不完整。");
+                }
+            }
+
             private Condition(SqlCommandPackage<T> sqlCommandPackage) {
                 this.sqlCommandPackage = sqlCommandPackage;
             }
@@ -496,6 +516,10 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2022-06-02 18:43
              */
             public void likeValue(String parameterName, String value, Boolean trim, Boolean head, Boolean tail) {
+                this.checkField();
+                if (value == null) {
+                    return;
+                }
                 final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
                 this.sqlCommandPackage.sqlBuilder.append(condition).append("(").append(this.fieldName).append(" LIKE :").append(parameterName).append(")");
                 this.sqlCommandPackage.parameterMap.put(parameterName, s);
@@ -524,6 +548,7 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2022-11-20 8:28
              */
             public <P> void inPackage(String parameterName, P[] data, Boolean notIn, Boolean isNull) {
+                this.checkField();
                 if (data != null && data.length > 0) {
                     Joiner joiner = Joiner.on(",").skipNulls();
                     String[] names = new String[data.length];
@@ -541,6 +566,10 @@ public abstract class OracleBaseView extends BaseView {
             }
 
             public <P> void between(String beginParameterName, P beginValue, String endParameterName, P endValue) {
+                this.checkField();
+                if (beginValue == null || endValue == null) {
+                    return;
+                }
                 this.sqlCommandPackage.sqlBuilder.append(condition)
                         .append("(").append(this.fieldName)
                         .append(" between :").append(beginParameterName)
@@ -562,6 +591,10 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2022-12-01 10:23
              */
             public <P> void inclusion(String minParameterName, String maxParameterName, P minValue, P maxValue) {
+                this.checkField2();
+                if (minValue == null || maxValue == null) {
+                    return;
+                }
                 this.sqlCommandPackage.sqlBuilder.append(condition).append(" (");
                 this.sqlCommandPackage.sqlBuilder.append("((").append(minFieldName).append(" < :").append(minParameterName).append(") and (")
                         .append(maxFieldName).append(" > :").append(minParameterName).append("))");
@@ -585,56 +618,64 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2023-02-23 23:51
              */
             public <P> void eq(String parameterName, P value) {
-                this.sqlCommandPackage.sqlBuilder.append(condition).append("(").append(this.fieldName).append(" = :").append(parameterName).append(")");
-                this.sqlCommandPackage.parameterMap.put(parameterName, value);
+                this.generate("=", parameterName, value);
             }
 
             /**
              * <> 比较
-             * @author LiuHuiYu
-             * Created DateTime 2023-03-25 9:23
+             *
              * @param parameterName 参数名称
              * @param value         值
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
              */
             public <P> void ne(String parameterName, P value) {
                 this.generate("<>", parameterName, value);
             }
+
             /**
              * > 比较
-             * @author LiuHuiYu
-             * Created DateTime 2023-03-25 9:23
+             *
              * @param parameterName 参数名称
              * @param value         值
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
              */
             public <P> void gt(String parameterName, P value) {
                 this.generate(">", parameterName, value);
             }
+
             /**
              * < 比较
-             * @author LiuHuiYu
-             * Created DateTime 2023-03-25 9:23
+             *
              * @param parameterName 参数名称
              * @param value         值
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
              */
             public <P> void lt(String parameterName, P value) {
                 this.generate("<", parameterName, value);
             }
+
             /**
              * >= 比较
-             * @author LiuHuiYu
-             * Created DateTime 2023-03-25 9:23
+             *
              * @param parameterName 参数名称
              * @param value         值
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
              */
             public <P> void ge(String parameterName, P value) {
                 this.generate(">=", parameterName, value);
             }
+
             /**
              * <= 比较
-             * @author LiuHuiYu
-             * Created DateTime 2023-03-25 9:23
+             *
              * @param parameterName 参数名称
              * @param value         值
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
              */
             public <P> void le(String parameterName, P value) {
                 this.generate("<=", parameterName, value);
@@ -647,19 +688,37 @@ public abstract class OracleBaseView extends BaseView {
              * Created DateTime 2023-03-25 9:23
              */
             public void isNull() {
+                this.checkField();
                 this.sqlCommandPackage.sqlBuilder
                         .append(condition)
                         .append("(").append(this.fieldName)
                         .append(" is null )");
             }
 
-            private <P> void generate(String operator, String parameterName, P value) {
+            /**
+             * 为 null
+             *
+             * @author LiuHuiYu
+             * Created DateTime 2023-03-25 9:23
+             */
+            public void isNotNull() {
+                this.checkField();
                 this.sqlCommandPackage.sqlBuilder
                         .append(condition)
                         .append("(").append(this.fieldName)
-                        .append(" ").append(operator)
-                        .append(" :").append(parameterName).append(")");
-                this.sqlCommandPackage.parameterMap.put(parameterName, value);
+                        .append(" is not null )");
+            }
+
+            private <P> void generate(String operator, String parameterName, P value) {
+                this.checkField();
+                if (value != null) {
+                    this.sqlCommandPackage.sqlBuilder
+                            .append(condition)
+                            .append("(").append(this.fieldName)
+                            .append(" ").append(operator)
+                            .append(" :").append(parameterName).append(")");
+                    this.sqlCommandPackage.parameterMap.put(parameterName, value);
+                }
             }
             /*
  *           eq 就是 equal等于

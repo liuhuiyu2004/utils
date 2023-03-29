@@ -37,13 +37,14 @@ public class OracleBaseViewTest extends TestBase {
         final OracleBaseViewDemo instance = OracleBaseViewDemo.getInstance();
         final Long count = instance.findCount(paging);
         final Long count2 = instance.findCount2(paging);
+        final Long count3 = instance.findCount3(paging);
         final List<Object> list = instance.findList(paging);
         final Object one = instance.findOne(paging);
         final PageImpl<Object> page = instance.findPage(paging);
         final PageImpl<Object> page2 = instance.findPage2(paging);
         final PageImpl<Object> page3 = instance.findPage3(paging);
 
-        LOG.info(String.join("", Collections.nCopies(6, "{};\n")), count, count2, list, page, page2, page3);
+        LOG.info(String.join("", Collections.nCopies(8, "{};\n")), count, count2, count3, list,one, page, page2, page3);
     }
 
 }

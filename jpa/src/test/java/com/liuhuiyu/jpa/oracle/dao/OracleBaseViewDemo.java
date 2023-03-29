@@ -66,6 +66,10 @@ public class OracleBaseViewDemo extends OracleBaseView {
         return super.count(pagingFind, "SELECT * from AA T", "WHERE(1=1)", this::fullWhere);
     }
 
+    public Long findCount3(IPaging pagingFind) {
+        return super.count(pagingFind, "SELECT * from AB T", "WHERE(2=2)", this::fullWhere);
+    }
+
     private PageImplBuilder<IPaging, Object> createPageImplBuilder(IPaging pagingFind) {
         return new PageImplBuilder<>((o) -> new Object(), pagingFind, "", this::fullWhere)
                 .baseWhere("")
@@ -93,34 +97,52 @@ public class OracleBaseViewDemo extends OracleBaseView {
         }
 
         private void like0() {
-            super.likeValue("find0", "t.field0", "ab");
+            super.conditionAnd("find0").likeValue("t.field0", "ab");
         }
 
         private void like1() {
-            super.likeValue("find1", "t.field1", "abc");
+            super.conditionAnd("t.field1").likeValue("find1", "abc");
         }
 
         private void like2() {
-            super.likeValue("find2", "t.field2", "abcd", false, false, false);
+            super.conditionAnd("t.field2").likeValue("find2", "abcd", false, false, false);
         }
 
         private void in0() {
-            super.inPackage("inA", "t.fieldInA", new String[]{"a"});
-            super.inPackage("inB", "t.fieldInB", new String[]{"b"});
+            super.conditionAnd("t.fieldInA").inPackage("inA", new String[]{"a"});
+            super.conditionAnd("t.fieldInB").inPackage("inB", new String[]{"b"});
             //等效代码
-            super.inPackage("inB", "t.fieldInB", new String[]{"a"}, false, false);
+            super.conditionAnd("t.fieldInB").inPackage("inB", new String[]{"a"}, false, false);
         }
 
         private void in1() {
-            super.inPackage("in2", "t.fieldIn2", new String[]{"b"}, true, true);
+            super.conditionAnd("t.fieldIn2").inPackage("in2", new String[]{"b"}, true, true);
         }
 
         private void inclusion1() {
-            super.inclusion("minValue", "maxValue", "t.min_value", "t.max_value", 50, 100);
+            super.conditionAnd("t.min_value", "t.max_value").inclusion("minValue", "maxValue", 50, 100);
+            super.conditionAnd("t.min_value1", "t.max_value1").inclusion("minValue1", "maxValue1", 50, 100);
         }
 
         private void inclusion2() {
-            super.inclusion("minV", "maxV", "t.min_v", "t.max_v", 0.7, 1);
+            super.conditionOr("t.min_v", "t.max_v").inclusion("minV", "maxV", 0.7, 1);
+            super.conditionOr("t.min_v1", "t.max_v1").inclusion("minV1", "maxV1", 0.7, 1);
+        }
+
+        private void between() {
+            super.conditionAnd("t.A").between("vMin", 1, "vMax", 5);
+        }
+
+        private void compare() {
+            super.conditionAnd("t.A").eq("v", 1);
+            super.conditionAnd("t.B").ne("v", 1);
+            super.conditionAnd("t.D").gt("v", 1);
+            super.conditionAnd("t.C").ge("v", 1);
+            super.conditionAnd("t.E").lt("v", 1);
+            super.conditionAnd("t.F").le("v", 1);
+            super.conditionOr("t.G").isNull();
+            super.conditionOr("t.G1").isNull();
+            super.conditionAnd("t.H").isNotNull();
         }
 
         @Override
@@ -132,6 +154,8 @@ public class OracleBaseViewDemo extends OracleBaseView {
             this.in1();
             this.inclusion1();
             this.inclusion2();
+            this.between();
+            this.compare();
         }
     }
 }
