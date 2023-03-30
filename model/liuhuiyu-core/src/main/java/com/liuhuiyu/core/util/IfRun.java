@@ -83,7 +83,9 @@ public class IfRun<T, R> {
      * @return com.liuhuiyu.core.util.IfRun
      * @author LiuHuiYu
      * Created DateTime 2023-01-27 11:28
+     * @deprecated 此方法会在代码编写过程中因编码错误引发故障。
      */
+    @Deprecated
     public IfRun<T, R> elseIf(Boolean b, R r) {
         if (this.isAllowExecution(b)) {
             this.resOptional = Optional.ofNullable(r);
