@@ -1,7 +1,5 @@
 package com.liuhuiyu.core.data.collection;
 
-import com.liuhuiyu.core.data.change.IChangeNotice;
-
 /**
  * 数据采集通知注册
  *
@@ -10,5 +8,21 @@ import com.liuhuiyu.core.data.change.IChangeNotice;
  * Created DateTime 2023-03-30 20:44
  */
 public interface ICollectionNoticeReg<T> {
-    void collectionNoticeReg(ICollectionConsumer<T> iCollectionConsumer);
+    /**
+     * 功能描述
+     *
+     * @param collectionConsumer 消费者注册
+     * @author LiuHuiYu
+     * Created DateTime 2023-03-31 8:24
+     */
+    void collectionNoticeReg(ICollectionConsumer<T> collectionConsumer);
+
+    /**
+     * 消费者注销
+     *
+     * @param collectionConsumerKey 消费者Key
+     * @author LiuHuiYu
+     * Created DateTime 2023-03-31 8:24
+     */
+    void collectionNoticeUnReg(String collectionConsumerKey);
 }

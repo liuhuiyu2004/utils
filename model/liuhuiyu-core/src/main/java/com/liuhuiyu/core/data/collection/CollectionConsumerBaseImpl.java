@@ -1,5 +1,8 @@
 package com.liuhuiyu.core.data.collection;
 
+import com.liuhuiyu.core.thread.ThreadPoolExecutorBuilder;
+
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 /**
@@ -10,10 +13,12 @@ import java.util.function.Consumer;
  */
 public class CollectionConsumerBaseImpl<T> implements ICollectionConsumer<T> {
     private final String key;
-    private final Consumer<Data<T>> consumer;
-    public CollectionConsumerBaseImpl(String key, Consumer<Data<T>> consumer) {
+    private final Consumer<CollectionConsumerData<T>> consumer;
+    private final ExecutorService executorService;
+    public CollectionConsumerBaseImpl(String key, Consumer<CollectionConsumerData<T>> consumer) {
         this.key = key;
         this.consumer = consumer;
+        this.executorService = ThreadPoolExecutorBuilder.create().builder();
     }
     @Override
     public String getKey() {
@@ -23,25 +28,9 @@ public class CollectionConsumerBaseImpl<T> implements ICollectionConsumer<T> {
     @Override
     public void collectionNotice(Object sender, CollectionData<T> changeData) {
         if (this.consumer != null) {
-            this.consumer.accept(new Data<>(sender, changeData));
-        }
-    }
-
-    public static class Data<T> {
-        Object sender;
-        CollectionData<T> collectionData;
-
-        public Data(Object sender, CollectionData<T> collectionData) {
-            this.sender = sender;
-            this.collectionData = collectionData;
-        }
-
-        public Object getSender() {
-            return sender;
-        }
-
-        public CollectionData<T> getCollectionData() {
-            return collectionData;
+            this.executorService.execute(() -> {
+                this.consumer.accept(new CollectionConsumerData<>(sender, changeData));
+            });
         }
     }
 }

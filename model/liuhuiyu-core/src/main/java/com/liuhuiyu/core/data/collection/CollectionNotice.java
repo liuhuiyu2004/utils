@@ -23,27 +23,29 @@ public class CollectionNotice<T> implements ICollectionNoticeReg<T> {
         this.sender = sender;
         this.executorService = ThreadPoolExecutorBuilder.create().builder();
     }
+
     /**
      * 注册
      *
-     * @param iCollectionConsumer 注册的对象
+     * @param collectionConsumer 注册的对象
      * @author LiuHuiYu
      * Created DateTime 2023-02-07 14:05
      */
     @Override
-    public void collectionNoticeReg(ICollectionConsumer <T> iCollectionConsumer) {
-        this.noticeMap.put(iCollectionConsumer.getKey(), iCollectionConsumer);
+    public void collectionNoticeReg(ICollectionConsumer<T> collectionConsumer) {
+        this.noticeMap.put(collectionConsumer.getKey(), collectionConsumer);
     }
 
     /**
      * 注销通知
      *
-     * @param iCollectionConsumer 注销的对象
+     * @param key 注销key
      * @author LiuHuiYu
      * Created DateTime 2023-02-07 14:05
      */
-    public void unReg(ICollectionConsumer<T> iCollectionConsumer) {
-        this.noticeMap.remove(iCollectionConsumer.getKey());
+    @Override
+    public void collectionNoticeUnReg(String key) {
+        this.noticeMap.remove(key);
     }
 
     /**
@@ -70,6 +72,4 @@ public class CollectionNotice<T> implements ICollectionNoticeReg<T> {
             this.noticeMap.forEach((key, item) -> IgnoredException.run(() -> this.executorService.execute(() -> item.collectionNotice(sender, collectionData))));
         }
     }
-
-
 }

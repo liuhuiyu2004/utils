@@ -1,23 +1,29 @@
 package com.liuhuiyu.core.data.collection;
 
+import com.liuhuiyu.core.thread.ThreadPoolExecutorBuilder;
+
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 /**
  * 采集数据消费者（有序）
+ *
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2023-03-30 21:10
  */
 public class CollectionConsumerVectorImpl<T> implements ICollectionConsumer<T> {
     private final String key;
-    private final Consumer<Data<T>> consumer;
-    Vector<Data<T>> vector;
+    private final Consumer<CollectionConsumerData<T>> consumer;
+    Vector<CollectionConsumerData<T>> vector;
+    private final ExecutorService executorService;
 
-    public CollectionConsumerVectorImpl(String key, Consumer<Data<T>> consumer) {
+    public CollectionConsumerVectorImpl(String key, Consumer<CollectionConsumerData<T>> consumer) {
         this.vector = new Vector<>(0);
         this.key = key;
         this.consumer = consumer;
+        this.executorService = ThreadPoolExecutorBuilder.create().builder();
     }
 
     private void run() {
@@ -36,25 +42,11 @@ public class CollectionConsumerVectorImpl<T> implements ICollectionConsumer<T> {
 
     @Override
     public void collectionNotice(Object sender, CollectionData<T> changeData) {
-        this.vector.add(new Data<>(sender, changeData));
-        this.run();
-    }
-
-    public static class Data<T> {
-        Object sender;
-        CollectionData<T> collectionData;
-
-        public Data(Object sender, CollectionData<T> collectionData) {
-            this.sender = sender;
-            this.collectionData = collectionData;
-        }
-
-        public Object getSender() {
-            return sender;
-        }
-
-        public CollectionData<T> getCollectionData() {
-            return collectionData;
+        if (this.consumer != null) {
+            this.executorService.execute(() -> {
+                this.vector.add(new CollectionConsumerData<>(sender, changeData));
+                this.run();
+            });
         }
     }
 }
