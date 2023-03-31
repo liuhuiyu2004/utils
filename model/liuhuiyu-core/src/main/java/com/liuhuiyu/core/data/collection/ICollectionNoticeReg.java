@@ -9,7 +9,7 @@ package com.liuhuiyu.core.data.collection;
  */
 public interface ICollectionNoticeReg<T> {
     /**
-     * 功能描述
+     * 消费者注册
      *
      * @param collectionConsumer 消费者注册
      * @author LiuHuiYu

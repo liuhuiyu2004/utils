@@ -11,10 +11,6 @@ public class CollectionData<T> {
     T data;
     String collectionModel;
 
-    public CollectionData(T data) {
-        this(data, "");
-    }
-
     public CollectionData(T data, String collectionModel) {
         this.data = data;
         this.collectionModel = collectionModel;
