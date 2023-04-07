@@ -14,12 +14,17 @@ import java.util.function.Consumer;
 public class CollectionConsumerBaseImpl<T> implements ICollectionConsumer<T> {
     private final String key;
     private final Consumer<CollectionConsumerData<T>> consumer;
-    private final ExecutorService executorService;
+    private ExecutorService executorService;
     public CollectionConsumerBaseImpl(String key, Consumer<CollectionConsumerData<T>> consumer) {
         this.key = key;
         this.consumer = consumer;
-        this.executorService = ThreadPoolExecutorBuilder.create().builder();
+        this.executorService = ThreadPoolExecutorBuilder.create().threadName("ConsumerBase").builder();
     }
+
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
     @Override
     public String getKey() {
         return this.key;
@@ -28,9 +33,7 @@ public class CollectionConsumerBaseImpl<T> implements ICollectionConsumer<T> {
     @Override
     public void collectionNotice(Object sender, CollectionData<T> changeData) {
         if (this.consumer != null) {
-            this.executorService.execute(() -> {
-                this.consumer.accept(new CollectionConsumerData<>(sender, changeData));
-            });
+            this.executorService.execute(() -> this.consumer.accept(new CollectionConsumerData<>(sender, changeData)));
         }
     }
 }

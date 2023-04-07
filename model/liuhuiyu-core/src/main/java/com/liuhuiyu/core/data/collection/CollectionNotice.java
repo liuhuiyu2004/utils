@@ -16,12 +16,16 @@ import java.util.concurrent.ExecutorService;
  */
 public class CollectionNotice<T> implements ICollectionNoticeReg<T> {
     private final Object sender;
-    private final ExecutorService executorService;
+    private ExecutorService executorService;
     private final Map<String, ICollectionConsumer<T>> noticeMap = new HashMap<>(0);
 
     public CollectionNotice(Object sender) {
         this.sender = sender;
-        this.executorService = ThreadPoolExecutorBuilder.create().builder();
+        this.executorService = ThreadPoolExecutorBuilder.create().threadName("CollectionNotice").builder();
+    }
+
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
     /**

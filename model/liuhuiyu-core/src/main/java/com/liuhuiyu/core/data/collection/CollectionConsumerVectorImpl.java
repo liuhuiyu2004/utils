@@ -17,13 +17,17 @@ public class CollectionConsumerVectorImpl<T> implements ICollectionConsumer<T> {
     private final String key;
     private final Consumer<CollectionConsumerData<T>> consumer;
     Vector<CollectionConsumerData<T>> vector;
-    private final ExecutorService executorService;
+    private ExecutorService executorService;
 
     public CollectionConsumerVectorImpl(String key, Consumer<CollectionConsumerData<T>> consumer) {
         this.vector = new Vector<>(0);
         this.key = key;
         this.consumer = consumer;
-        this.executorService = ThreadPoolExecutorBuilder.create().builder();
+        this.executorService = ThreadPoolExecutorBuilder.create().threadName("ConsumerVector").builder();
+    }
+
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
     private void run() {
