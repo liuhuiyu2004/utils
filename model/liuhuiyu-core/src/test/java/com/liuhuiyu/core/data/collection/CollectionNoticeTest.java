@@ -1,5 +1,6 @@
 package com.liuhuiyu.core.data.collection;
 
+import com.liuhuiyu.core.thread.ThreadPoolExecutorBuilder;
 import com.liuhuiyu.test.TestBase;
 import org.junit.jupiter.api.Test;
 
@@ -13,9 +14,13 @@ class CollectionNoticeTest extends TestBase {
     public void test() throws InterruptedException {
         Aa1 aa1 = new Aa1("Ak1");
         CollectionConsumerBaseImpl<Integer> baseConsumer1 = new CollectionConsumerBaseImpl<>("C1", (data) -> this.outPrint("C1", data, 1000));
+        baseConsumer1.setExecutorService(ThreadPoolExecutorBuilder.create().threadName("C1-").builder());
         CollectionConsumerBaseImpl<Integer> baseConsumer2 = new CollectionConsumerBaseImpl<>("C2", (data) -> this.outPrint("C2", data, 100));
+        baseConsumer2.setExecutorService(ThreadPoolExecutorBuilder.create().threadName("C2-").builder());
         CollectionConsumerVectorImpl<Integer> vectorConsumer1 = new CollectionConsumerVectorImpl<>("V1", (data) -> this.outPrint("V1", data, 1000));
+        vectorConsumer1.setExecutorService(ThreadPoolExecutorBuilder.create().threadName("V1-").builder());
         CollectionConsumerVectorImpl<Integer> vectorConsumer2 = new CollectionConsumerVectorImpl<>("V2", (data) -> this.outPrint("V2", data, 1200));
+        vectorConsumer2.setExecutorService(ThreadPoolExecutorBuilder.create().threadName("V2-").builder());
         aa1.collectionNoticeReg(baseConsumer1);
         aa1.collectionNoticeReg(baseConsumer2);
         aa1.collectionNoticeReg(vectorConsumer1);
