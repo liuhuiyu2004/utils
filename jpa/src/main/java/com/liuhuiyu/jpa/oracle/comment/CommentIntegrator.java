@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 
 /**
+ * 注解集成
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2021-11-19 11:36

@@ -35,8 +35,9 @@ public class OracleOrder {
         this.defOrder = field + " " + direction;
     }
 
-    public void addOrder(String key, String value) {
+    public OracleOrder addOrder(String key, String value) {
         orderMap.put(key.toUpperCase(), value);
+        return this;
     }
 
     public String getOrder(List<Sort> sortList) {

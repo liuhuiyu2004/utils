@@ -469,6 +469,19 @@ public abstract class OracleBaseView extends BaseView {
             return f;
         }
 
+        protected Condition<T>conditionNone(String fieldName){
+            Condition<T> f = new Condition<>(this);
+            f.fieldName = fieldName;
+            f.condition = "";
+            return f;
+        }
+        protected Condition<T> conditionNone(String minFieldName, String maxFieldName) {
+            Condition<T> f = new Condition<>(this);
+            f.minFieldName = minFieldName;
+            f.maxFieldName = maxFieldName;
+            f.condition = "";
+            return f;
+        }
         protected static class Condition<T> {
             final SqlCommandPackage<T> sqlCommandPackage;
             String fieldName;

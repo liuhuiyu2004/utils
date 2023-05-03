@@ -41,4 +41,11 @@ public class AppTest extends TestBase {
     public void out() {
         LOG.info(String.join(";\n", Collections.nCopies(6, "{}")), 1, 2, 3, 4, 5, 6);
     }
+
+    @Test
+    public void sql() {
+        final String sql = "SELECT T.ID, T.AREA_ID, T.AREA_NAME, T.SITE_ID, T.SITE_NAME, T.PERSON_ID, T.ORIGINAL_PERSON_ID, T.PERSON_NAME, T.PERSON_PC_NO, T.COMPANY_NAME, T.FIRST_TIME, T.UPDATE_TIME, T.EXPIRATION_TIME" +
+                " FROM ZNAF_SITE_PERSON T";
+        final String[] split = sql.split("[, ]");
+    }
 }

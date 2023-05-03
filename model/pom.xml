@@ -13,12 +13,14 @@
     <description>liuhuiyu工具箱</description>
     <url>https://github.com/liuhuiyu2004/utils</url>
     <modules>
+        <module>liuhuiyu-test</module>
         <module>liuhuiyu-core</module>
+        <module>liuhuiyu-json</module>
     </modules>
 
     <properties>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- versions -->
         <compile.version>8</compile.version>
     </properties>

@@ -23,9 +23,9 @@
     <dependencies>
         <dependency>
             <groupId>com.liuhuiyu</groupId>
-            <artifactId>test2</artifactId>
+            <artifactId>liuhuiyu-test</artifactId>
+            <version>2023.0.1</version>
             <scope>test</scope>
-            <version>2022.1.0</version>
         </dependency>
     </dependencies>
 

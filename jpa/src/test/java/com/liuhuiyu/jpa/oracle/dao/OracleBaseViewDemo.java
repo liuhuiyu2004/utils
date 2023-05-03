@@ -143,6 +143,9 @@ public class OracleBaseViewDemo extends OracleBaseView {
             super.conditionOr("t.G").isNull();
             super.conditionOr("t.G1").isNull();
             super.conditionAnd("t.H").isNotNull();
+            this.sqlBuilder.append("(");
+            super.conditionNone("T.I").isNull();
+            this.sqlBuilder.append(")");
         }
 
         @Override

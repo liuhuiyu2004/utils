@@ -12,6 +12,7 @@ import java.util.function.Function;
  * Created DateTime 2023-04-07 17:11
  */
 public abstract class StrategyRouter<P, R> {
+
     public StrategyRouter() {
         this.abstractInit();
     }
