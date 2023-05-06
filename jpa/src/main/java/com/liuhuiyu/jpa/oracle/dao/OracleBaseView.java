@@ -413,7 +413,19 @@ public abstract class OracleBaseView extends BaseView {
          * @author LiuHuiYu
          * Created DateTime 2022-11-19 21:32
          */
-        public abstract void commandPackage();
+        protected abstract void commandPackage();
+
+        /**
+         * 执行命令封装
+         * @author LiuHuiYu
+         * Created DateTime 2023-05-06 11:42
+         */
+        public void runCommandPackage() {
+            this.commandPackage();
+            if (this.conditionalDepth != 0) {
+                throw new RuntimeException("条件层级未闭锁，请检查是否所有的 begin 都有 对应的 end。");
+            }
+        }
 
         /**
          * 功能描述
@@ -469,6 +481,7 @@ public abstract class OracleBaseView extends BaseView {
             f.condition = " OR ";
             return f;
         }
+
         @Deprecated
         public Condition<T> conditionNone(String fieldName) {
             Condition<T> f = new Condition<>(this);
@@ -479,6 +492,12 @@ public abstract class OracleBaseView extends BaseView {
 
         int conditionalDepth = 0;
 
+        public SqlCommandPackage<T> conditionalBeginAnd() {
+            this.conditionalDepth++;
+            this.sqlBuilder.append("AND(");
+            return this;
+        }
+
         public Condition<T> conditionalBeginAnd(String fieldName) {
             this.conditionalDepth++;
             this.sqlBuilder.append("AND(");
@@ -487,6 +506,7 @@ public abstract class OracleBaseView extends BaseView {
             f.condition = "";
             return f;
         }
+
         public Condition<T> conditionalBeginAnd(String minFieldName, String maxFieldName) {
             this.conditionalDepth++;
             this.sqlBuilder.append("AND(");
@@ -496,6 +516,13 @@ public abstract class OracleBaseView extends BaseView {
             f.condition = "";
             return f;
         }
+
+        public SqlCommandPackage<T> conditionalBeginOr() {
+            this.conditionalDepth++;
+            this.sqlBuilder.append("OR(");
+            return this;
+        }
+
         public Condition<T> conditionalBeginOr(String fieldName) {
             this.conditionalDepth++;
             this.sqlBuilder.append("OR(");
@@ -504,6 +531,7 @@ public abstract class OracleBaseView extends BaseView {
             f.condition = "";
             return f;
         }
+
         public Condition<T> conditionalBeginOr(String minFieldName, String maxFieldName) {
             this.conditionalDepth++;
             this.sqlBuilder.append("OR(");
@@ -513,6 +541,7 @@ public abstract class OracleBaseView extends BaseView {
             f.condition = "";
             return f;
         }
+
         public SqlCommandPackage<T> conditionalEnd() {
             if (this.conditionalDepth <= 0) {
                 throw new RuntimeException("条件层级不能为负");
