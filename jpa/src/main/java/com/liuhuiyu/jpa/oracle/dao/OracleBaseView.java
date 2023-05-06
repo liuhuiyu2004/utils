@@ -417,13 +417,14 @@ public abstract class OracleBaseView extends BaseView {
 
         /**
          * 功能描述
-         * @author LiuHuiYu
-         * Created DateTime 2023-03-29 9:25
+         *
          * @param minFieldName 最大值字段
          * @param maxFieldName 最小值字段
          * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
+         * @author LiuHuiYu
+         * Created DateTime 2023-03-29 9:25
          */
-        protected Condition<T> conditionAnd(String minFieldName, String maxFieldName) {
+        public Condition<T> conditionAnd(String minFieldName, String maxFieldName) {
             Condition<T> f = new Condition<>(this);
             f.minFieldName = minFieldName;
             f.maxFieldName = maxFieldName;
@@ -439,14 +440,14 @@ public abstract class OracleBaseView extends BaseView {
          * @author LiuHuiYu
          * Created DateTime 2023-02-23 23:56
          */
-        protected Condition<T> conditionAnd(String fieldName) {
+        public Condition<T> conditionAnd(String fieldName) {
             Condition<T> f = new Condition<>(this);
             f.fieldName = fieldName;
             f.condition = " AND ";
             return f;
         }
 
-        protected Condition<T> conditionOr(String minFieldName, String maxFieldName) {
+        public Condition<T> conditionOr(String minFieldName, String maxFieldName) {
             Condition<T> f = new Condition<>(this);
             f.minFieldName = minFieldName;
             f.maxFieldName = maxFieldName;
@@ -462,26 +463,65 @@ public abstract class OracleBaseView extends BaseView {
          * @author LiuHuiYu
          * Created DateTime 2023-02-23 23:56
          */
-        protected Condition<T> conditionOr(String fieldName) {
+        public Condition<T> conditionOr(String fieldName) {
             Condition<T> f = new Condition<>(this);
             f.fieldName = fieldName;
             f.condition = " OR ";
             return f;
         }
-
-        protected Condition<T>conditionNone(String fieldName){
+        @Deprecated
+        public Condition<T> conditionNone(String fieldName) {
             Condition<T> f = new Condition<>(this);
             f.fieldName = fieldName;
             f.condition = "";
             return f;
         }
-        protected Condition<T> conditionNone(String minFieldName, String maxFieldName) {
+
+        int conditionalDepth = 0;
+
+        public Condition<T> conditionalBeginAnd(String fieldName) {
+            this.conditionalDepth++;
+            this.sqlBuilder.append("AND(");
+            Condition<T> f = new Condition<>(this);
+            f.fieldName = fieldName;
+            f.condition = "";
+            return f;
+        }
+        public Condition<T> conditionalBeginAnd(String minFieldName, String maxFieldName) {
+            this.conditionalDepth++;
+            this.sqlBuilder.append("AND(");
             Condition<T> f = new Condition<>(this);
             f.minFieldName = minFieldName;
             f.maxFieldName = maxFieldName;
             f.condition = "";
             return f;
         }
+        public Condition<T> conditionalBeginOr(String fieldName) {
+            this.conditionalDepth++;
+            this.sqlBuilder.append("OR(");
+            Condition<T> f = new Condition<>(this);
+            f.fieldName = fieldName;
+            f.condition = "";
+            return f;
+        }
+        public Condition<T> conditionalBeginOr(String minFieldName, String maxFieldName) {
+            this.conditionalDepth++;
+            this.sqlBuilder.append("OR(");
+            Condition<T> f = new Condition<>(this);
+            f.minFieldName = minFieldName;
+            f.maxFieldName = maxFieldName;
+            f.condition = "";
+            return f;
+        }
+        public SqlCommandPackage<T> conditionalEnd() {
+            if (this.conditionalDepth <= 0) {
+                throw new RuntimeException("条件层级不能为负");
+            }
+            this.conditionalDepth--;
+            this.sqlBuilder.append(")");
+            return this;
+        }
+
         protected static class Condition<T> {
             final SqlCommandPackage<T> sqlCommandPackage;
             String fieldName;
@@ -513,8 +553,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2022-06-02 18:43
              */
-            public void likeValue(String parameterName, String value) {
-                likeValue(parameterName, value, true, true, true);
+            public SqlCommandPackage<T> likeValue(String parameterName, String value) {
+                return likeValue(parameterName, value, true, true, true);
             }
 
             /**
@@ -528,14 +568,15 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2022-06-02 18:43
              */
-            public void likeValue(String parameterName, String value, Boolean trim, Boolean head, Boolean tail) {
+            public SqlCommandPackage<T> likeValue(String parameterName, String value, Boolean trim, Boolean head, Boolean tail) {
                 this.checkField();
                 if (value == null) {
-                    return;
+                    return this.sqlCommandPackage;
                 }
                 final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
                 this.sqlCommandPackage.sqlBuilder.append(condition).append("(").append(this.fieldName).append(" LIKE :").append(parameterName).append(")");
                 this.sqlCommandPackage.parameterMap.put(parameterName, s);
+                return this.sqlCommandPackage;
             }
 
             /**
@@ -546,8 +587,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2022-11-20 8:28
              */
-            public <P> void inPackage(String parameterName, P[] data) {
-                inPackage(parameterName, data, false, false);
+            public <P> SqlCommandPackage<T> inPackage(String parameterName, P[] data) {
+                return inPackage(parameterName, data, false, false);
             }
 
             /**
@@ -560,7 +601,7 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2022-11-20 8:28
              */
-            public <P> void inPackage(String parameterName, P[] data, Boolean notIn, Boolean isNull) {
+            public <P> SqlCommandPackage<T> inPackage(String parameterName, P[] data, Boolean notIn, Boolean isNull) {
                 this.checkField();
                 if (data != null && data.length > 0) {
                     Joiner joiner = Joiner.on(",").skipNulls();
@@ -576,12 +617,13 @@ public abstract class OracleBaseView extends BaseView {
                     }
                     this.sqlCommandPackage.sqlBuilder.append(")");
                 }
+                return this.sqlCommandPackage;
             }
 
-            public <P> void between(String beginParameterName, P beginValue, String endParameterName, P endValue) {
+            public <P> SqlCommandPackage<T> between(String beginParameterName, P beginValue, String endParameterName, P endValue) {
                 this.checkField();
                 if (beginValue == null || endValue == null) {
-                    return;
+                    return this.sqlCommandPackage;
                 }
                 this.sqlCommandPackage.sqlBuilder.append(condition)
                         .append("(").append(this.fieldName)
@@ -591,6 +633,7 @@ public abstract class OracleBaseView extends BaseView {
                         .append(")");
                 this.sqlCommandPackage.parameterMap.put(beginParameterName, beginValue);
                 this.sqlCommandPackage.parameterMap.put(endParameterName, endValue);
+                return this.sqlCommandPackage;
             }
 
             /**
@@ -603,10 +646,10 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2022-12-01 10:23
              */
-            public <P> void inclusion(String minParameterName, String maxParameterName, P minValue, P maxValue) {
+            public <P> SqlCommandPackage<T> inclusion(String minParameterName, String maxParameterName, P minValue, P maxValue) {
                 this.checkField2();
                 if (minValue == null || maxValue == null) {
-                    return;
+                    return this.sqlCommandPackage;
                 }
                 this.sqlCommandPackage.sqlBuilder.append(condition).append(" (");
                 this.sqlCommandPackage.sqlBuilder.append("((").append(minFieldName).append(" < :").append(minParameterName).append(") and (")
@@ -620,6 +663,7 @@ public abstract class OracleBaseView extends BaseView {
                 this.sqlCommandPackage.sqlBuilder.append(")");
                 this.sqlCommandPackage.parameterMap.put(minParameterName, minValue);
                 this.sqlCommandPackage.parameterMap.put(maxParameterName, maxValue);
+                return this.sqlCommandPackage;
             }
 
             /**
@@ -630,8 +674,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-02-23 23:51
              */
-            public <P> void eq(String parameterName, P value) {
-                this.generate("=", parameterName, value);
+            public <P> SqlCommandPackage<T> eq(String parameterName, P value) {
+                return this.generate("=", parameterName, value);
             }
 
             /**
@@ -642,8 +686,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-03-25 9:23
              */
-            public <P> void ne(String parameterName, P value) {
-                this.generate("<>", parameterName, value);
+            public <P> SqlCommandPackage<T> ne(String parameterName, P value) {
+                return this.generate("<>", parameterName, value);
             }
 
             /**
@@ -654,8 +698,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-03-25 9:23
              */
-            public <P> void gt(String parameterName, P value) {
-                this.generate(">", parameterName, value);
+            public <P> SqlCommandPackage<T> gt(String parameterName, P value) {
+                return this.generate(">", parameterName, value);
             }
 
             /**
@@ -666,8 +710,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-03-25 9:23
              */
-            public <P> void lt(String parameterName, P value) {
-                this.generate("<", parameterName, value);
+            public <P> SqlCommandPackage<T> lt(String parameterName, P value) {
+                return this.generate("<", parameterName, value);
             }
 
             /**
@@ -678,8 +722,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-03-25 9:23
              */
-            public <P> void ge(String parameterName, P value) {
-                this.generate(">=", parameterName, value);
+            public <P> SqlCommandPackage<T> ge(String parameterName, P value) {
+                return this.generate(">=", parameterName, value);
             }
 
             /**
@@ -690,8 +734,8 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-03-25 9:23
              */
-            public <P> void le(String parameterName, P value) {
-                this.generate("<=", parameterName, value);
+            public <P> SqlCommandPackage<T> le(String parameterName, P value) {
+                return this.generate("<=", parameterName, value);
             }
 
             /**
@@ -700,12 +744,13 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-03-25 9:23
              */
-            public void isNull() {
+            public SqlCommandPackage<T> isNull() {
                 this.checkField();
                 this.sqlCommandPackage.sqlBuilder
                         .append(condition)
                         .append("(").append(this.fieldName)
                         .append(" is null )");
+                return this.sqlCommandPackage;
             }
 
             /**
@@ -714,15 +759,16 @@ public abstract class OracleBaseView extends BaseView {
              * @author LiuHuiYu
              * Created DateTime 2023-03-25 9:23
              */
-            public void isNotNull() {
+            public SqlCommandPackage<T> isNotNull() {
                 this.checkField();
                 this.sqlCommandPackage.sqlBuilder
                         .append(condition)
                         .append("(").append(this.fieldName)
                         .append(" is not null )");
+                return this.sqlCommandPackage;
             }
 
-            private <P> void generate(String operator, String parameterName, P value) {
+            private <P> SqlCommandPackage<T> generate(String operator, String parameterName, P value) {
                 this.checkField();
                 if (value != null) {
                     this.sqlCommandPackage.sqlBuilder
@@ -732,6 +778,7 @@ public abstract class OracleBaseView extends BaseView {
                             .append(" :").append(parameterName).append(")");
                     this.sqlCommandPackage.parameterMap.put(parameterName, value);
                 }
+                return this.sqlCommandPackage;
             }
             /*
  *           eq 就是 equal等于

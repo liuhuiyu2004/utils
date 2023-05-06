@@ -134,18 +134,19 @@ public class OracleBaseViewDemo extends OracleBaseView {
         }
 
         private void compare() {
-            super.conditionAnd("t.A").eq("v", 1);
-            super.conditionAnd("t.B").ne("v", 1);
-            super.conditionAnd("t.D").gt("v", 1);
-            super.conditionAnd("t.C").ge("v", 1);
-            super.conditionAnd("t.E").lt("v", 1);
-            super.conditionAnd("t.F").le("v", 1);
-            super.conditionOr("t.G").isNull();
-            super.conditionOr("t.G1").isNull();
-            super.conditionAnd("t.H").isNotNull();
-            this.sqlBuilder.append("(");
-            super.conditionNone("T.I").isNull();
-            this.sqlBuilder.append(")");
+            super.conditionAnd("t.A").eq("v", 1)
+                    .conditionAnd("t.B").ne("v", 1)
+                    .conditionAnd("t.D").gt("v", 1)
+                    .conditionAnd("t.C").ge("v", 1)
+                    .conditionAnd("t.E").lt("v", 1)
+                    .conditionAnd("t.F").le("v", 1)
+                    .conditionOr("t.G").isNull()
+                    .conditionOr("t.G1").isNull()
+                    .conditionAnd("t.H").isNotNull()
+                    .conditionalBeginAnd("T.I").isNull().conditionAnd("T.J").likeValue("j", "aaa")
+                    .conditionalEnd()
+                    .conditionalBeginOr("T.I").isNull().conditionOr("T.K").le("k", 99)
+                    .conditionalEnd();
         }
 
         @Override
