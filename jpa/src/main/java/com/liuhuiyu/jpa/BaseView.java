@@ -1,6 +1,8 @@
 package com.liuhuiyu.jpa;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
@@ -80,6 +82,7 @@ public abstract class BaseView {
         });
     }
 
+
     /**
      * 对象列表获取
      *
@@ -124,6 +127,62 @@ public abstract class BaseView {
             }
         });
         return resList;
+    }
+
+    /**
+     * 对象列表获取
+     *
+     * @param sql          基本语句
+     * @param parameterMap 参数表
+     * @param onlyFirst    仅第一行数据
+     * @return java.util.List<java.lang.Object [ ]>
+     * @author LiuHuiYu
+     * Created DateTime 2021-03-22 14:05
+     */
+    protected List<Object[]> getResultList2(String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
+        ArrayList<Object[]> resList = new ArrayList<>();
+        this.fullResultSet(sql, parameterMap, (resultSet) -> {
+            try {
+                int columnCount = resultSet.getMetaData().getColumnCount();
+                ArrayList<String> columnLabels=this.setColumnLabels(resultSet.getMetaData());
+                while (resultSet.next()) {
+                    Object[] objs = new Object[columnCount];
+                    for (int i = 1; i <= columnCount; i++) {
+                        objs[i - 1] = (resultSet.getObject(i));
+                    }
+                    resList.add(objs);
+                    if (onlyFirst) {
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        return resList;
+    }
+
+
+    /**
+     * 字段名称按照顺序设置
+     *
+     * @author LiuHuiYu
+     * Created DateTime 2023-07-28 17:26
+     */
+    private ArrayList<String> setColumnLabels(ResultSetMetaData metaData) {
+        ArrayList<String> columnLabels;
+        try {
+            int count = metaData.getColumnCount();
+            columnLabels = new ArrayList<>(count);
+            for (int i = 1; i <= count; i++) {
+                columnLabels.add(metaData.getColumnLabel(i).toUpperCase());
+            }
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return columnLabels;
     }
 
     /**
@@ -261,7 +320,75 @@ public abstract class BaseView {
         };
         return getFirstResult(longDaoOperator, sql, parameterMap).orElse(0L);
     }
+    private <T> T rowToT(ResultSet rs, ArrayList<String> columnLabels, Class<T> clazz) {
+        T obj = null;
+        try {
+            obj = clazz.newInstance();
+            final Field[] fields = obj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                int mod = field.getModifiers();
+                final int columnIndex = columnLabels.indexOf(field.getName().toUpperCase());
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod) ||
+                        columnIndex < 0) {
+                    continue;
+                }
+                Object rowValue = rs.getObject(columnIndex + 1);
+                Object value = getValue(field, rowValue);
+                field.setAccessible(true);
+                field.set(obj, value);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
 
+    /**
+     * 将指定值转换为与类字段相同类型的值
+     *
+     * @param field 字段
+     * @param value 值
+     * @return java.lang.Object
+     * @author LiuHuiYu
+     * Created DateTime 2023-07-28 16:19
+     */
+    private static Object getValue(Field field, Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (field.getType().getName().equals(String.class.getName())) {
+            return value.toString();
+        }
+        if (value instanceof BigDecimal) {
+            BigDecimal v = (BigDecimal) value;
+            if (field.getType().getName().equals(int.class.getName()) ||
+                    field.getType().getName().equals(Integer.class.getName())) {
+                return v.intValue();
+            }
+            else if (field.getType().getName().equals(long.class.getName()) ||
+                    field.getType().getName().equals(Long.class.getName())) {
+                return v.longValue();
+            }
+            else if (field.getType().getName().equals(float.class.getName()) ||
+                    field.getType().getName().equals(Float.class.getName())) {
+                return v.floatValue();
+            }
+            else if (field.getType().getName().equals(double.class.getName()) ||
+                    field.getType().getName().equals(Double.class.getName())) {
+                return v.doubleValue();
+            }
+            else if (field.getType().getName().equals(byte.class.getName()) ||
+                    field.getType().getName().equals(Byte.class.getName())) {
+                return v.byteValue();
+            }
+            else if (field.getType().getName().equals(short.class.getName()) ||
+                    field.getType().getName().equals(Short.class.getName())) {
+                return v.shortValue();
+            }
+        }
+        return value;
+    }
     /**
      * 查询建造者
      *
