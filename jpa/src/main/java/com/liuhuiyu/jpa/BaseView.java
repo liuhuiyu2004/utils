@@ -139,20 +139,16 @@ public abstract class BaseView {
      * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:05
      */
-    protected List<Object[]> getResultList2(String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
-        ArrayList<Object[]> resList = new ArrayList<>();
+    protected <T> List<T> getResultListT(Class<T> clazz,String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
+        ArrayList<T> resList = new ArrayList<>();
         this.fullResultSet(sql, parameterMap, (resultSet) -> {
             try {
                 int columnCount = resultSet.getMetaData().getColumnCount();
                 ArrayList<String> columnLabels=this.setColumnLabels(resultSet.getMetaData());
                 while (resultSet.next()) {
-                    Object[] objs = new Object[columnCount];
-                    for (int i = 1; i <= columnCount; i++) {
-                        objs[i - 1] = (resultSet.getObject(i));
-                    }
-                    resList.add(objs);
-                    if (onlyFirst) {
-                        return;
+                    while (resultSet.next()) {
+                        final T t = rowToT(resultSet, columnLabels, clazz);
+                        resList.add(t);
                     }
                 }
             }
