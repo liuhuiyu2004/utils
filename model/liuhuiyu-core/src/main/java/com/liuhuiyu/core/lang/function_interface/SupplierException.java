@@ -9,9 +9,12 @@ package com.liuhuiyu.core.lang.function_interface;
 public interface SupplierException<T> {
 
     /**
-     * Gets a result.
+     * 获取函数接口数据
      *
-     * @return a result
+     * @return T 实体
+     * @throws Exception 异常信息
+     *                   Created DateTime 2023-08-03 9:20
+     * @author LiuHuiYu
      */
     T get() throws Exception;
 }

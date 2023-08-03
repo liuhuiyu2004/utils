@@ -31,23 +31,14 @@ class IgnoredExceptionTest extends TestBase {
     @ParameterizedTest()
     @MethodSource("argumentsProvider")
     public void get(Integer value) {
+        int v = value > 10 ? -1 : 0;
         final Integer integer = IgnoredException.get(() -> {
+            if (value > 10) {
+                throw new Exception("");
+            }
             Assert.assertTrue(value > 5, "");
             return value;
-        }, 0);
-        LOG.info("{}->{}", value, integer);
-    }
-
-    @DisplayName("忽略异常获取默认值")
-    @ParameterizedTest()
-    @MethodSource("argumentsProvider")
-    public void getEx(Integer value) {
-        final Integer integer = IgnoredException.getEx(() -> {
-            if (value > 5) {
-                throw new Exception("异常抛出");
-            }
-            return value;
-        }, 0);
+        }, v);
         LOG.info("{}->{}", value, integer);
     }
 
