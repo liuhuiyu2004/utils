@@ -1,5 +1,7 @@
 package com.liuhuiyu.core.util;
 
+import com.liuhuiyu.core.lang.function_interface.SupplierException;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -72,6 +74,42 @@ public class IgnoredException {
      * Created DateTime 2023-02-22 21:38
      */
     public static <T> T get(Supplier<T> supplier, Function<Exception, T> exceptionFunction) {
+        try {
+            return supplier.get();
+        }
+        catch (Exception ex) {
+            return exceptionFunction.apply(ex);
+        }
+    }
+
+    /**
+     * 功能描述
+     *
+     * @param supplierException 要执行的 Supplier
+     * @param def               默认值
+     * @param <T>               类型
+     * @return T 实体
+     * @author LiuHuiYu
+     * Created DateTime 2023-08-03 9:14
+     */
+    public static <T> T getEx(SupplierException<T> supplierException, T def) {
+        try {
+            return supplierException.get();
+        }
+        catch (Exception ex) {
+            return def;
+        }
+    }
+    /**
+     * 执行中出现异常，返回默认值
+     *
+     * @param supplier          要执行的 Supplier
+     * @param exceptionFunction 异常的时候执行
+     * @return T
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-22 21:38
+     */
+    public static <T> T getEx(SupplierException<T> supplier, Function<Exception, T> exceptionFunction) {
         try {
             return supplier.get();
         }

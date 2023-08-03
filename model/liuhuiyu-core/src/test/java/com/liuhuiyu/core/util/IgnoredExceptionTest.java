@@ -38,6 +38,19 @@ class IgnoredExceptionTest extends TestBase {
         LOG.info("{}->{}", value, integer);
     }
 
+    @DisplayName("忽略异常获取默认值")
+    @ParameterizedTest()
+    @MethodSource("argumentsProvider")
+    public void getEx(Integer value) {
+        final Integer integer = IgnoredException.getEx(() -> {
+            if (value > 5) {
+                throw new Exception("异常抛出");
+            }
+            return value;
+        }, 0);
+        LOG.info("{}->{}", value, integer);
+    }
+
     static Stream<Arguments> argumentsProvider() {
         return Stream.of(
                 Arguments.arguments(1),
