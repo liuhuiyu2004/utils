@@ -139,15 +139,15 @@ public abstract class BaseView {
      * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:05
      */
-    protected <T> List<T> getResultListT(Class<T> clazz,String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
+    protected <T> List<T> getResultListT(Class<T> clazz, String sql, Map<String, Object> parameterMap, boolean onlyFirst) {
         ArrayList<T> resList = new ArrayList<>();
         this.fullResultSet(sql, parameterMap, (resultSet) -> {
             try {
                 int columnCount = resultSet.getMetaData().getColumnCount();
-                ArrayList<String> columnLabels=this.setColumnLabels(resultSet.getMetaData());
+//                ArrayList<String> columnLabels=this.setColumnLabels(resultSet.getMetaData());
                 while (resultSet.next()) {
                     while (resultSet.next()) {
-                        final T t = rowToT(resultSet, columnLabels, clazz);
+                        final T t = rowToT(resultSet, clazz);
                         resList.add(t);
                     }
                 }
@@ -160,26 +160,26 @@ public abstract class BaseView {
     }
 
 
-    /**
-     * 字段名称按照顺序设置
-     *
-     * @author LiuHuiYu
-     * Created DateTime 2023-07-28 17:26
-     */
-    private ArrayList<String> setColumnLabels(ResultSetMetaData metaData) {
-        ArrayList<String> columnLabels;
-        try {
-            int count = metaData.getColumnCount();
-            columnLabels = new ArrayList<>(count);
-            for (int i = 1; i <= count; i++) {
-                columnLabels.add(metaData.getColumnLabel(i).toUpperCase());
-            }
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-        return columnLabels;
-    }
+//    /**
+//     * 字段名称按照顺序设置
+//     *
+//     * @author LiuHuiYu
+//     * Created DateTime 2023-07-28 17:26
+//     */
+//    private ArrayList<String> setColumnLabels(ResultSetMetaData metaData) {
+//        ArrayList<String> columnLabels;
+//        try {
+//            int count = metaData.getColumnCount();
+//            columnLabels = new ArrayList<>(count);
+//            for (int i = 1; i <= count; i++) {
+//                columnLabels.add(metaData.getColumnLabel(i).toUpperCase());
+//            }
+//        }
+//        catch (Exception ex) {
+//            throw new RuntimeException(ex);
+//        }
+//        return columnLabels;
+//    }
 
     /**
      * 对象列表获取
@@ -316,14 +316,21 @@ public abstract class BaseView {
         };
         return getFirstResult(longDaoOperator, sql, parameterMap).orElse(0L);
     }
-    private <T> T rowToT(ResultSet rs, ArrayList<String> columnLabels, Class<T> clazz) {
+
+    private <T> T rowToT(ResultSet rs, Class<T> clazz) {
         T obj = null;
         try {
             obj = clazz.newInstance();
             final Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
                 int mod = field.getModifiers();
-                final int columnIndex = columnLabels.indexOf(field.getName().toUpperCase());
+                int columnIndex ;
+                try {
+                    columnIndex = rs.findColumn(field.getName());
+                }
+                catch (Exception igex) {
+                    columnIndex = -1;
+                }
                 if (Modifier.isStatic(mod) || Modifier.isFinal(mod) ||
                         columnIndex < 0) {
                     continue;
@@ -385,6 +392,7 @@ public abstract class BaseView {
         }
         return value;
     }
+
     /**
      * 查询建造者
      *
