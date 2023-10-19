@@ -213,7 +213,7 @@ public class ConditionImpl<T> implements Condition<T> {
     }
 
     /**
-     * >= 比较
+     * 大于等于 比较
      *
      * @param value 值
      * @author LiuHuiYu
@@ -225,7 +225,7 @@ public class ConditionImpl<T> implements Condition<T> {
     }
 
     /**
-     * <= 比较
+     * 小于等于 比较
      *
      * @param value 值
      * @author LiuHuiYu

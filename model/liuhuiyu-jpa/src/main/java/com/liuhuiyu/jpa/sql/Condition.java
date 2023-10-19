@@ -104,6 +104,7 @@ public interface Condition<T> {
      * < 比较
      *
      * @param value 值
+     * @param <P>   p
      * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */

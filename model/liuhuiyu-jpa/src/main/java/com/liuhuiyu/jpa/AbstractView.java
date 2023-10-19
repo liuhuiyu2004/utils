@@ -32,7 +32,6 @@ public abstract class AbstractView {
      * 连接获取
      *
      * @param callFunctions 调用函数
-     * @author LiuHuiYu
      * Created DateTime 2021-03-25 10:42
      */
     protected void actionConnection(Consumer<Connection> callFunctions) {
@@ -97,8 +96,8 @@ public abstract class AbstractView {
      *
      * @param sql          基本语句
      * @param parameterMap 参数表
-     * @return java.util.List<java.lang.Object [ ]>
      * @author LiuHuiYu
+     * @return List  数组对
      * Created DateTime 2021-03-22 14:05
      */
     protected List<Object[]> getResultObjectList(String sql, List<Object> parameterMap) {
@@ -111,7 +110,7 @@ public abstract class AbstractView {
      * @param sql          基本语句
      * @param parameterMap 参数表
      * @param onlyFirst    仅第一行数据
-     * @return java.util.List<java.lang.Object [ ]>
+     * @return List 对象数组
      * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:05
      */
@@ -147,7 +146,8 @@ public abstract class AbstractView {
      * @param b            DaoOperator
      * @param sql          基本语句
      * @param parameterMap 参数表
-     * @return java.util.List<T>
+     * @param <T> T
+     * @return java.util.List<T> 返回
      * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:04
      */
