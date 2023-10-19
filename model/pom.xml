@@ -18,6 +18,7 @@
         <module>liuhuiyu-json</module>
         <module>liuhuiyu-jpa</module>
         <module>liuhuiyu-dto</module>
+        <module>liuhuiyu-jpa-dm</module>
     </modules>
 
     <properties>

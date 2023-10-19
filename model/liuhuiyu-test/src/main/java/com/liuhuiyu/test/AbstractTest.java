@@ -12,8 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
  * @version v1.0.0.0
  * Created DateTime 2023-04-19 14:10
  */
-@Deprecated
-public abstract class TestBase {
+public abstract class AbstractTest {
     protected static Logger LOG;
 
     @BeforeAll
@@ -42,7 +41,7 @@ public abstract class TestBase {
      */
     protected void setLoggerValue(Level level) {
         LOG = LogManager.getLogger();
-        org.apache.logging.log4j.core.config.Configurator.setLevel(LOG, level);
+        Configurator.setLevel(LOG, level);
     }
 
     /**
