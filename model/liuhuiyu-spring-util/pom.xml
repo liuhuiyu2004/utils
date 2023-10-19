@@ -7,35 +7,22 @@
         <version>2023.0.1</version>
     </parent>
 
-    <artifactId>liuhuiyu-jpa</artifactId>
+    <artifactId>liuhuiyu-spring-util</artifactId>
     <packaging>jar</packaging>
 
-    <name>liuhuiyu-jpa</name>
+    <name>liuhuiyu-spring-util</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.liuhuiyu</groupId>
-            <artifactId>core</artifactId>
-            <version>2023.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.liuhuiyu</groupId>
-            <artifactId>liuhuiyu-dto</artifactId>
-            <version>2023.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.liuhuiyu</groupId>
-            <artifactId>liuhuiyu-test</artifactId>
-            <version>2023.0.1</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <build>
-    </build>
 </project>
