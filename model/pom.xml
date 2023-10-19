@@ -16,6 +16,8 @@
         <module>liuhuiyu-test</module>
         <module>liuhuiyu-core</module>
         <module>liuhuiyu-json</module>
+        <module>liuhuiyu-jpa</module>
+        <module>liuhuiyu-dto</module>
     </modules>
 
     <properties>
