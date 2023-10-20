@@ -20,6 +20,8 @@
         <module>liuhuiyu-dto</module>
         <module>liuhuiyu-jpa-dm</module>
         <module>liuhuiyu-spring-util</module>
+        <module>liuhuiyu-web</module>
+        <module>liuhuiyu-cloud-util</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
@@ -58,6 +60,11 @@
             <dependency>
                 <groupId>com.liuhuiyu</groupId>
                 <artifactId>liuhuiyu-core</artifactId>
+                <version>${liuhuiyu.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.liuhuiyu</groupId>
+                <artifactId>liuhuiyu-json</artifactId>
                 <version>${liuhuiyu.revision}</version>
             </dependency>
             <!--endregion-->
