@@ -18,6 +18,7 @@ public class Operating {
      * 操作人id
      */
     private String operatorId;
+    private String operatorName;
     /**
      * 操作模式名称（用户自定义）
      */
@@ -56,4 +57,11 @@ public class Operating {
         this.operatorId = operatorId;
     }
 
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
 }
