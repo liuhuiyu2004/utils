@@ -21,15 +21,48 @@
         <module>liuhuiyu-jpa-dm</module>
         <module>liuhuiyu-spring-util</module>
     </modules>
-
     <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <!-- versions -->
         <compile.version>8</compile.version>
+        <!-- 版本 -->
+        <liuhuiyu.revision>2023.0.1</liuhuiyu.revision>
+        <!-- 引入包版本 -->
+        <junit.version>5.9.0</junit.version>
+        <gson.version>2.10.1</gson.version>
+        <log4j2.version>2.18.0</log4j2.version>
     </properties>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <!--region 模块 -->
+            <dependency>
+                <groupId>com.liuhuiyu</groupId>
+                <artifactId>liuhuiyu-core</artifactId>
+                <version>${liuhuiyu.revision}</version>
+            </dependency>
+            <!--endregion-->
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <!-- 全局单元测试 -->
     </dependencies>
@@ -45,6 +78,7 @@
             <url>https://license.coscl.org.cn/MulanPSL2</url>
         </license>
     </licenses>
+
     <developers>
         <developer>
             <name>liuhuiyu</name>

@@ -277,6 +277,21 @@ public abstract class AbstractDmView extends AbstractView {
             this.countSql = null;
         }
 
+        public SelectBuilder<T, R> setCountSql(String countSql) {
+            this.countSql = countSql;
+            return this;
+        }
+
+        public SelectBuilder<T, R> setOrder(String order) {
+            this.order = order;
+            return this;
+        }
+
+        public SelectBuilder<T, R> setBaseWhere(String baseWhere) {
+            this.baseWhere = baseWhere;
+            return this;
+        }
+
         public PageImpl<R> buildPage() {
             if (this.clazz == null) {
                 return page(b, findWhere, sql, countSql, baseWhere, order, fullWhere);
