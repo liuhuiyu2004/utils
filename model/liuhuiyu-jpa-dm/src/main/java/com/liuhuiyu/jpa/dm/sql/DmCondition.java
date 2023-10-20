@@ -27,7 +27,43 @@ public class DmCondition<T> implements Condition<T> {
     String maxFieldName;
     String condition;
 
-    private DmCondition(AbstractSqlCommandPackage<T> sqlCommandPackage) {
+    public AbstractSqlCommandPackage<T> getSqlCommandPackage() {
+        return sqlCommandPackage;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public String getMinFieldName() {
+        return minFieldName;
+    }
+
+    public void setMinFieldName(String minFieldName) {
+        this.minFieldName = minFieldName;
+    }
+
+    public String getMaxFieldName() {
+        return maxFieldName;
+    }
+
+    public void setMaxFieldName(String maxFieldName) {
+        this.maxFieldName = maxFieldName;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public DmCondition(AbstractSqlCommandPackage<T> sqlCommandPackage) {
         this.sqlCommandPackage = sqlCommandPackage;
     }
 

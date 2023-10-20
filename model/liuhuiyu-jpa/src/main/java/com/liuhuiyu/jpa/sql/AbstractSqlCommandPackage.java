@@ -86,6 +86,18 @@ public abstract class AbstractSqlCommandPackage<T> {
      */
     protected abstract Condition<T> conditionOr(String fieldName);
 
+    protected abstract Condition<T> condition(String minFieldName, String maxFieldName);
+
+    /**
+     * 条件生成
+     *
+     * @param fieldName 字段名称
+     * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-23 23:56
+     */
+    protected abstract Condition<T> condition(String fieldName);
+
     /**
      * 条件深度
      * Created DateTime 2023-10-19 16:18
