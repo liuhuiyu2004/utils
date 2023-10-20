@@ -1,7 +1,5 @@
 package com.liuhuiyu.web.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
