@@ -23,7 +23,6 @@ public abstract class AbstractSqlCommandPackage<T> {
      * @param findDto       查询条件
      * @param sqlBuilder    sqlBuilder
      * @param parameterList 参数
-     * @author LiuHuiYu
      * Created DateTime 2022-11-20 8:27
      */
     public AbstractSqlCommandPackage(T findDto, StringBuilder sqlBuilder, List<Object> parameterList) {
@@ -35,7 +34,6 @@ public abstract class AbstractSqlCommandPackage<T> {
     /**
      * 执行命令封装
      *
-     * @author LiuHuiYu
      * Created DateTime 2023-05-06 11:42
      */
     public void runCommandPackage() {
@@ -48,7 +46,6 @@ public abstract class AbstractSqlCommandPackage<T> {
     /**
      * 命令封装
      *
-     * @author LiuHuiYu
      * Created DateTime 2022-11-19 21:32
      */
     protected abstract void commandPackage();
@@ -59,7 +56,6 @@ public abstract class AbstractSqlCommandPackage<T> {
      * @param minFieldName 最大值字段
      * @param maxFieldName 最小值字段
      * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
-     * @author LiuHuiYu
      * Created DateTime 2023-03-29 9:25
      */
     protected abstract Condition<T> conditionAnd(String minFieldName, String maxFieldName);
@@ -69,7 +65,6 @@ public abstract class AbstractSqlCommandPackage<T> {
      *
      * @param fieldName 字段名称
      * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
-     * @author LiuHuiYu
      * Created DateTime 2023-02-23 23:56
      */
     protected abstract Condition<T> conditionAnd(String fieldName);
@@ -81,7 +76,6 @@ public abstract class AbstractSqlCommandPackage<T> {
      *
      * @param fieldName 字段名称
      * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
-     * @author LiuHuiYu
      * Created DateTime 2023-02-23 23:56
      */
     protected abstract Condition<T> conditionOr(String fieldName);
@@ -93,7 +87,6 @@ public abstract class AbstractSqlCommandPackage<T> {
      *
      * @param fieldName 字段名称
      * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
-     * @author LiuHuiYu
      * Created DateTime 2023-02-23 23:56
      */
     protected abstract Condition<T> condition(String fieldName);

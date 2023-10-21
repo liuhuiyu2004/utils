@@ -24,8 +24,7 @@ public interface Condition<T> {
      * like值
      *
      * @param value 值
-     * @author LiuHuiYu
-     * Created DateTime 2022-06-02 18:43
+     *              Created DateTime 2022-06-02 18:43
      */
     AbstractSqlCommandPackage<T> likeValue(String value);
 
@@ -36,8 +35,7 @@ public interface Condition<T> {
      * @param trim  去掉首尾空格
      * @param head  头部模糊匹配
      * @param tail  尾部模糊匹配
-     * @author LiuHuiYu
-     * Created DateTime 2022-06-02 18:43
+     *              Created DateTime 2022-06-02 18:43
      */
     AbstractSqlCommandPackage<T> likeValue(String value, Boolean trim, Boolean head, Boolean tail);
 
@@ -45,8 +43,7 @@ public interface Condition<T> {
      * 封装 in 条件
      *
      * @param data 查询的数据
-     * @author LiuHuiYu
-     * Created DateTime 2022-11-20 8:28
+     *             Created DateTime 2022-11-20 8:28
      */
     <P> AbstractSqlCommandPackage<T> inPackage(P[] data);
 
@@ -56,8 +53,7 @@ public interface Condition<T> {
      * @param data   查询的数据
      * @param notIn  使用 not in
      * @param isNull 包含空 OR(fieldName is null)
-     * @author LiuHuiYu
-     * Created DateTime 2022-11-20 8:28
+     *               Created DateTime 2022-11-20 8:28
      */
     <P> AbstractSqlCommandPackage<T> inPackage(P[] data, Boolean notIn, Boolean isNull);
 
@@ -68,8 +64,7 @@ public interface Condition<T> {
      *
      * @param minValue 最小值
      * @param maxValue 最大值
-     * @author LiuHuiYu
-     * Created DateTime 2022-12-01 10:23
+     *                 Created DateTime 2022-12-01 10:23
      */
     <P> AbstractSqlCommandPackage<T> inclusion(P minValue, P maxValue);
 
@@ -77,8 +72,7 @@ public interface Condition<T> {
      * 等于
      *
      * @param value 值
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-23 23:51
+     *              Created DateTime 2023-02-23 23:51
      */
     <P> AbstractSqlCommandPackage<T> eq(P value);
 
@@ -86,8 +80,7 @@ public interface Condition<T> {
      * <> 比较
      *
      * @param value 值
-     * @author LiuHuiYu
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     <P> AbstractSqlCommandPackage<T> ne(P value);
 
@@ -95,8 +88,7 @@ public interface Condition<T> {
      * > 比较
      *
      * @param value 值
-     * @author LiuHuiYu
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     <P> AbstractSqlCommandPackage<T> gt(P value);
 
@@ -105,8 +97,7 @@ public interface Condition<T> {
      *
      * @param value 值
      * @param <P>   p
-     * @author LiuHuiYu
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     <P> AbstractSqlCommandPackage<T> lt(P value);
 
@@ -114,8 +105,7 @@ public interface Condition<T> {
      * >= 比较
      *
      * @param value 值
-     * @author LiuHuiYu
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     <P> AbstractSqlCommandPackage<T> ge(P value);
 
@@ -123,23 +113,20 @@ public interface Condition<T> {
      * <= 比较
      *
      * @param value 值
-     * @author LiuHuiYu
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     <P> AbstractSqlCommandPackage<T> le(P value);
 
     /**
      * 为 null
-     *
-     * @author LiuHuiYu
+     * <p>
      * Created DateTime 2023-03-25 9:23
      */
     AbstractSqlCommandPackage<T> isNull();
 
     /**
      * 为 null
-     *
-     * @author LiuHuiYu
+     * <p>
      * Created DateTime 2023-03-25 9:23
      */
     AbstractSqlCommandPackage<T> isNotNull();

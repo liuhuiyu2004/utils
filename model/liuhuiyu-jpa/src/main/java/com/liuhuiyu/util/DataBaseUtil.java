@@ -45,7 +45,6 @@ public class DataBaseUtil {
      *
      * @param pStat PreparedStatement
      * @param list  命名参数的值表，其中的值可以比较所需的参数多。
-     * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:10
      */
     public static void fillParameters(PreparedStatement pStat, List<Object> list) {

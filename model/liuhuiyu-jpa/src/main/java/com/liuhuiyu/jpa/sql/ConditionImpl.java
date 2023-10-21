@@ -1,7 +1,5 @@
 package com.liuhuiyu.jpa.sql;
 
-import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
-import com.liuhuiyu.jpa.sql.Condition;
 import org.springframework.util.StringUtils;
 
 /**
@@ -47,7 +45,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * like值
      *
      * @param value 值
-     * @author LiuHuiYu
      * Created DateTime 2022-06-02 18:43
      */
     @Override
@@ -62,7 +59,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * @param trim  去掉首尾空格
      * @param head  头部模糊匹配
      * @param tail  尾部模糊匹配
-     * @author LiuHuiYu
      * Created DateTime 2022-06-02 18:43
      */
     @Override
@@ -81,7 +77,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * 封装 in 条件
      *
      * @param data 查询的数据
-     * @author LiuHuiYu
      * Created DateTime 2022-11-20 8:28
      */
     @Override
@@ -95,7 +90,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * @param data   查询的数据
      * @param notIn  使用 not in
      * @param isNull 包含空 OR(fieldName is null)
-     * @author LiuHuiYu
      * Created DateTime 2022-11-20 8:28
      */
     @Override
@@ -137,7 +131,6 @@ public class ConditionImpl<T> implements Condition<T> {
      *
      * @param minValue 最小值
      * @param maxValue 最大值
-     * @author LiuHuiYu
      * Created DateTime 2022-12-01 10:23
      */
     @Override
@@ -168,7 +161,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * 等于
      *
      * @param value 值
-     * @author LiuHuiYu
      * Created DateTime 2023-02-23 23:51
      */
     @Override
@@ -180,7 +172,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * <> 比较
      *
      * @param value 值
-     * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */
     @Override
@@ -192,7 +183,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * > 比较
      *
      * @param value 值
-     * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */
     @Override
@@ -204,7 +194,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * < 比较
      *
      * @param value 值
-     * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */
     @Override
@@ -216,7 +205,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * 大于等于 比较
      *
      * @param value 值
-     * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */
     @Override
@@ -228,7 +216,6 @@ public class ConditionImpl<T> implements Condition<T> {
      * 小于等于 比较
      *
      * @param value 值
-     * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */
     @Override
@@ -238,8 +225,6 @@ public class ConditionImpl<T> implements Condition<T> {
 
     /**
      * 为 null
-     *
-     * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */
     @Override
@@ -254,8 +239,6 @@ public class ConditionImpl<T> implements Condition<T> {
 
     /**
      * 为 null
-     *
-     * @author LiuHuiYu
      * Created DateTime 2023-03-25 9:23
      */
     @Override

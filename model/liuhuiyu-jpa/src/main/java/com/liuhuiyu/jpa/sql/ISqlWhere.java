@@ -12,7 +12,6 @@ public interface ISqlWhere {
      * 获取sql条件语句
      *
      * @return java.lang.StringBuilder
-     * @author LiuHuiYu
      * Created DateTime 2023-09-19 17:34
      */
     StringBuilder getSqlWhere();
@@ -21,7 +20,6 @@ public interface ISqlWhere {
      * 设置sql条件语句
      *
      * @param sqlWhere 条件语句
-     * @author LiuHuiYu
      * Created DateTime 2023-09-19 17:37
      */
     void setSqlWhere(StringBuilder sqlWhere);
@@ -30,7 +28,6 @@ public interface ISqlWhere {
      * 获取条件参数值
      *
      * @return java.lang.StringBuilder
-     * @author LiuHuiYu
      * Created DateTime 2023-09-19 17:34
      */
     List<Object> getValues();
@@ -39,7 +36,6 @@ public interface ISqlWhere {
      * 设置条件参数值
      *
      * @param valueList 参数值列表
-     * @author LiuHuiYu
      * Created DateTime 2023-09-19 17:37
      */
     void setValues(List<Object> valueList);

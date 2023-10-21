@@ -17,7 +17,6 @@ public interface WhereFullByParameterList<T> {
      * @param whereDto      条件
      * @param sqlBuilder    sql语句
      * @param parameterList 参数列表
-     * @author LiuHuiYu
      * Created DateTime 2023-10-19 11:55
      */
     void full(T whereDto, StringBuilder sqlBuilder, List<Object> parameterList);

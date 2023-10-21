@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 
 /**
  * @author LiuHuiYu
- * @version v1.0.0.0
  * Created DateTime 2021-03-22 9:12
+ * @version v1.0.0.0
  */
 public abstract class AbstractView {
     //region 基本功能
@@ -32,7 +32,7 @@ public abstract class AbstractView {
      * 连接获取
      *
      * @param callFunctions 调用函数
-     * Created DateTime 2021-03-25 10:42
+     *                      Created DateTime 2021-03-25 10:42
      */
     protected void actionConnection(Consumer<Connection> callFunctions) {
         try (Connection connection = this.dataSource.getConnection()) {
@@ -48,8 +48,7 @@ public abstract class AbstractView {
      *
      * @param sql           基础语句
      * @param callFunctions 回调
-     * @author LiuHuiYu
-     * Created DateTime 2021-03-25 10:45
+     *                      Created DateTime 2021-03-25 10:45
      */
     @SuppressWarnings("all")
     protected void actionPreparedStatement(String sql, Consumer<PreparedStatement> callFunctions) {
@@ -69,8 +68,7 @@ public abstract class AbstractView {
      * @param sql           基础语句
      * @param parameterMap  参数Map
      * @param callFunctions 回调
-     * @author LiuHuiYu
-     * Created DateTime 2021-03-25 10:46
+     *                      Created DateTime 2021-03-25 10:46
      */
     protected void fullResultSet(String sql, List<Object> parameterMap, Consumer<ResultSet> callFunctions) {
         this.actionPreparedStatement(sql, preparedStatement -> {
@@ -96,7 +94,6 @@ public abstract class AbstractView {
      *
      * @param sql          基本语句
      * @param parameterMap 参数表
-     * @author LiuHuiYu
      * @return List  数组对
      * Created DateTime 2021-03-22 14:05
      */
@@ -111,7 +108,6 @@ public abstract class AbstractView {
      * @param parameterMap 参数表
      * @param onlyFirst    仅第一行数据
      * @return List 对象数组
-     * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:05
      */
     protected List<Object[]> getResultObjectList(String sql, List<Object> parameterMap, boolean onlyFirst) {
@@ -146,9 +142,8 @@ public abstract class AbstractView {
      * @param b            DaoOperator
      * @param sql          基本语句
      * @param parameterMap 参数表
-     * @param <T> T
+     * @param <T>          T
      * @return java.util.List<T> 返回
-     * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:04
      */
     protected <T> List<T> getResultList(ObjectToT<T> b, String sql, List<Object> parameterMap) {
@@ -167,7 +162,6 @@ public abstract class AbstractView {
      * @param parameterMap 参数表
      * @param onlyFirst    仅第一行数据
      * @return java.util.List<java.lang.Object [ ]>
-     * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:05
      */
     protected <T> List<T> getResultListT(Class<T> clazz, String sql, List<Object> parameterMap, boolean onlyFirst) {
@@ -175,10 +169,8 @@ public abstract class AbstractView {
         this.fullResultSet(sql, parameterMap, (resultSet) -> {
             try {
                 while (resultSet.next()) {
-                    while (resultSet.next()) {
-                        final T t = DataBaseUtil.rowToT(resultSet, clazz);
-                        resList.add(t);
-                    }
+                    final T t = DataBaseUtil.rowToT(resultSet, clazz);
+                    resList.add(t);
                 }
             }
             catch (Exception ex) {
@@ -196,7 +188,6 @@ public abstract class AbstractView {
      * @param whereFull 查询填充
      * @param b         DaoOperator
      * @return java.util.List<R>
-     * @author LiuHuiYu
      * Created DateTime 2022-01-12 10:16
      */
     protected <T, R> List<R> selectList(T input, String sql, WhereFullByParameterList<T> whereFull, ObjectToT<R> b) {
@@ -216,7 +207,6 @@ public abstract class AbstractView {
      * @param whereFull 查询填充
      * @param clazz     返回类型
      * @return java.util.List<R>
-     * @author LiuHuiYu
      * Created DateTime 2022-01-12 10:16
      */
     protected <T, R> List<R> selectListT(T input, String sql, WhereFullByParameterList<T> whereFull, Class<R> clazz) {
@@ -236,7 +226,6 @@ public abstract class AbstractView {
      * @param whereFull 条件生成
      * @param clazz     结果转化
      * @return java.util.Optional<R>
-     * @author LiuHuiYu
      * Created DateTime 2022-05-09 16:16
      */
     protected <T, R> Optional<R> getFirstResultT(T input, String sql, WhereFullByParameterList<T> whereFull, Class<R> clazz) {
@@ -252,7 +241,6 @@ public abstract class AbstractView {
      * @param whereFull 条件生成
      * @param b         结果转化
      * @return java.util.Optional<R>
-     * @author LiuHuiYu
      * Created DateTime 2022-05-09 16:16
      */
     protected <T, R> Optional<R> getFirstResult(T input, String sql, WhereFullByParameterList<T> whereFull, ObjectToT<R> b) {
@@ -270,7 +258,6 @@ public abstract class AbstractView {
      * @param sql          执行语句
      * @param parameterMap 参数表
      * @return java.util.Optional<T>
-     * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:02
      */
     protected <T> Optional<T> getFirstResult(ObjectToT<T> b, String sql, List<Object> parameterMap) {
@@ -291,7 +278,6 @@ public abstract class AbstractView {
      * @param sql          执行语句
      * @param parameterMap 参数表
      * @return java.util.Optional<T>
-     * @author LiuHuiYu
      * Created DateTime 2021-03-22 14:02
      */
     protected <T> Optional<T> getFirstResultT(Class<T> clazz, String sql, List<Object> parameterMap) {
@@ -305,7 +291,6 @@ public abstract class AbstractView {
      * @param sql          sql语句
      * @param parameterMap 参数
      * @return java.lang.Long
-     * @author LiuHuiYu
      * Created DateTime 2022-02-15 16:54
      */
     protected Long selectCount(String sql, List<Object> parameterMap) {
@@ -325,7 +310,6 @@ public abstract class AbstractView {
      * @param sql          语句
      * @param parameterMap 参数表
      * @return java.util.Optional<java.lang.Object>
-     * @author LiuHuiYu
      * Created DateTime 2021-03-22 13:46
      */
     protected Optional<Object> getSingleResult(String sql, List<Object> parameterMap) {
@@ -346,7 +330,6 @@ public abstract class AbstractView {
      * @param sql       原始语句
      * @param whereFull 查询填充
      * @return java.lang.Long
-     * @author LiuHuiYu
      * Created DateTime 2022-01-12 10:48
      */
     protected <T> Long selectCount(T input, String sql, WhereFullByParameterList<T> whereFull) {
