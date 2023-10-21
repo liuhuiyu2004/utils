@@ -29,9 +29,9 @@
         </dependency>
     </dependencies>
 
-    <build>
+   <!-- <build>
         <plugins>
-            <!--生成doc jar包-->
+            &lt;!&ndash;生成doc jar包&ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -41,7 +41,7 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <!-- 不让像@Param 这种后面没写值的东西 报错。-->
+                        &lt;!&ndash; 不让像@Param 这种后面没写值的东西 报错。&ndash;&gt;
                         <configuration>
                             <additionalJOption>-Xdoclint:none</additionalJOption>
                         </configuration>
@@ -50,7 +50,7 @@
 
                 </executions>
             </plugin>
-            <!--生成源码jar包-->
+            &lt;!&ndash;生成源码jar包&ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -64,5 +64,5 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
 </project>
