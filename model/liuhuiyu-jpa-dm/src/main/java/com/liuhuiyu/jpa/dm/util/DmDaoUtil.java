@@ -27,6 +27,6 @@ public class DmDaoUtil {
             }
         }
         sqlBuilder.insert(0, "select * from (");
-        sqlBuilder.append(") ").append(rowNumName).append(" limit ").append(paging.beginRowNo()).append(",").append(paging.getPageSize());
+        sqlBuilder.append(") ").append(rowNumName).append(" limit ").append(paging.beginRowNo() - 1).append(",").append(paging.getPageSize());
     }
 }
