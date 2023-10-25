@@ -53,9 +53,49 @@ public class IgnoredException {
      * @param def      默认值
      * @return T
      * @author LiuHuiYu
+     * @deprecated 使用 getOrElse 方法替换此功能
      * Created DateTime 2023-02-22 21:38
      */
+    @Deprecated
     public static <T> T get(SupplierException<T> supplier, T def) {
+        try {
+            return supplier.get();
+        }
+        catch (Exception ex) {
+            return def;
+        }
+    }
+
+    /**
+     * 执行中出现异常，返回默认值
+     *
+     * @param supplier          要执行的 Supplier
+     * @param exceptionFunction 异常的时候执行
+     * @return T
+     * @author LiuHuiYu
+     * @deprecated 使用 getOrElseGet 方法替换此功能
+     * Created DateTime 2023-02-22 21:38
+     */
+    @Deprecated
+    public static <T> T get(SupplierException<T> supplier, Function<Exception, T> exceptionFunction) {
+        try {
+            return supplier.get();
+        }
+        catch (Exception ex) {
+            return exceptionFunction.apply(ex);
+        }
+    }
+
+    /**
+     * 执行中出现异常，返回默认值
+     *
+     * @param supplier 要执行的 Supplier
+     * @param def      默认值
+     * @return T
+     * @author LiuHuiYu
+     * Created DateTime 2023-02-22 21:38
+     */
+    public static <T> T getOrElse(SupplierException<T> supplier, T def) {
         try {
             return supplier.get();
         }
@@ -73,7 +113,7 @@ public class IgnoredException {
      * @author LiuHuiYu
      * Created DateTime 2023-02-22 21:38
      */
-    public static <T> T get(SupplierException<T> supplier, Function<Exception, T> exceptionFunction) {
+    public static <T> T getOrElseGet(SupplierException<T> supplier, Function<Exception, T> exceptionFunction) {
         try {
             return supplier.get();
         }
