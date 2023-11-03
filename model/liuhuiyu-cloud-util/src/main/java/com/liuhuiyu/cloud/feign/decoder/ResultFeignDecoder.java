@@ -7,9 +7,8 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
-import com.liuhuiyu.util.exception.LhyException;
-import com.liuhuiyu.util.map.MapUtil;
-import com.liuhuiyu.util.model.Result;
+import com.liuhuiyu.json.map.MapUtil;
+import com.liuhuiyu.spring.model.Result;
 import feign.FeignException;
 import feign.Response;
 import feign.Util;
@@ -71,7 +70,7 @@ public class ResultFeignDecoder implements Decoder {
                     content.addAll(list);
                 }
                 else {
-                    throw new LhyException("无法解析非List数据");
+                    throw new RuntimeException("无法解析非List数据");
                 }
                 // 数据转换
                 List<Object> collect = content.stream().map(v -> {
@@ -82,7 +81,7 @@ public class ResultFeignDecoder implements Decoder {
                         return objectMapper.readValue(json, boundType);
                     }
                     catch (JsonProcessingException e) {
-                        throw new LhyException("无法解析List数据转换");
+                        throw new RuntimeException("无法解析List数据转换");
                     }
                 }).collect(Collectors.toList());
                 // 封装PageImpl
@@ -99,7 +98,7 @@ public class ResultFeignDecoder implements Decoder {
             return mapper.readValue(new Gson().toJson(result.getData()), javaType);
         }
         else {
-            throw new LhyException(result.getMsg());
+            throw new RuntimeException(result.getMsg());
         }
     }
 }
