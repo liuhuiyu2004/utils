@@ -60,11 +60,9 @@ public class Md5SaltUtil {
     /**
      * 验证口令是否合法
      *
-     * @param password     密码
-     * @param passwordInDb 验证密码
+     * @param password     密码（密码明文）
+     * @param passwordInDb 验证密码（加密的密码）
      * @return 密码是否匹配
-     * @throws NoSuchAlgorithmException     异常
-     * @throws UnsupportedEncodingException 异常
      */
     public static boolean validPassword(String password, String passwordInDb) {
         return validPassword(password, passwordInDb, SALT_LENGTH);
