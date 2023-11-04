@@ -20,10 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +31,7 @@ import java.util.stream.Collectors;
 public class ResultFeignDecoder implements Decoder {
     public static final String RESULT_DATA_FIELD_NAME = "data";
     public static final String PAGE_IMPL_CLASS_NAME = "org.springframework.data.domain.PageImpl";
+    public static final String OPTIONAL_CLASS_NAME = "java.util.Optional";
     public static final String PAGE_IMPL_CONTENT_FIELD_NAME = "content";
     public static final String PAGE_IMPL_NUMBER_FIELD_NAME = "number";
     public static final String PAGE_IMPL_SIZE_FIELD_NAME = "size";
@@ -91,6 +89,16 @@ public class ResultFeignDecoder implements Decoder {
                 PageRequest pageable = PageRequest.of(number, size);
                 long totalElements = mapUtil.getLongValue(PAGE_IMPL_TOTAL_ELEMENTS_FIELD_NAME, 0L);
                 return new PageImpl<>(collect, pageable, totalElements);
+            }
+            else if (type.getTypeName().contains(OPTIONAL_CLASS_NAME)) {
+                // 获取分页泛型类型
+                JavaType boundType = javaType.getBindings().getBoundType(0);
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                Object data = map.get(RESULT_DATA_FIELD_NAME);
+                String json = new Gson().toJson(data);
+                final Object o = objectMapper.readValue(json, boundType);
+                return Optional.ofNullable(o);
             }
             // 其他类型转换
             ObjectMapper mapper = new ObjectMapper();
