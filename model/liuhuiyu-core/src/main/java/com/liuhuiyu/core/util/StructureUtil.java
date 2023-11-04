@@ -1,6 +1,9 @@
 package com.liuhuiyu.core.util;
 
+import com.liuhuiyu.core.util.model.TreeStructure;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -32,5 +35,31 @@ public class StructureUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 获取树结构路径
+     *
+     * @param parentId      上级树编号id
+     * @param pathDelimiter 分隔符
+     * @param getParentTree 根据id获取指定id的树结构基础信息
+     * @return java.lang.String
+     * @author LiuHuiYu
+     * Created DateTime 2023-11-03 12:18
+     */
+    public static <T> String getTreePath(T parentId, String pathDelimiter, Function<T, Optional<TreeStructure<T>>> getParentTree) {
+        StringBuilder pathBuilder = new StringBuilder();
+        T tmpId = parentId;
+        while (tmpId != null) {
+            Optional<TreeStructure<T>> parent = getParentTree.apply(tmpId);
+            if (parent.isPresent() && parent.get().getName() != null) {
+                pathBuilder.insert(0, pathDelimiter + parent.get().getName());
+                tmpId = parent.get().getParentId();
+            }
+            else {
+                break;
+            }
+        }
+        return pathBuilder.toString();
     }
 }
