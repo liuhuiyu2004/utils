@@ -4,7 +4,9 @@ import com.liuhuiyu.core.util.IfRun;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.sql.NClob;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * 将对象值转换为字段类型的值
@@ -206,8 +208,14 @@ public class ObjectToFieldValue {
         return getString(this.value);
     }
 
+    public static void setCustomConversionToString(Function<Object, String> func) {
+        customConversionToString = func;
+    }
+
+    private static Function<Object, String> customConversionToString;
+
     public static String getString(Object value) {
-        return value.toString();
+        return customConversionToString == null ? value.toString() : customConversionToString.apply(value);
     }
 
     private BigDecimal getBigDecimal() {
