@@ -293,6 +293,7 @@ public abstract class AbstractDmView extends AbstractView {
         }
 
         public PageImpl<R> buildPage() {
+            Assert.assertTrue(StringUtils.hasText(countSql), "countSql语句未设定");
             if (this.clazz == null) {
                 return page(b, findWhere, sql, countSql, baseWhere, order, fullWhere);
             }
