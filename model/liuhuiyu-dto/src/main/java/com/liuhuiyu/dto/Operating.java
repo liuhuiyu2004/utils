@@ -9,7 +9,7 @@ import org.springframework.util.ObjectUtils;
  * @version v1.0.0.0
  * Created DateTime 2023-10-19 11:17
  */
-public class Operating {
+public class Operating implements Cloneable {
     public static final String NONE_MODEL = "";
     public static final String ADD_MODEL = "add";
     public static final String UPDATE_MODEL = "update";
@@ -63,5 +63,15 @@ public class Operating {
 
     public void setOperatorName(String operatorName) {
         this.operatorName = operatorName;
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public Operating clone() {
+        Operating operating = new Operating();
+        operating.setModelName(this.modelName);
+        operating.setOperatorId(this.operatorId);
+        operating.setOperatorName(this.operatorName);
+        return operating;
     }
 }
