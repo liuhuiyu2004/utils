@@ -1,13 +1,11 @@
 package com.liuhuiyu.core.net.udp;
 
-import com.liuhuiyu.core.net.UdpUtil;
 import com.liuhuiyu.core.thread.ThreadPoolExecutorBuilder;
 import com.liuhuiyu.core.util.Assert;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Consumer;
 
 /**
@@ -45,7 +43,9 @@ public class UdpServer {
                 try {
                     UdpThread thread1 = new UdpThread(consumer);
                     ds.receive(thread1.getPacket());
-                    this.executorService.execute(thread1);
+                    if (!this.stop) {
+                        this.executorService.execute(thread1);
+                    }
                 }
                 catch (IOException e) {
                     if (ioException != null) {
@@ -59,17 +59,9 @@ public class UdpServer {
         }
     }
 
-    public Consumer<IOException> getIoException() {
-        return ioException;
-    }
-
     public void setIoException(Consumer<IOException> ioException) {
         Assert.assertFalse(stop, "服务启动中禁止修改异常接口。");
         this.ioException = ioException;
-    }
-
-    public ExecutorService getExecutorService() {
-        return executorService;
     }
 
     public void setExecutorService(ExecutorService executorService) {
@@ -78,6 +70,22 @@ public class UdpServer {
     }
 
     public void stop() {
+        this.stop((ex) -> {
+        });
+    }
+
+    public void stop(Consumer<IOException> ioException) {
         this.stop = true;
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            byte[] buf = "over".getBytes();
+            //将数据打包
+            DatagramPacket packet = new DatagramPacket(buf, buf.length, inetAddress, port);
+            socket.send(packet);
+            socket.close();
+        }
+        catch (IOException ex) {
+            ioException.accept(ex);
+        }
     }
 }
