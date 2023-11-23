@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * @version v1.0.0.0
  * Created DateTime 2023-11-23 7:49
  */
-public class UdpThread extends Thread  {
+public class UdpThread extends Thread {
     byte[] buffer = new byte[UdpUtil.MAXIMUM_TRANSMISSION_LENGTH_LOCAL_AREA_NETWORK];
 
     private final DatagramPacket packet;
@@ -23,6 +23,9 @@ public class UdpThread extends Thread  {
 
     @Override
     public void run() {
+        if (Thread.currentThread().isInterrupted()) {
+            return;
+        }
         consumer.accept(packet);
     }
 

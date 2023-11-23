@@ -76,13 +76,11 @@ public class UdpServer {
 
     public void stop(Consumer<IOException> ioException) {
         this.stop = true;
-        try {
-            DatagramSocket socket = new DatagramSocket();
+        try (DatagramSocket socket = new DatagramSocket()) {
             byte[] buf = "over".getBytes();
-            //将数据打包
             DatagramPacket packet = new DatagramPacket(buf, buf.length, inetAddress, port);
             socket.send(packet);
-            socket.close();
+            this.executorService.shutdown();
         }
         catch (IOException ex) {
             ioException.accept(ex);

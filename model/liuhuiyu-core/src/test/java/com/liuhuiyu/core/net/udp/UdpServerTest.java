@@ -55,6 +55,6 @@ class UdpServerTest extends AbstractTest {
         new Thread(this::test).start();
         ThreadUtil.sleep(10_000);
         server.stop();
-        ThreadUtil.sleep(10_000);
+        ThreadUtil.sleep(100_000);
     }
 }
