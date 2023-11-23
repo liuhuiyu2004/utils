@@ -1,7 +1,5 @@
 package com.liuhuiyu.core.thread;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -24,7 +22,7 @@ public class ThreadUtil {
      * @author LiuHuiYu
      * Created DateTime 2021-04-14 14:03
      */
-    public static <T> void asynchronousDataLoading(@NotNull List<T> list, Consumer<T> consumer, Executor executor, Runnable closeExecutor) {
+    public static <T> void asynchronousDataLoading(List<T> list, Consumer<T> consumer, Executor executor, Runnable closeExecutor) {
         CompletableFuture.allOf(list.stream()
                 .map(item -> CompletableFuture.runAsync(() -> consumer.accept(item), executor))
                 .toArray(CompletableFuture[]::new)).join();

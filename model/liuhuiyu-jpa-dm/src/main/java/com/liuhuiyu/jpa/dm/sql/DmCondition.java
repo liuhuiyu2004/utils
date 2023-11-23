@@ -2,6 +2,7 @@ package com.liuhuiyu.jpa.dm.sql;
 
 import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
 import com.liuhuiyu.jpa.sql.Condition;
+import com.liuhuiyu.jpa.sql.ConditionImpl;
 import org.springframework.util.StringUtils;
 
 /**
@@ -104,12 +105,11 @@ public class DmCondition<T> implements Condition<T> {
     @Override
     public AbstractSqlCommandPackage<T> likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
         this.checkField();
-        if (value == null) {
-            return this.sqlCommandPackage;
+        if (trim ? StringUtils.hasText(value) : (value != null && !value.isEmpty())) {
+            final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
+            this.sqlCommandPackage.getSqlBuilder().append(condition).append("(").append(this.fieldName).append(" LIKE ").append("?").append(")");
+            this.sqlCommandPackage.getParameterList().add(s);
         }
-        final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
-        this.sqlCommandPackage.getSqlBuilder().append(condition).append("(").append(this.fieldName).append(" LIKE ").append("?").append(")");
-        this.sqlCommandPackage.getParameterList().add(s);
         return this.sqlCommandPackage;
     }
 
