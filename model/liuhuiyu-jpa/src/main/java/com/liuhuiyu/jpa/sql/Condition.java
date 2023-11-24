@@ -2,6 +2,9 @@ package com.liuhuiyu.jpa.sql;
 
 import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * eq 就是 equal等于
  * ne就是 not equal不等于
@@ -46,6 +49,24 @@ public interface Condition<T> {
      *             Created DateTime 2022-11-20 8:28
      */
     <P> AbstractSqlCommandPackage<T> inPackage(P[] data);
+
+    /**
+     * 封装 in 条件
+     *
+     * @param data 查询的数据
+     *             Created DateTime 2022-11-20 8:28
+     */
+    <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> data);
+
+    /**
+     * 封装 in 条件
+     *
+     * @param data   查询的数据
+     * @param notIn  使用 not in
+     * @param isNull 包含空 OR(fieldName is null)
+     *               Created DateTime 2022-11-20 8:28
+     */
+    <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> data, Boolean notIn, Boolean isNull);
 
     /**
      * 封装 in 条件

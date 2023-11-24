@@ -2,6 +2,11 @@ package com.liuhuiyu.jpa.sql;
 
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.IntFunction;
+
 /**
  * eq 就是 equal等于
  * ne就是 not equal不等于
@@ -19,13 +24,13 @@ import org.springframework.util.StringUtils;
  * Created DateTime 2023-10-19 15:39
  */
 public class ConditionImpl<T> implements Condition<T> {
-    final AbstractSqlCommandPackage<T> sqlCommandPackage;
-    String fieldName;
-    String minFieldName;
-    String maxFieldName;
-    String condition;
+    protected final AbstractSqlCommandPackage<T> sqlCommandPackage;
+    protected String fieldName;
+    protected String minFieldName;
+    protected String maxFieldName;
+    protected String condition;
 
-    private ConditionImpl(AbstractSqlCommandPackage<T> sqlCommandPackage) {
+    public ConditionImpl(AbstractSqlCommandPackage<T> sqlCommandPackage) {
         this.sqlCommandPackage = sqlCommandPackage;
     }
 
@@ -45,7 +50,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * like值
      *
      * @param value 值
-     * Created DateTime 2022-06-02 18:43
+     *              Created DateTime 2022-06-02 18:43
      */
     @Override
     public AbstractSqlCommandPackage<T> likeValue(String value) {
@@ -59,7 +64,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * @param trim  去掉首尾空格
      * @param head  头部模糊匹配
      * @param tail  尾部模糊匹配
-     * Created DateTime 2022-06-02 18:43
+     *              Created DateTime 2022-06-02 18:43
      */
     @Override
     public AbstractSqlCommandPackage<T> likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
@@ -77,7 +82,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * 封装 in 条件
      *
      * @param data 查询的数据
-     * Created DateTime 2022-11-20 8:28
+     *             Created DateTime 2022-11-20 8:28
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> inPackage(P[] data) {
@@ -87,18 +92,21 @@ public class ConditionImpl<T> implements Condition<T> {
     /**
      * 封装 in 条件
      *
-     * @param data   查询的数据
-     * @param notIn  使用 not in
-     * @param isNull 包含空 OR(fieldName is null)
-     * Created DateTime 2022-11-20 8:28
+     * @param collection 查询的数据
+     *                   Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data, Boolean notIn, Boolean isNull) {
+    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection) {
+        return inPackage(collection, false, false);
+    }
+
+    @Override
+    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection, Boolean notIn, Boolean isNull) {
         this.checkField();
-        if (data != null && data.length > 0) {
+        if (collection != null && !collection.isEmpty()) {
             this.sqlCommandPackage.getSqlBuilder().append(condition).append("((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
             String separator = "";
-            for (P datum : data) {
+            for (P datum : collection) {
                 this.sqlCommandPackage.getSqlBuilder().append(separator).append("?");
                 separator = ",";
                 this.sqlCommandPackage.getParameterList().add(datum);
@@ -110,6 +118,21 @@ public class ConditionImpl<T> implements Condition<T> {
             this.sqlCommandPackage.getSqlBuilder().append(")");
         }
         return this.sqlCommandPackage;
+    }
+
+    /**
+     * 封装 in 条件
+     *
+     * @param data   查询的数据
+     * @param notIn  使用 not in
+     * @param isNull 包含空 OR(fieldName is null)
+     *               Created DateTime 2022-11-20 8:28
+     */
+    @Override
+    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data, Boolean notIn, Boolean isNull) {
+        this.checkField();
+        final List<P> list = Arrays.asList(data);
+        return inPackage(list, notIn, isNull);
     }
 
     @Override
@@ -131,7 +154,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *
      * @param minValue 最小值
      * @param maxValue 最大值
-     * Created DateTime 2022-12-01 10:23
+     *                 Created DateTime 2022-12-01 10:23
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> inclusion(P minValue, P maxValue) {
@@ -161,7 +184,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * 等于
      *
      * @param value 值
-     * Created DateTime 2023-02-23 23:51
+     *              Created DateTime 2023-02-23 23:51
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> eq(P value) {
@@ -172,7 +195,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * <> 比较
      *
      * @param value 值
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> ne(P value) {
@@ -183,7 +206,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * > 比较
      *
      * @param value 值
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> gt(P value) {
@@ -194,7 +217,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * < 比较
      *
      * @param value 值
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> lt(P value) {
@@ -205,7 +228,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * 大于等于 比较
      *
      * @param value 值
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> ge(P value) {
@@ -216,7 +239,7 @@ public class ConditionImpl<T> implements Condition<T> {
      * 小于等于 比较
      *
      * @param value 值
-     * Created DateTime 2023-03-25 9:23
+     *              Created DateTime 2023-03-25 9:23
      */
     @Override
     public <P> AbstractSqlCommandPackage<T> le(P value) {

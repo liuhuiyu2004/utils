@@ -2,8 +2,11 @@ package com.liuhuiyu.jpa.dm.sql;
 
 import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
 import com.liuhuiyu.jpa.sql.Condition;
-import com.liuhuiyu.jpa.sql.ConditionImpl;
 import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * eq 就是 equal等于
@@ -22,6 +25,11 @@ import org.springframework.util.StringUtils;
  * Created DateTime 2023-10-19 15:39
  */
 public class DmCondition<T> implements Condition<T> {
+
+    public DmCondition(AbstractSqlCommandPackage<T> sqlCommandPackage) {
+        this.sqlCommandPackage = sqlCommandPackage;
+    }
+
     final AbstractSqlCommandPackage<T> sqlCommandPackage;
     String fieldName;
     String minFieldName;
@@ -62,10 +70,6 @@ public class DmCondition<T> implements Condition<T> {
 
     public void setCondition(String condition) {
         this.condition = condition;
-    }
-
-    public DmCondition(AbstractSqlCommandPackage<T> sqlCommandPackage) {
-        this.sqlCommandPackage = sqlCommandPackage;
     }
 
     private void checkField() {
@@ -128,19 +132,21 @@ public class DmCondition<T> implements Condition<T> {
     /**
      * 封装 in 条件
      *
-     * @param data   查询的数据
-     * @param notIn  使用 not in
-     * @param isNull 包含空 OR(fieldName is null)
-     * @author LiuHuiYu
-     * Created DateTime 2022-11-20 8:28
+     * @param collection 查询的数据
+     *                   Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data, Boolean notIn, Boolean isNull) {
+    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection) {
+        return inPackage(collection, false, false);
+    }
+
+    @Override
+    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection, Boolean notIn, Boolean isNull) {
         this.checkField();
-        if (data != null && data.length > 0) {
+        if (collection != null && !collection.isEmpty()) {
             this.sqlCommandPackage.getSqlBuilder().append(condition).append("((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
             String separator = "";
-            for (P datum : data) {
+            for (P datum : collection) {
                 this.sqlCommandPackage.getSqlBuilder().append(separator).append("?");
                 separator = ",";
                 this.sqlCommandPackage.getParameterList().add(datum);
@@ -152,6 +158,21 @@ public class DmCondition<T> implements Condition<T> {
             this.sqlCommandPackage.getSqlBuilder().append(")");
         }
         return this.sqlCommandPackage;
+    }
+
+    /**
+     * 封装 in 条件
+     *
+     * @param data   查询的数据
+     * @param notIn  使用 not in
+     * @param isNull 包含空 OR(fieldName is null)
+     *               Created DateTime 2022-11-20 8:28
+     */
+    @Override
+    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data, Boolean notIn, Boolean isNull) {
+        this.checkField();
+        final List<P> list = Arrays.asList(data);
+        return inPackage(list, notIn, isNull);
     }
 
     @Override
