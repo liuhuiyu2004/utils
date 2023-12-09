@@ -199,30 +199,20 @@ public class CompressUtil {
      * 使用gzip压缩字符串
      *
      * @param str 要压缩的字符串
-     * @return
+     * @return java.lang.String
+     * @author LiuHuiYu
+     * Created DateTime 2023-12-09 20:45
      */
     public static String compress(String str) {
-        if (str == null || str.length() == 0) {
+        if (str == null || str.isEmpty()) {
             return str;
         }
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GZIPOutputStream gzip = null;
-        try {
-            gzip = new GZIPOutputStream(out);
+        try (GZIPOutputStream gzip = new GZIPOutputStream(out)) {
             gzip.write(str.getBytes());
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            if (gzip != null) {
-                try {
-                    gzip.close();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }//加入Java开发交流君样：756584822一起吹水聊天
-            }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
         return new sun.misc.BASE64Encoder().encode(out.toByteArray());
     }
@@ -230,56 +220,29 @@ public class CompressUtil {
     /**
      * 使用gzip解压缩
      *
-     * @param compressedStr 压缩字符串
-     * @return
+     * @param compressedStr 压缩的字符串
+     * @return java.lang.String
+     * @author LiuHuiYu
+     * Created DateTime 2023-12-09 20:47
      */
-    public static String uncompress(String compressedStr) {
+    public static String unCompress(String compressedStr) {
         if (compressedStr == null) {
-            return null;
+            throw new IllegalArgumentException("压缩的字符串未设定。");
         }
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ByteArrayInputStream in = null;
-        GZIPInputStream ginzip = null;
-        byte[] compressed = null;
-        String decompressed = null;
-        try {
-            compressed = new sun.misc.BASE64Decoder().decodeBuffer(compressedStr);
-            in = new ByteArrayInputStream(compressed);
-            ginzip = new GZIPInputStream(in);
+        try (
+                ByteArrayInputStream in = new ByteArrayInputStream(new sun.misc.BASE64Decoder().decodeBuffer(compressedStr));
+                GZIPInputStream gInZip = new GZIPInputStream(in);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ) {
             byte[] buffer = new byte[1024];
-            int offset = -1;
-            while ((offset = ginzip.read(buffer)) != -1) {
+            int offset;
+            while ((offset = gInZip.read(buffer)) != -1) {
                 out.write(buffer, 0, offset);
             }
-            decompressed = out.toString();
+            return out.toString();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        finally {
-            if (ginzip != null) {
-                try {
-                    ginzip.close();
-                }
-                catch (IOException e) {
-                }//加入Java开发交流君样：756584822一起吹水聊天
-            }
-            if (in != null) {
-                try {
-                    in.close();
-                }
-                catch (IOException e) {
-                }
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                }
-                catch (IOException e) {
-                }
-            }
-        }
-        return decompressed;
     }
 }
