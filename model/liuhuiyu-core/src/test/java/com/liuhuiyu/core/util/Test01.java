@@ -34,4 +34,8 @@ public class Test01 extends AbstractTest {
                     return true;
                 }).allMatch(v -> v<=3));
     }
+    @Test
+    public void test2(){
+        LOG.info("{}",Integer.MAX_VALUE);//2,147,483,647
+    }
 }
