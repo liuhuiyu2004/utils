@@ -8,12 +8,33 @@ package com.liuhuiyu.core.util;
  * Created DateTime 2023-11-27 9:43
  */
 public class PasswordComplex {
+    /**
+     * 默认密码最小长度
+     */
     public static final int DEFAULT_PASSWORD_MINIMUM_LENGTH = 8;
+    /**
+     * 默认密码最低复杂度
+     */
     public static final int DEFAULT_PASSWORD_MINIMUM_COMPLEXITY = 3;
+    /**
+     * 最低密码复杂度
+     */
     public static final int PASSWORD_MINIMUM_COMPLEXITY = 1;
+    /**
+     * 最高密码复杂度
+     */
     public static final int PASSWORD_MAXIMUM_COMPLEXITY = 4;
+    /**
+     * 密码
+     */
     private final String password;
+    /**
+     * 密码最小长度
+     */
     private final int passwordMinLength;
+    /**
+     * 密码最小复杂度
+     */
     private final int passwordMinComplexity;
 
     /**
