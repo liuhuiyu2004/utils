@@ -1,6 +1,7 @@
 package com.liuhuiyu.util;
 
 import com.liuhuiyu.core.util.IgnoredException;
+import com.liuhuiyu.jpa.util.SqlResolution;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -40,12 +41,38 @@ public class DataBaseUtil {
         return obj;
     }
 
+    public static <T> T objToT(Object objData, Class<T> clazz, SqlResolution sqlResolution) {
+        Object[] objArray = (Object[]) objData;
+        T obj;
+        try {
+            obj = clazz.newInstance();
+            final Field[] fields = obj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                int mod = field.getModifiers();
+                int columnIndex = sqlResolution.getFieldIndex(field.getName());
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod) || columnIndex < 0 || columnIndex >= objArray.length) {
+                    continue;
+                }
+                Object rowValue = objArray[columnIndex];
+                final Optional<Object> valueOfFieldType = new ObjectToFieldValue(field, rowValue).getValueOfFieldType();
+                if (valueOfFieldType.isPresent()) {
+                    field.setAccessible(true);
+                    field.set(obj, valueOfFieldType.get());
+                }
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return obj;
+    }
+
     /**
      * 使用参数值Map，填充pStat
      *
      * @param pStat PreparedStatement
      * @param list  命名参数的值表，其中的值可以比较所需的参数多。
-     * Created DateTime 2021-03-22 14:10
+     *              Created DateTime 2021-03-22 14:10
      */
     public static void fillParameters(PreparedStatement pStat, List<Object> list) {
         setParameters(pStat, list.toArray());
