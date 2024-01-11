@@ -1,5 +1,6 @@
 package com.liuhuiyu.jpa;
 
+import com.liuhuiyu.core.lang.function_interface.ObjectToT;
 import com.liuhuiyu.jpa.util.SqlResolution;
 import com.liuhuiyu.util.DataBaseUtil;
 
@@ -32,7 +33,8 @@ public abstract class AbstractTransactionalView {
      * Created DateTime 2021-03-22 14:02
      */
     protected <T> Optional<T> getFirstResultT(Class<T> clazz, String sql, List<Object> parameterMap) {
-        return this.getResultListT(clazz, sql, parameterMap).findFirst();
+        final Stream<T> resultListT = this.getResultListT(clazz, sql, parameterMap);
+        return resultListT.findFirst();
     }
 
     /**
@@ -65,7 +67,18 @@ public abstract class AbstractTransactionalView {
         for (int i = 0, length = parameterList.size(); i < length; i++) {
             nativeQuery.setParameter(i + 1, parameterList.get(i));
         }
-        return (Stream<T>) nativeQuery.getResultStream()
-                .map(v -> DataBaseUtil.objToT(v, clazz, sqlResolution));
+        return (Stream<T>) nativeQuery.getResultList().stream().map(v -> DataBaseUtil.objToT(v, clazz, sqlResolution));
+    }
+
+    /**
+     * 统计查询
+     *
+     * @param sql          sql语句
+     * @param parameterMap 参数
+     * @return java.lang.Long
+     * Created DateTime 2022-02-15 16:54
+     */
+    protected Long selectCount(String sql, List<Object> parameterMap) {
+        return this.getFirstResultT(Long.class, sql, parameterMap).orElse(0L);
     }
 }

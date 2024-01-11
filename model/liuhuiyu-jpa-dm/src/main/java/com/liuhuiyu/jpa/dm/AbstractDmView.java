@@ -3,6 +3,7 @@ package com.liuhuiyu.jpa.dm;
 import com.liuhuiyu.core.lang.function_interface.ObjectToT;
 import com.liuhuiyu.core.util.Assert;
 import com.liuhuiyu.dto.IPaging;
+import com.liuhuiyu.jpa.AbstractTransactionalView;
 import com.liuhuiyu.jpa.AbstractView;
 import com.liuhuiyu.jpa.dm.util.DmDaoUtil;
 import com.liuhuiyu.jpa.sql.WhereFullByParameterList;

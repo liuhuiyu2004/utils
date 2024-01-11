@@ -2,6 +2,7 @@ package com.liuhuiyu.jpa.util;
 
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.*;
 
 import java.util.HashMap;
@@ -37,7 +38,8 @@ public class SqlResolution {
                 selectItem.accept(new SelectItemVisitorAdapter() {
                     @Override
                     public void visit(SelectExpressionItem item) {
-                        map.put(item.getAlias().getName().toLowerCase(), index.getAndIncrement());
+                        String name = item.getAlias() == null ? ((Column) item.getExpression()).getColumnName() : item.getAlias().getName();
+                        map.put(name.toLowerCase(), index.getAndIncrement());
                     }
                 });
             }

@@ -19,7 +19,9 @@ import java.util.function.Consumer;
  * @author LiuHuiYu
  * Created DateTime 2021-03-22 9:12
  * @version v1.0.0.0
+ * @deprecated 使用AbstractTransactionalView 进行替代
  */
+@Deprecated
 public abstract class AbstractView {
     //region 基本功能
     private final DataSource dataSource;
