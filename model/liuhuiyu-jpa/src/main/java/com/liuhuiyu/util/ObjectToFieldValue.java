@@ -1,10 +1,13 @@
 package com.liuhuiyu.util;
 
+import com.liuhuiyu.core.time.LocalDateUtil;
 import com.liuhuiyu.core.util.IfRun;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.sql.NClob;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.util.*;
 import java.util.function.Function;
 
@@ -16,11 +19,20 @@ import java.util.function.Function;
  * Created DateTime 2023-08-05 22:54
  */
 public class ObjectToFieldValue {
-    Field field;
+    /**
+     * 要转换成的格式
+     * Created DateTime 2024-01-13 22:46
+     */
+    String typeName;
     Object value;
 
     public ObjectToFieldValue(Field field, Object value) {
-        this.field = field;
+        this.typeName = getTypeName(field.getType());
+        this.value = value;
+    }
+
+    public ObjectToFieldValue(String typeName, Object value) {
+        this.typeName = typeName;
         this.value = value;
     }
 
@@ -28,18 +40,21 @@ public class ObjectToFieldValue {
         if (value == null) {
             return Optional.empty();
         }
-        final String typeName = getTypeName(field.getType());
         Object obj = IfRun.create()
-                .elseIf(typeName.equals(int.class.getName()), () -> this.getInt())
-                .elseIf(typeName.equals(long.class.getName()), () -> this.getLong())
-                .elseIf(typeName.equals(float.class.getName()), () -> this.getFloat())
-                .elseIf(typeName.equals(double.class.getName()), () -> this.getDouble())
-                .elseIf(typeName.equals(byte.class.getName()), () -> this.getByte())
-                .elseIf(typeName.equals(short.class.getName()), () -> this.getShort())
-                .elseIf(typeName.equals(boolean.class.getName()), () -> this.getBoolean())
-                .elseIf(typeName.equals(char.class.getName()), () -> this.getChar())
-                .elseIf(typeName.equals(String.class.getName()), () -> this.getString())
-                .elseIf(typeName.equals(BigDecimal.class.getName()), () -> this.getBigDecimal())
+                .elseIf(this.typeName.equals(int.class.getName()), () -> this.getInt())
+                .elseIf(this.typeName.equals(long.class.getName()), () -> this.getLong())
+                .elseIf(this.typeName.equals(float.class.getName()), () -> this.getFloat())
+                .elseIf(this.typeName.equals(double.class.getName()), () -> this.getDouble())
+                .elseIf(this.typeName.equals(byte.class.getName()), () -> this.getByte())
+                .elseIf(this.typeName.equals(short.class.getName()), () -> this.getShort())
+                .elseIf(this.typeName.equals(boolean.class.getName()), () -> this.getBoolean())
+                .elseIf(this.typeName.equals(char.class.getName()), () -> this.getChar())
+                .elseIf(this.typeName.equals(String.class.getName()), () -> this.getString())
+                .elseIf(this.typeName.equals(BigDecimal.class.getName()), () -> this.getBigDecimal())
+                .elseIf(this.typeName.equals(LocalDateTime.class.getName()), () -> this.getLocalDateTime())
+                .elseIf(this.typeName.equals(LocalDate.class.getName()), () -> this.getLocalDate())
+                .elseIf(this.typeName.equals(LocalTime.class.getName()), () -> this.getLocalTime())
+                .elseIf(this.typeName.equals(Timestamp.class.getName()), () -> this.getTimestamp())
                 .orElseThrow(() -> new DataBaseException("无法将值" + value + "转换成Integer."));
         return Optional.ofNullable(obj);
     }
@@ -215,7 +230,17 @@ public class ObjectToFieldValue {
     private static Function<Object, String> customConversionToString;
 
     public static String getString(Object value) {
-        return customConversionToString == null ? value.toString() : customConversionToString.apply(value);
+        if (customConversionToString == null) {
+            final String typeName = getTypeName(value.getClass());
+            return (String) IfRun.create()
+                    .elseIf(typeName.equals(int.class.getName()), () -> Integer.toString((int) value))
+                    .elseIf(typeName.equals(LocalDateTime.class.getName()), () -> ((LocalDateTime) value).toString())
+                    .elseIf(typeName.equals(Timestamp.class.getName()), () -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(((Timestamp) value)))
+                    .orElse(value.toString());
+        }
+        else {
+            return customConversionToString.apply(value);
+        }
     }
 
     private BigDecimal getBigDecimal() {
@@ -236,6 +261,61 @@ public class ObjectToFieldValue {
                 .elseIf(typeName.equals(char.class.getName()), () -> new BigDecimal(String.valueOf((char) value)))
                 .elseIf(typeName.equals(BigDecimal.class.getName()), () -> value)
                 .orElseThrow(() -> new DataBaseException("无法将值" + value + "转换成Byte."));
+    }
+
+    private LocalDateTime getLocalDateTime() {
+        return getLocalDateTime(this.value);
+    }
+
+    public static LocalDateTime getLocalDateTime(Object value) {
+        final String typeName = getTypeName(value.getClass());
+        return (LocalDateTime) IfRun.create()
+                .elseIf(typeName.equals(int.class.getName()), () -> LocalDateTime.ofInstant(Instant.ofEpochMilli((int) value), ZoneId.systemDefault()))
+                .elseIf(typeName.equals(long.class.getName()), () -> LocalDateTime.ofInstant(Instant.ofEpochMilli((long) value), ZoneId.systemDefault()))
+                .elseIf(typeName.equals(float.class.getName()), () -> LocalDateTime.ofInstant(Instant.ofEpochMilli((int) value), ZoneId.systemDefault()))
+                .elseIf(typeName.equals(double.class.getName()), () -> LocalDateTime.ofInstant(Instant.ofEpochMilli((long) value), ZoneId.systemDefault()))
+                .elseIf(typeName.equals(byte.class.getName()), () -> LocalDateTime.ofInstant(Instant.ofEpochMilli((int) value), ZoneId.systemDefault()))
+                .elseIf(typeName.equals(short.class.getName()), () -> LocalDateTime.ofInstant(Instant.ofEpochMilli((int) value), ZoneId.systemDefault()))
+                .elseIf(typeName.equals(boolean.class.getName()), () -> {
+                    throw new DataBaseException("不支持转换为LocalDateTime");
+                })
+                .elseIf(typeName.equals(char.class.getName()), () -> {
+                    throw new DataBaseException("不支持转换为LocalDateTime");
+                })
+                .elseIf(typeName.equals(String.class.getName()), () -> {
+                    String str = ((String) value).trim();
+                    return LocalDateUtil.stringToDateTime(str);
+                })
+                .elseIf(typeName.equals(BigDecimal.class.getName()), () -> LocalDateTime.ofInstant(Instant.ofEpochMilli(((BigDecimal) value).longValue()), ZoneId.systemDefault()))
+                .elseIf(typeName.equals(LocalDateTime.class.getName()), () -> value)
+                .elseIf(typeName.equals(LocalDate.class.getName()), () -> LocalDateTime.from((LocalDate) value))
+                .elseIf(typeName.equals(LocalTime.class.getName()), () -> LocalDateTime.from((LocalTime) value))
+                .elseIf(typeName.equals(Timestamp.class.getName()), () -> ((Timestamp) value).toLocalDateTime())
+                .orElseThrow(() -> new DataBaseException("无法将值" + value + "转换成LocalDateTime."));
+    }
+
+    private LocalDate getLocalDate() {
+        return getLocalDate(this.value);
+    }
+
+    public static LocalDate getLocalDate(Object value) {
+        return getLocalDateTime(value).toLocalDate();
+    }
+
+    private LocalTime getLocalTime() {
+        return getLocalTime(this.value);
+    }
+
+    public static LocalTime getLocalTime(Object value) {
+        return getLocalDateTime(value).toLocalTime();
+    }
+
+    private Timestamp getTimestamp() {
+        return getTimestamp(this.value);
+    }
+
+    public static Timestamp getTimestamp(Object value) {
+        return Timestamp.valueOf(getLocalDateTime(value));
     }
 
     public static String getTypeName(Class<?> type) {
@@ -265,8 +345,12 @@ public class ObjectToFieldValue {
         DATA_TYPE_MAP.put(byte.class.getName(), Arrays.asList(byte.class.getName(), Byte.class.getName()));
         DATA_TYPE_MAP.put(short.class.getName(), Arrays.asList(short.class.getName(), Short.class.getName()));
         DATA_TYPE_MAP.put(boolean.class.getName(), Arrays.asList(boolean.class.getName(), Boolean.class.getName()));
-        DATA_TYPE_MAP.put(char.class.getName(), Collections.singletonList(char.class.getName()));
+        DATA_TYPE_MAP.put(char.class.getName(), Arrays.asList(char.class.getName(), Character.class.getName()));
         DATA_TYPE_MAP.put(String.class.getName(), Collections.singletonList(String.class.getName()));
         DATA_TYPE_MAP.put(BigDecimal.class.getName(), Collections.singletonList(BigDecimal.class.getName()));
+        DATA_TYPE_MAP.put(LocalDateTime.class.getName(), Collections.singletonList(LocalDateTime.class.getName()));
+        DATA_TYPE_MAP.put(LocalDate.class.getName(), Collections.singletonList(LocalDate.class.getName()));
+        DATA_TYPE_MAP.put(LocalTime.class.getName(), Collections.singletonList(LocalTime.class.getName()));
+        DATA_TYPE_MAP.put(Timestamp.class.getName(), Collections.singletonList(Timestamp.class.getName()));
     }
 }

@@ -5,6 +5,7 @@ import com.liuhuiyu.dto.IPaging;
 import com.liuhuiyu.jpa.AbstractTransactionalView;
 import com.liuhuiyu.jpa.dm.util.DmDaoUtil;
 import com.liuhuiyu.jpa.sql.WhereFullByParameterList;
+import com.liuhuiyu.jpa.util.SqlResolution;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 
@@ -14,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author LiuHuiYu
@@ -51,13 +51,13 @@ public class AbstractTransactionalDmView extends AbstractTransactionalView {
      * @author LiuHuiYu
      * Created DateTime 2022-04-25 10:29
      */
-    protected <T, R> Stream<R> list(Class<R> clazz, T t, String sql, String baseWhere, String order, WhereFullByParameterList<T> fullWhere) {
+    protected <T, R> List<R> list(Class<R> clazz, T t, String sql, String baseWhere, String order, WhereFullByParameterList<T> fullWhere) {
         StringBuilder sqlBuilder = new StringBuilder(sql);
         sqlBuilder.append(SPACE).append(baseWhere);
         List<Object> parameterMap = new ArrayList<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
         sqlBuilder.append(SPACE).append(order);
-        return super.getResultListT(clazz, sqlBuilder.toString(), parameterMap);
+        return super.getResultListT(clazz, sqlBuilder.toString(), parameterMap).collect(Collectors.toList());
     }
 
     /**
@@ -75,7 +75,8 @@ public class AbstractTransactionalDmView extends AbstractTransactionalView {
      * @author LiuHuiYu
      * Created DateTime 2022-04-25 10:29
      */
-    protected <T, R> Stream<R> pageList(Class<R> clazz, T t, String sql, String baseWhere, String order, WhereFullByParameterList<T> fullWhere) {
+    protected <T, R> List<R> pageList(Class<R> clazz, T t, String sql, String baseWhere, String order, WhereFullByParameterList<T> fullWhere) {
+        SqlResolution sqlResolution = new SqlResolution(sql);
         Assert.assertTrue(t instanceof IPaging, "查询条件不包含分页信息。");
         IPaging iPaging = (IPaging) t;
         if (!StringUtils.hasText(baseWhere)) {
@@ -87,7 +88,7 @@ public class AbstractTransactionalDmView extends AbstractTransactionalView {
         fullWhere.full(t, sqlBuilder, parameterMap);
         sqlBuilder.append(SPACE).append(order);
         DmDaoUtil.paginationOracleSql(sqlBuilder, iPaging.getPaging());
-        return super.getResultListT(clazz, sqlBuilder.toString(), parameterMap);
+        return super.getResultListT(clazz, sqlBuilder.toString(), parameterMap,sqlResolution).collect(Collectors.toList());
     }
 
     protected <T, R> Optional<R> getFirstResult(Class<R> clazz, T t, String sql, String baseWhere, String order, WhereFullByParameterList<T> fullWhere) {
@@ -96,8 +97,13 @@ public class AbstractTransactionalDmView extends AbstractTransactionalView {
         List<Object> parameterMap = new ArrayList<>(0);
         fullWhere.full(t, sqlBuilder, parameterMap);
         sqlBuilder.append(SPACE).append(order);
-        final Stream<R> resultList = super.getResultListT(clazz, sqlBuilder.toString(), parameterMap);
-        return resultList.findFirst();
+        final List<R> resultList = super.getResultListT(clazz, sqlBuilder.toString(), parameterMap).collect(Collectors.toList());
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(resultList.get(0));
+        }
     }
 
     /**
@@ -124,14 +130,14 @@ public class AbstractTransactionalDmView extends AbstractTransactionalView {
             gatekeeperCarLogDtoList = Collections.emptyList();
         }
         else if (iPaging.getPaging().isAllInOne()) {
-            gatekeeperCarLogDtoList = this.list(clazz, t, sql, baseWhere, order, fullWhere).collect(Collectors.toList());
+            gatekeeperCarLogDtoList = this.list(clazz, t, sql, baseWhere, order, fullWhere);
         }
         else if (iPaging.getPaging().getPageSize() == 0) {
             gatekeeperCarLogDtoList = Collections.emptyList();
         }
         else {
             //记录查询
-            gatekeeperCarLogDtoList = pageList(clazz, t, sql, baseWhere, order, fullWhere).collect(Collectors.toList());
+            gatekeeperCarLogDtoList = pageList(clazz, t, sql, baseWhere, order, fullWhere);
         }
         return new PageImpl<>(gatekeeperCarLogDtoList, iPaging.getPaging().getPageRequest(), total);
     }
@@ -172,11 +178,10 @@ public class AbstractTransactionalDmView extends AbstractTransactionalView {
 
         public PageImpl<R> buildPage() {
             Assert.assertTrue(StringUtils.hasText(countSql), "countSql语句未设定");
-
             return page2(clazz, findWhere, sql, countSql, baseWhere, order, fullWhere);
         }
 
-        public Stream<R> buildList() {
+        public List<R> buildList() {
             return list(clazz, findWhere, sql, baseWhere, order, fullWhere);
         }
 

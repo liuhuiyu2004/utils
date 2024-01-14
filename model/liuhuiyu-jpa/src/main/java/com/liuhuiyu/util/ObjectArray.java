@@ -14,8 +14,10 @@ import java.util.function.Function;
  *
  * @author LiuHuiYu
  * @version v1.0.0.0
+ * @deprecated 此方法很少使用，已经由反射代替
  * Created DateTime 2021-03-09 17:30
  */
+@Deprecated
 public class ObjectArray {
     private final Object[] objects;
     private int index = 0;

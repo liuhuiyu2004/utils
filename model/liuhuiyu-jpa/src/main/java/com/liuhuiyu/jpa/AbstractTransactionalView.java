@@ -1,6 +1,5 @@
 package com.liuhuiyu.jpa;
 
-import com.liuhuiyu.core.lang.function_interface.ObjectToT;
 import com.liuhuiyu.jpa.util.SqlResolution;
 import com.liuhuiyu.util.DataBaseUtil;
 
@@ -50,6 +49,10 @@ public abstract class AbstractTransactionalView {
         return this.getResultListT(clazz, sql, parameterMap).collect(Collectors.toList());
     }
 
+    protected <T> Stream<T> getResultListT(Class<T> clazz, String sql, List<Object> parameterList) {
+        return getResultListT(clazz, sql, parameterList, null);
+    }
+
     /**
      * 返回数据流
      *
@@ -61,8 +64,8 @@ public abstract class AbstractTransactionalView {
      * Created DateTime 2023-12-31 14:32
      */
     @SuppressWarnings("all")
-    protected <T> Stream<T> getResultListT(Class<T> clazz, String sql, List<Object> parameterList) {
-        SqlResolution sqlResolution = new SqlResolution(sql);
+    protected <T> Stream<T> getResultListT(Class<T> clazz, String sql, List<Object> parameterList, SqlResolution resolution) {
+        SqlResolution sqlResolution = resolution == null ? new SqlResolution(sql) : resolution;
         final Query nativeQuery = entityManager.createNativeQuery(sql);
         for (int i = 0, length = parameterList.size(); i < length; i++) {
             nativeQuery.setParameter(i + 1, parameterList.get(i));
@@ -73,12 +76,17 @@ public abstract class AbstractTransactionalView {
     /**
      * 统计查询
      *
-     * @param sql          sql语句
-     * @param parameterMap 参数
+     * @param sql           sql语句
+     * @param parameterList 参数
      * @return java.lang.Long
      * Created DateTime 2022-02-15 16:54
      */
-    protected Long selectCount(String sql, List<Object> parameterMap) {
-        return this.getFirstResultT(Long.class, sql, parameterMap).orElse(0L);
+    protected Long selectCount(String sql, List<Object> parameterList) {
+        final Query nativeQuery = entityManager.createNativeQuery(sql);
+        for (int i = 0, length = parameterList.size(); i < length; i++) {
+            nativeQuery.setParameter(i + 1, parameterList.get(i));
+        }
+        final Object singleResult = nativeQuery.getSingleResult();
+        return Long.parseLong(singleResult.toString());
     }
 }

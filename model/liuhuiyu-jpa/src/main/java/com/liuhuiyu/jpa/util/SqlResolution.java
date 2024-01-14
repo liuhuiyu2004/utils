@@ -34,11 +34,24 @@ public class SqlResolution {
             Select stmt = (Select) CCJSqlParserUtil.parse(sql);
             Map<String, Integer> map = new HashMap<>();
             final AtomicInteger index = new AtomicInteger(0);
+            final AtomicInteger funcIndex = new AtomicInteger(0);
             for (SelectItem selectItem : ((PlainSelect) stmt.getSelectBody()).getSelectItems()) {
                 selectItem.accept(new SelectItemVisitorAdapter() {
                     @Override
                     public void visit(SelectExpressionItem item) {
-                        String name = item.getAlias() == null ? ((Column) item.getExpression()).getColumnName() : item.getAlias().getName();
+                        String name;
+                        if (item.getAlias() != null) {
+                            name = item.getAlias().getName();
+                        }
+                        else if (item.getExpression() instanceof Column) {
+                            name = ((Column) item.getExpression()).getColumnName();
+                        }
+                        else if (item.getExpression() instanceof net.sf.jsqlparser.expression.Function) {
+                            name = String.valueOf(funcIndex.getAndIncrement());
+                        }
+                        else {
+                            return;
+                        }
                         map.put(name.toLowerCase(), index.getAndIncrement());
                     }
                 });
