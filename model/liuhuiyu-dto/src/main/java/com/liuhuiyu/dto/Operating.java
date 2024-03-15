@@ -18,7 +18,15 @@ public class Operating implements Cloneable {
      * 操作人id
      */
     private String operatorId;
+    /**
+     * 操作人名称
+     */
     private String operatorName;
+    /**
+     * 操作人类型id（1.系统；2.用户；3.三方）
+     */
+    private int operatorTypeId;
+
     /**
      * 操作模式名称（用户自定义）
      */
@@ -65,6 +73,14 @@ public class Operating implements Cloneable {
         this.operatorName = operatorName;
     }
 
+    public int getOperatorTypeId() {
+        return operatorTypeId;
+    }
+
+    public void setOperatorTypeId(int operatorTypeId) {
+        this.operatorTypeId = operatorTypeId;
+    }
+
     @Override
     @SuppressWarnings("all")
     public Operating clone() {
@@ -72,6 +88,7 @@ public class Operating implements Cloneable {
         operating.setModelName(this.modelName);
         operating.setOperatorId(this.operatorId);
         operating.setOperatorName(this.operatorName);
+        operating.setOperatorTypeId(this.operatorTypeId);
         return operating;
     }
 }
