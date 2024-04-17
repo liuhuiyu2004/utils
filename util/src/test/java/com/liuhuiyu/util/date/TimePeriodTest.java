@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author LiuHuiYu
@@ -43,5 +45,15 @@ class TimePeriodTest extends TestBase {
     public void testTime3() {
         TimePeriod timePeriod = new TimePeriod(Timestamp.valueOf(LocalDateTime.now().plusHours(1)), Timestamp.valueOf(LocalDateTime.now()));
         LOG.info("{}-{}", timePeriod.getBeginTime(), timePeriod.getEndTime());
+    }
+
+@Test
+    public void s(){
+        List<String> list=new ArrayList<>();
+        list.add(null);
+        list.add(null);
+        list.add("null");
+        list.add("a");
+        LOG.info(list);
     }
 }
