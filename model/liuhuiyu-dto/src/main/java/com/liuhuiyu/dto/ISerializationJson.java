@@ -19,7 +19,10 @@ public interface ISerializationJson extends Serializable {
      * @author LiuHuiYu
      * Created DateTime 2022-01-20 15:30
      */
-    String toJson();
+    default String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
 
     /**
      * 将对象转换成json字符串
