@@ -274,6 +274,16 @@ public class ConditionImpl<T> implements Condition<T> {
         return this.sqlCommandPackage;
     }
 
+    @Override
+    public AbstractSqlCommandPackage<T> expression(String expression) {
+        this.sqlCommandPackage.getSqlBuilder()
+                .append(this.condition)
+                .append("(")
+                .append(expression)
+                .append(")");
+        return this.sqlCommandPackage;
+    }
+
     private <P> AbstractSqlCommandPackage<T> generate(String operator, P value) {
         this.checkField();
         if (value != null) {

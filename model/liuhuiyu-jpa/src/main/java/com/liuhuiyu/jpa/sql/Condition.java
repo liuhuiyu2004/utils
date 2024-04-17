@@ -151,5 +151,14 @@ public interface Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     AbstractSqlCommandPackage<T> isNotNull();
+    /**
+     * 表达式
+     *
+     * @param expression 表达式
+     * @return cc.rehome.db.jpa.sql.AbstractSqlCommandPackage<T>
+     * @author LiuHuiYu
+     * Created DateTime 2024-01-14 21:44
+     */
+    AbstractSqlCommandPackage<T> expression(String expression);
 
 }
