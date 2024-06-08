@@ -22,6 +22,7 @@
         <module>liuhuiyu-spring-util</module>
         <module>liuhuiyu-web</module>
         <module>liuhuiyu-cloud-util</module>
+        <module>liuhuiyu-db</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
