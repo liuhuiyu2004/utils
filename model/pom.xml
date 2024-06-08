@@ -16,9 +16,7 @@
         <module>liuhuiyu-test</module>
         <module>liuhuiyu-core</module>
         <module>liuhuiyu-json</module>
-        <module>liuhuiyu-jpa</module>
         <module>liuhuiyu-dto</module>
-        <module>liuhuiyu-jpa-dm</module>
         <module>liuhuiyu-spring-util</module>
         <module>liuhuiyu-web</module>
         <module>liuhuiyu-cloud-util</module>

@@ -12,4 +12,8 @@
 
     <name>liuhuiyu-db</name>
     <url>http://maven.apache.org</url>
+    <modules>
+        <module>liuhuiyu-jpa</module>
+        <module>liuhuiyu-jpa-dm</module>
+    </modules>
 </project>
