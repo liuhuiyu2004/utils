@@ -325,6 +325,11 @@ public class DmCondition<T> implements Condition<T> {
         return this.sqlCommandPackage;
     }
 
+    @Override
+    public AbstractSqlCommandPackage<T> expression(String expression) {
+        return null;
+    }
+
     private <P> AbstractSqlCommandPackage<T> generate(String operator, P value) {
         this.checkField();
         if (value != null) {

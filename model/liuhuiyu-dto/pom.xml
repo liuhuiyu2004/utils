@@ -9,6 +9,7 @@
 
     <artifactId>liuhuiyu-dto</artifactId>
     <packaging>jar</packaging>
+    <version>2023.0.1</version>
 
     <name>liuhuiyu-dto</name>
     <url>http://maven.apache.org</url>

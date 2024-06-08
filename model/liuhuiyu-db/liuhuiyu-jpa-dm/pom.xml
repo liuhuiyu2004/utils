@@ -15,7 +15,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.versions>2.1.6.RELEASE</spring.versions>
+<!--        <spring.versions>2.1.6.RELEASE</spring.versions>-->
+        <spring.versions>2.5.3</spring.versions>
+        <liuhuiyu.versions>2023.0.1</liuhuiyu.versions>
     </properties>
 
     <dependencies>
@@ -39,14 +41,35 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>Dm8JdbcDriver18</artifactId>
+            <version>8.1.1.49</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmDialect-for-hibernate4.0</artifactId>
+            <version>8.1.2.141</version>
+        </dependency>
+        <dependency>
             <groupId>com.liuhuiyu</groupId>
             <artifactId>liuhuiyu-jpa</artifactId>
             <version>2023.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.dameng</groupId>
-            <artifactId>Dm8JdbcDriver18</artifactId>
-            <version>8.1.1.49</version>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-dto</artifactId>
+            <version>2023.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-core</artifactId>
+            <version>2023.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-test</artifactId>
+            <version>2023.0.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

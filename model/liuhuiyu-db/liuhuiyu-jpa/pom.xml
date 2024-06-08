@@ -9,6 +9,7 @@
 
     <artifactId>liuhuiyu-jpa</artifactId>
     <packaging>jar</packaging>
+    <version>2023.0.1</version>
 
     <name>liuhuiyu-jpa</name>
     <url>http://maven.apache.org</url>

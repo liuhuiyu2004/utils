@@ -19,7 +19,7 @@
         <annotations.versions>23.0.0</annotations.versions>
         <com.liuhuiyu.dto.versions>2021.1.0</com.liuhuiyu.dto.versions>
         <com.liuhuiyu.test.versions>2022.1.0</com.liuhuiyu.test.versions>
-        <spring.versions>2.1.6.RELEASE</spring.versions>
+        <spring.versions>2.5.3</spring.versions>
         <log4j2.version>2.18.0</log4j2.version>
         <guava.version>31.1-jre</guava.version>
     </properties>
@@ -80,7 +80,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.1</version>
                 <!-- 绑定source插件到Maven的生命周期,并在生命周期后执行绑定的source的goal -->
                 <executions>
                     <execution>
