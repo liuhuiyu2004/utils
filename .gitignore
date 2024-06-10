@@ -32,4 +32,5 @@ hs_err_pid*
 /model/liuhuiyu-spring-util/target/
 /model/liuhuiyu-test/target/
 /model/liuhuiyu-web/target/
-
+/model/liuhuiyu-db/liuhuiyu-jpa/target/
+/model/liuhuiyu-db/liuhuiyu-jpa-dm/target/
