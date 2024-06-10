@@ -26,6 +26,15 @@ public class DynamicCronTask {
     private ThreadPoolTaskScheduler taskScheduler;
     Map<String, ScheduledFuture<?>> scheduledFutureMap = new HashMap<>();
 
+    /**
+     * 注册<p>
+     * Created DateTime 2024/6/10 下午1:30 <p>
+     * LiuHuiYu
+     *
+     * @param name     注册名称
+     * @param cron     cron表达式
+     * @param runnable 运行方法
+     */
     public void register(String name, String cron, Runnable runnable) {
         // 高版本使用 CronExpression，低版本使用 CronSequenceGenerator
         boolean validExpression = CronExpression.isValidExpression(cron);
@@ -40,11 +49,20 @@ public class DynamicCronTask {
         scheduledFutureMap.put(name, scheduledFuture);
     }
 
+    /**
+     * 取消注册<p>
+     * Created DateTime 2024/6/10 下午1:31 <p>
+     * LiuHuiYu
+     *
+     * @param name 注册名称
+     * @return boolean  是否取消成功
+     */
     public boolean unRegister(String name) {
         ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(name);
         if (null != scheduledFuture) {
             return scheduledFuture.cancel(false);
-        }else{
+        }
+        else {
             return false;
         }
     }
