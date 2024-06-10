@@ -11,8 +11,6 @@ public interface RunnableException {
      * 执行函数
      *
      * @throws Exception 异常
-     * @author LiuHuiYu
-     * Created DateTime 2023-08-03 9:21
      */
     void run() throws Exception;
 }

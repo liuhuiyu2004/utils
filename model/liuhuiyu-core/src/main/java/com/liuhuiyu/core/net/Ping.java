@@ -18,8 +18,6 @@ public class Ping {
      *
      * @param ipAddress 地址
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2023-01-10 17:08
      */
     public static boolean ping(String ipAddress) {
         //超时应该在3钞以上
@@ -39,8 +37,6 @@ public class Ping {
      * @param pingTimes ping次数
      * @param timeOut   超时时间
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2023-01-10 17:09
      */
     public static boolean windowsPing(String ipAddress, int pingTimes, int timeOut) {
         // 将要执行的ping命令,此命令是windows格式的命令

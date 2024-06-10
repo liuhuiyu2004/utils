@@ -72,8 +72,6 @@ public class LocalDateUtil {
      *
      * @param value 字符串
      * @return java.time.LocalDate
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 10:46
      */
     public static LocalDate stringToDate(String value) {
         return stringToDate(value, LocalDate.of(DEFINE_YEAR, DEFINE_MONTH, DEFINE_DAY));
@@ -84,8 +82,6 @@ public class LocalDateUtil {
      *
      * @param value 字符串
      * @return java.time.LocalDate
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 10:46
      */
     public static LocalDate stringToDate(String value, LocalDate defValue) {
         return stringToDate(value, defValue, PRECISION_DAY);
@@ -96,8 +92,6 @@ public class LocalDateUtil {
      *
      * @param value 字符串
      * @return java.time.LocalDate
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 10:46
      */
     public static LocalDate stringToDate(String value, LocalDate defValue, int precision) {
         final String[] split = value.split(DATE_DELIMITER_REGEX);
@@ -117,8 +111,6 @@ public class LocalDateUtil {
      *
      * @param value 字符串
      * @return java.time.LocalTime
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 14:15
      */
     public static LocalTime stringToTime(String value) {
         return stringToTime(value, LocalTime.of(DEFINE_HOUR, DEFINE_MINUTE, DEFINE_SECOND, DEFINE_NANO));
@@ -130,8 +122,6 @@ public class LocalDateUtil {
      * @param value    字符串
      * @param defValue 默认值
      * @return java.time.LocalTime
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 14:15
      */
     public static LocalTime stringToTime(String value, LocalTime defValue) {
         return stringToTime(value, defValue, PRECISION_MINUTE);
@@ -144,8 +134,6 @@ public class LocalDateUtil {
      * @param defValue  默认值
      * @param precision 解析精度
      * @return java.time.LocalTime
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 14:15
      */
     public static LocalTime stringToTime(String value, LocalTime defValue, int precision) {
         final String[] split = value.split(TIME_DELIMITER_REGEX);
@@ -156,7 +144,8 @@ public class LocalDateUtil {
             int nanoOfSecond = getValue(split, 3, precision < PRECISION_NANO, DEFINE_NANO);
             if (nanoOfSecond < 1_000) {
                 nanoOfSecond *= 1_000_000;
-            }else if(nanoOfSecond < 1_000_000){
+            }
+            else if (nanoOfSecond < 1_000_000) {
                 nanoOfSecond *= 1_000;
             }
             return LocalTime.of(hour, minute, second, nanoOfSecond);
@@ -171,8 +160,6 @@ public class LocalDateUtil {
      *
      * @param value 字符串(默认精确解析到日)
      * @return java.time.LocalDateTime
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 14:04
      */
     public static LocalDateTime stringToDateTime(String value) {
         return stringToDateTime(value, LocalDateTime.of(DEFINE_YEAR, DEFINE_MONTH, DEFINE_DAY, DEFINE_HOUR, DEFINE_MINUTE, DEFINE_SECOND, DEFINE_NANO));
@@ -184,8 +171,6 @@ public class LocalDateUtil {
      * @param value       字符串(默认精确解析到日)
      * @param defDateTime 解析失败默认值
      * @return java.time.LocalDateTime
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 14:04
      */
     public static LocalDateTime stringToDateTime(String value, LocalDateTime defDateTime) {
         return stringToDateTime(value, defDateTime, PRECISION_DAY);
@@ -205,8 +190,6 @@ public class LocalDateUtil {
      *                    <pre>SECOND_PRECISION:秒</pre>
      *                    <pre>NANO_PRECISION:纳秒</pre>
      * @return java.time.LocalDateTime
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-05 14:04
      */
     public static LocalDateTime stringToDateTime(String value, LocalDateTime defDateTime, int precision) {
         final String[] splitBase = value.split(DATE_TIME_DELIMITER_REGEX);

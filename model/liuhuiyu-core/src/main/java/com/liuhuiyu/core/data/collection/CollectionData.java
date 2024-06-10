@@ -29,8 +29,6 @@ public class CollectionData<T> {
      *
      * @param modelName 更新模式名称
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:06
      */
     public boolean isCollectionModel(String modelName) {
         return this.collectionModel != null && this.collectionModel.equals(modelName);

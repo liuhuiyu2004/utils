@@ -19,8 +19,6 @@ public class ThreadUtil {
      * @param consumer      list处理
      * @param executor      线程池
      * @param closeExecutor 提供关闭线程池的方法
-     * @author LiuHuiYu
-     * Created DateTime 2021-04-14 14:03
      */
     public static <T> void asynchronousDataLoading(List<T> list, Consumer<T> consumer, Executor executor, Runnable closeExecutor) {
         CompletableFuture.allOf(list.stream()
@@ -33,8 +31,6 @@ public class ThreadUtil {
      * 休眠（带返回状态(成功：正常无中断；失败：异常中断引发休眠结束)）
      *
      * @param millis 休眠时间
-     * @author LiuHuiYu
-     * Created DateTime 2021-08-20 14:43
      */
     @SuppressWarnings("All")
     public static boolean sleep(long millis) {

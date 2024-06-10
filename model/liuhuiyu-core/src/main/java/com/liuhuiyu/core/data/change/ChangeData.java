@@ -19,8 +19,6 @@ public class ChangeData<T> {
      * 变更数据模型
      *
      * @param data 数据信息
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:07
      */
     public ChangeData(T data) {
         this(null, data, null, null);
@@ -32,8 +30,6 @@ public class ChangeData<T> {
      * @param data        数据信息
      * @param dataStatus  数据状态
      * @param changeModel 数据模式
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:07
      */
     public ChangeData(T data, DataStatus dataStatus, String changeModel) {
         this(null, data, dataStatus, changeModel);
@@ -45,8 +41,6 @@ public class ChangeData<T> {
      * @param data        数据信息
      * @param dataStatus  数据状态
      * @param changeModel 数据模式
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:07
      */
     public ChangeData(T oldData, T data, DataStatus dataStatus, String changeModel) {
         this.oldData = oldData;
@@ -59,8 +53,6 @@ public class ChangeData<T> {
      * 获取数据
      *
      * @return T
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:07
      */
     public T getData() {
         return data;
@@ -74,8 +66,6 @@ public class ChangeData<T> {
      * 获取数据状态
      *
      * @return com.liuhuiyu.core.data.change.ChangeData.DataStatus
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:07
      */
     public DataStatus getDataStatus() {
         return dataStatus;
@@ -85,8 +75,6 @@ public class ChangeData<T> {
      * 获取更新模式
      *
      * @return java.lang.String
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:07
      */
     public String getChangeModel() {
         return changeModel;
@@ -97,8 +85,6 @@ public class ChangeData<T> {
      *
      * @param changeModel 更新模式名称
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:06
      */
     public boolean isChangeModel(String changeModel) {
         return this.changeModel.equals(changeModel);

@@ -19,8 +19,6 @@ public class TimestampUtil {
      *
      * @param value 字符串
      * @return java.sql.Timestamp
-     * @author LiuHuiYu
-     * Created DateTime 2022-01-06 15:38
      */
     public static Timestamp beginTime(String value) {
         try {
@@ -46,8 +44,6 @@ public class TimestampUtil {
      *
      * @param value 字符串
      * @return java.sql.Timestamp
-     * @author LiuHuiYu
-     * Created DateTime 2022-01-06 15:38
      */
     public static Timestamp endTime(String value) {
         try {
@@ -76,8 +72,6 @@ public class TimestampUtil {
      *
      * @param value 字符串
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2022-01-06 15:37
      */
     public static boolean isTimestampString(String value) {
         return endTime(value) != null;

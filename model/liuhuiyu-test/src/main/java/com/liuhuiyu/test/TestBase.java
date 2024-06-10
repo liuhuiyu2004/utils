@@ -24,8 +24,6 @@ public abstract class TestBase {
 
     /**
      * 初始化 Logger
-     *
-     * @author LiuHuiYu
      * Created DateTime 2022-09-08 11:18
      */
     protected void setLoggerValue(final Class<?> clazz, Level level) {
@@ -37,7 +35,6 @@ public abstract class TestBase {
      * 初始化 Logger
      *
      * @param level 级别
-     * @author LiuHuiYu
      * Created DateTime 2022-09-08 11:18
      */
     protected void setLoggerValue(Level level) {
@@ -49,8 +46,7 @@ public abstract class TestBase {
      * 打印Object序列化到json的信息
      *
      * @param obj 打印的对象
-     * @author LiuHuiYu
-     * Created DateTime 2022-09-08 11:21
+     *            Created DateTime 2022-09-08 11:21
      */
     protected void printObjectJson(Object obj) {
         LOG.info(new Gson().toJson(obj));

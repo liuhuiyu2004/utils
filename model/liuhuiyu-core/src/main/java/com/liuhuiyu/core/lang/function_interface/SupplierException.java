@@ -13,8 +13,6 @@ public interface SupplierException<T> {
      *
      * @return T 实体
      * @throws Exception 异常信息
-     *                   Created DateTime 2023-08-03 9:20
-     * @author LiuHuiYu
      */
     T get() throws Exception;
 }

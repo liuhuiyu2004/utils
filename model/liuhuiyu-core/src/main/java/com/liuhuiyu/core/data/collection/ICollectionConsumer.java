@@ -12,7 +12,6 @@ public interface ICollectionConsumer<T> {
      * 注册key
      *
      * @return java.lang.String
-     * @author LiuHuiYu
      * Created DateTime 2023-02-07 14:02
      */
     String getKey();
@@ -22,8 +21,7 @@ public interface ICollectionConsumer<T> {
      *
      * @param sender     消息发送者
      * @param changeData 更新的数据信息
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:02
+     *                   Created DateTime 2023-02-07 14:02
      */
     void collectionNotice(Object sender, CollectionData<T> changeData);
 }

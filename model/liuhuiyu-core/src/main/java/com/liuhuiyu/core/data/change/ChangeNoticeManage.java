@@ -3,6 +3,7 @@ package com.liuhuiyu.core.data.change;
 /**
  * 更新数据管理
  * 不建议使用
+ *
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2023-02-07 12:45
@@ -20,8 +21,6 @@ public class ChangeNoticeManage<T> {
      * 注册
      *
      * @param iChangeNotice 注册的对象
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:05
      */
     public void reg(IChangeNotice<T> iChangeNotice) {
         this.changeNotice.reg(iChangeNotice);
@@ -31,8 +30,6 @@ public class ChangeNoticeManage<T> {
      * 注销通知
      *
      * @param iChangeNotice 注销的对象
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:05
      */
     public void unReg(IChangeNotice<T> iChangeNotice) {
         this.changeNotice.unReg(iChangeNotice);

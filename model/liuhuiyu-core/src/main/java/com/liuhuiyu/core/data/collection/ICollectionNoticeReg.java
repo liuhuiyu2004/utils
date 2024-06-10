@@ -12,7 +12,6 @@ public interface ICollectionNoticeReg<T> {
      * 消费者注册
      *
      * @param collectionConsumer 消费者注册
-     * @author LiuHuiYu
      * Created DateTime 2023-03-31 8:24
      */
     void collectionNoticeReg(ICollectionConsumer<T> collectionConsumer);
@@ -21,7 +20,6 @@ public interface ICollectionNoticeReg<T> {
      * 消费者注销
      *
      * @param collectionConsumerKey 消费者Key
-     * @author LiuHuiYu
      * Created DateTime 2023-03-31 8:24
      */
     void collectionNoticeUnReg(String collectionConsumerKey);

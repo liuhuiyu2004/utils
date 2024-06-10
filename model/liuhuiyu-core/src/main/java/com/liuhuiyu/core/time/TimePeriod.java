@@ -30,8 +30,6 @@ public class TimePeriod {
      * @param beginTime 开始时间（字符串）
      * @param endTime   结束时间（字符串）
      * @return com.liuhuiyu.core.time.TimePeriod
-     * @author LiuHuiYu
-     * Created DateTime 2023-01-13 10:03
      */
     public static TimePeriod stringCreate(String beginTime, String endTime) {
         Timestamp b = TimestampUtil.beginTime(beginTime);
@@ -55,8 +53,6 @@ public class TimePeriod {
      * @param beginTime 开始时间（Timestamp）
      * @param endTime   结束时间（Timestamp）
      * @return com.liuhuiyu.core.time.TimePeriod
-     * @author LiuHuiYu
-     * Created DateTime 2023-01-13 10:03
      */
     public static TimePeriod timestampCreate(Timestamp beginTime, Timestamp endTime) {
         return new TimePeriod(beginTime, endTime);
@@ -67,8 +63,6 @@ public class TimePeriod {
      *
      * @param timestamp 检测时间点
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2022-11-29 10:49
      */
     public boolean isInTimePeriod(Timestamp timestamp) {
         return beginTime.before(timestamp) && endTime.after(timestamp);
@@ -79,8 +73,6 @@ public class TimePeriod {
      *
      * @param timePeriod 时间段
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-25 11:10
      */
     public boolean isTimeStaggered(TimePeriod timePeriod) {
         if (!timePeriod.isValidTime() || !this.isValidTime()) {
@@ -99,8 +91,6 @@ public class TimePeriod {
      * 获取开始时间
      *
      * @return java.sql.Timestamp
-     * @author LiuHuiYu
-     * Created DateTime 2023-01-13 10:03
      */
     public Timestamp getBeginTime() {
         return beginTime;
@@ -110,8 +100,6 @@ public class TimePeriod {
      * 获取结束时间
      *
      * @return java.sql.Timestamp
-     * @author LiuHuiYu
-     * Created DateTime 2023-01-13 10:03
      */
     public Timestamp getEndTime() {
         return endTime;
@@ -121,8 +109,6 @@ public class TimePeriod {
      * 判断时间段是否有效
      *
      * @return boolean
-     * @author LiuHuiYu
-     * Created DateTime 2023-01-13 10:02
      */
     public boolean isValidTime() {
         return beginTime != null;

@@ -32,8 +32,7 @@ public class CollectionNotice<T> implements ICollectionNoticeReg<T> {
      * 注册
      *
      * @param collectionConsumer 注册的对象
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:05
+     * @since v1.0.0.0
      */
     @Override
     public void collectionNoticeReg(ICollectionConsumer<T> collectionConsumer) {
@@ -44,8 +43,7 @@ public class CollectionNotice<T> implements ICollectionNoticeReg<T> {
      * 注销通知
      *
      * @param key 注销key
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:05
+     *            Created DateTime 2023-02-07 14:05
      */
     @Override
     public void collectionNoticeUnReg(String key) {
@@ -56,8 +54,6 @@ public class CollectionNotice<T> implements ICollectionNoticeReg<T> {
      * 数据采集通知
      *
      * @param data 采集的数据
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:03
      */
     public void collectionNotice(T data) {
         this.collectionNotice(data, "");
@@ -67,8 +63,6 @@ public class CollectionNotice<T> implements ICollectionNoticeReg<T> {
      * 数据采集通知
      *
      * @param data 采集的数据
-     * @author LiuHuiYu
-     * Created DateTime 2023-02-07 14:03
      */
     public void collectionNotice(T data, String modelName) {
         synchronized (this) {

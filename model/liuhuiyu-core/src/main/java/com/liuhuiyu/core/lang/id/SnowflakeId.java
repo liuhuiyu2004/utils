@@ -5,11 +5,11 @@ import com.liuhuiyu.core.util.Assert;
 import java.sql.Timestamp;
 
 /**
- * 雪花算法生成Id（默认支持69年id生成）可通过自定义生成更广范围的id
+ * 雪花算法生成Id（默认支持69年id生成）可通过自定义生成更广范围的id<p>
+ * Created DateTime 2023-01-16 16:11
  *
  * @author LiuHuiYu
  * @version v1.0.0.0
- * Created DateTime 2023-01-16 16:11
  */
 public class SnowflakeId {
     /**
@@ -106,6 +106,7 @@ public class SnowflakeId {
 
     /**
      * 自定义初始化构造函数
+     * Created DateTime 2023-01-17 9:30
      *
      * @param initializeTheTimestamp 初始化时间戳
      * @param workerIdBits           工作ID位数(bit)
@@ -114,7 +115,6 @@ public class SnowflakeId {
      * @param workerId               工作ID(0~2^workerIdBits-1)
      * @param datacenterId           数据中心ID(0~2^datacenterIdBits-1)
      * @author LiuHuiYu
-     * Created DateTime 2023-01-17 9:30
      */
     public SnowflakeId(long initializeTheTimestamp, long workerIdBits, long datacenterIdBits, long sequenceBits, long workerId, long datacenterId) {
         final long maxWorkerId = ~(-1L << workerIdBits);
