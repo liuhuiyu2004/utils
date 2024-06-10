@@ -1,9 +1,6 @@
 package com.liuhuiyu.jpa.sql;
 
-import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
-
 import java.util.Collection;
-import java.util.List;
 
 /**
  * eq 就是 equal等于
@@ -151,6 +148,7 @@ public interface Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     AbstractSqlCommandPackage<T> isNotNull();
+
     /**
      * 表达式
      *

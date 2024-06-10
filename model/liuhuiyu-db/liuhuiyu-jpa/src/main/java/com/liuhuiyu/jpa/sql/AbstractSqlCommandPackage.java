@@ -1,9 +1,6 @@
 package com.liuhuiyu.jpa.sql;
 
-import com.liuhuiyu.jpa.sql.ISqlWhere;
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * 原生SQL封装
