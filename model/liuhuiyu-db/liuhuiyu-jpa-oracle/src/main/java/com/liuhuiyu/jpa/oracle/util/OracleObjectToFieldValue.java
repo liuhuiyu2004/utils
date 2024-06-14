@@ -20,6 +20,9 @@ public class OracleObjectToFieldValue implements ApplicationRunner {
         customConversionToString();
     }
 
+    /**
+     * 自定义转换
+     */
     public void customConversionToString() {
         ObjectToFieldValue.setCustomConversionToString((v) -> {
             if (v instanceof Clob) {
