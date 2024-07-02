@@ -40,4 +40,23 @@ public interface FromPrototype {
         }
         return new Gson().fromJson(fromPrototype.toJson(), classOfT);
     }
+
+    /**
+     * 将当前信息转换为指定类型的信息（相同属性数据深层复制）<p>
+     * author LiuHuiYu<p>
+     * Created DateTime 2024/7/3 6:46
+     *
+     * @param classOfT 类型
+     * @param obj      原始对象
+     * @return T
+     */
+    static <T> T fromObj(Class<T> classOfT, Object obj) {
+        if (classOfT == null) {
+            throw new RuntimeException("类型不能为null");
+        }
+        if (obj == null) {
+            throw new RuntimeException("要转换的数据不能为null");
+        }
+        return new Gson().fromJson(new Gson().toJson(obj), classOfT);
+    }
 }
