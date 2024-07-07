@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.liuhuiyu.jpa.oracle.util.OracleObjectToFieldValue
+#com.liuhuiyu.jpa.BaseView
