@@ -19,7 +19,7 @@ public class StreamUtil {
      * @param keyExtractor key提取器
      * @return java.util.function.Predicate<T>
      */
-    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(keyExtractor.apply(t));
     }
