@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 区间
  * @author LiuHuiYu * @version v1.0.0.0
  * Created DateTime 2024/7/7 18:15
  */

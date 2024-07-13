@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
+ * 时间区间合并
  * @author LiuHuiYu * @version v1.0.0.0
  * Created DateTime 2024/7/7 18:16
  */
@@ -17,7 +18,7 @@ public class IntervalMerger {
      * @param intervals     要获取的列表
      * @param sort          排序规则（按照最小到最大排序）
      * @param overlap       两个元素是否重叠规则(第一个元素的最大值是否大于第二个元素的最小值)
-     * @param maxComparator 最大值比较规则
+     * @param maxComparator 最大值比较规则（第一个值的最大值大于第二个值的最大值）
      * @return java.util.List<com.liuhuiyu.core.util.interval.Interregional < T>>
      */
     public static <T> List<Interregional<T>> mergeIntervals(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
@@ -65,7 +66,7 @@ public class IntervalMerger {
      * @param intervals     要获取的列表
      * @param sort          排序规则（按照最小到最大排序）
      * @param overlap       两个元素是否重叠规则(第一个元素的最大值是否大于第二个元素的最小值)
-     * @param maxComparator 最大值比较规则
+     * @param maxComparator 最大值比较规则（第一个值的最大值大于第二个值的最大值）
      * @return com.liuhuiyu.core.util.interval.Interregional<T>
      */
     public static <T> Interregional<T> getFirstMergeIntervals(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {

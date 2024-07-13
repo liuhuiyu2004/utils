@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.zip.*;
 
 /**
+ * 压缩解压工具类
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2023-12-08 16:30
