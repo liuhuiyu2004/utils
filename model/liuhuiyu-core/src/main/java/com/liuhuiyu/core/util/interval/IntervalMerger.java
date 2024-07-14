@@ -3,6 +3,7 @@ package com.liuhuiyu.core.util.interval;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -56,7 +57,7 @@ public class IntervalMerger {
         List<Interregional<T>> resList = new ArrayList<>();
         // 如果列表为空或只有一个元素，直接返回
         if (intervals == null || intervals.isEmpty()) {
-            return null;
+            return resList;
         }
         else if (intervals.size() == 1) {
             final Interregional<T> tInterregional = new Interregional<>(intervals.get(0), intervals.get(0));
@@ -100,13 +101,13 @@ public class IntervalMerger {
      * @param maxComparator 最大值比较规则（第一个值的最大值大于第二个值的最大值）
      * @return com.liuhuiyu.core.util.interval.Interregional<T>
      */
-    public static <T> Interregional<T> getFirstMergeIntervalsDetail(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
+    public static <T> Optional<Interregional<T>> getFirstMergeIntervalsDetail(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
         // 如果列表为空或只有一个元素，直接返回
         if (intervals == null || intervals.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
         else if (intervals.size() == 1) {
-            return new Interregional<>(intervals.get(0), intervals.get(0));
+            return Optional.of(new Interregional<>(intervals.get(0), intervals.get(0)));
         }
         // 按照开始时间排序
         intervals.sort(sort);
@@ -123,10 +124,10 @@ public class IntervalMerger {
             }
             else {
                 // 否则，将下一个时间段设为当前时间段，并添加到merged列表中
-                return res;
+                return Optional.of(res);
             }
         }
-        return res;
+        return Optional.of(res);
     }
 
     /**
@@ -140,7 +141,7 @@ public class IntervalMerger {
      * @param comparator            T数据区间类型比较规则
      * @return com.liuhuiyu.core.util.interval.Interregional<T>
      */
-    public static <T, T1> Interregional<T> getFirstMergeIntervals(List<T> intervals, Function<T, T1> getMinComparatorValue, Function<T, T1> getMaxComparatorValue, Comparator<T1> comparator) {
+    public static <T, T1> Optional<Interregional<T>> getFirstMergeIntervals(List<T> intervals, Function<T, T1> getMinComparatorValue, Function<T, T1> getMaxComparatorValue, Comparator<T1> comparator) {
         Comparator<T> sort = (v1, v2) -> {
             final T1 v1Begin = getMinComparatorValue.apply(v1);
             final T1 v2Begin = getMinComparatorValue.apply(v2);
