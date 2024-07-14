@@ -3,6 +3,7 @@ package com.liuhuiyu.core.util.interval;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 时间区间合并
@@ -11,7 +12,37 @@ import java.util.List;
  */
 public class IntervalMerger {
     /**
-     * 获取时间段列表<p>
+     * 获取区间合并列表（闭区间）<p>
+     * author LiuHuiYu<p>
+     * Created DateTime 2024/7/7 18:16
+     *
+     * @param intervals             要获取的列表
+     * @param getMinComparatorValue 获取T数据的最小值
+     * @param getMaxComparatorValue 获取T数据的最大值
+     * @param comparator            T数据区间类型比较规则
+     * @return java.util.List<com.liuhuiyu.core.util.interval.Interregional < T>>
+     */
+    public static <T, T1> List<Interregional<T>> mergeIntervals(List<T> intervals, Function<T, T1> getMinComparatorValue, Function<T, T1> getMaxComparatorValue, Comparator<T1> comparator) {
+        Comparator<T> sort = (v1, v2) -> {
+            final T1 v1Begin = getMinComparatorValue.apply(v1);
+            final T1 v2Begin = getMinComparatorValue.apply(v2);
+            return comparator.compare(v1Begin, v2Begin);
+        };
+        Comparator<T> overlap = (v1, v2) -> {
+            final T1 v1End = getMaxComparatorValue.apply(v1);
+            final T1 v2Begin = getMinComparatorValue.apply(v2);
+            return comparator.compare(v1End, v2Begin);
+        };
+        Comparator<T> maxComparator = (v1, v2) -> {
+            final T1 v1End = getMaxComparatorValue.apply(v1);
+            final T1 v2Begin = getMaxComparatorValue.apply(v2);
+            return comparator.compare(v1End, v2Begin);
+        };
+        return mergeIntervalsDetail(intervals, sort, overlap, maxComparator);
+    }
+
+    /**
+     * 获取区间合并列表（闭区间）<p>
      * author LiuHuiYu<p>
      * Created DateTime 2024/7/7 18:16
      *
@@ -21,7 +52,7 @@ public class IntervalMerger {
      * @param maxComparator 最大值比较规则（第一个值的最大值大于第二个值的最大值）
      * @return java.util.List<com.liuhuiyu.core.util.interval.Interregional < T>>
      */
-    public static <T> List<Interregional<T>> mergeIntervals(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
+    public static <T> List<Interregional<T>> mergeIntervalsDetail(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
         List<Interregional<T>> resList = new ArrayList<>();
         // 如果列表为空或只有一个元素，直接返回
         if (intervals == null || intervals.isEmpty()) {
@@ -59,7 +90,7 @@ public class IntervalMerger {
     }
 
     /**
-     * 获取首个时间段数据<p>
+     * 获取首个区间段数据(细节模式)（闭区间）<p>
      * author LiuHuiYu<p>
      * Created DateTime 2024/7/7 13:12
      *
@@ -69,7 +100,7 @@ public class IntervalMerger {
      * @param maxComparator 最大值比较规则（第一个值的最大值大于第二个值的最大值）
      * @return com.liuhuiyu.core.util.interval.Interregional<T>
      */
-    public static <T> Interregional<T> getFirstMergeIntervals(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
+    public static <T> Interregional<T> getFirstMergeIntervalsDetail(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
         // 如果列表为空或只有一个元素，直接返回
         if (intervals == null || intervals.isEmpty()) {
             return null;
@@ -98,4 +129,33 @@ public class IntervalMerger {
         return res;
     }
 
+    /**
+     * 获取首个区间段数据（闭区间）<p>
+     * author LiuHuiYu<p>
+     * Created DateTime 2024/7/7 13:12
+     *
+     * @param intervals             要获取的列表
+     * @param getMinComparatorValue 获取T数据的最小值
+     * @param getMaxComparatorValue 获取T数据的最大值
+     * @param comparator            T数据区间类型比较规则
+     * @return com.liuhuiyu.core.util.interval.Interregional<T>
+     */
+    public static <T, T1> Interregional<T> getFirstMergeIntervals(List<T> intervals, Function<T, T1> getMinComparatorValue, Function<T, T1> getMaxComparatorValue, Comparator<T1> comparator) {
+        Comparator<T> sort = (v1, v2) -> {
+            final T1 v1Begin = getMinComparatorValue.apply(v1);
+            final T1 v2Begin = getMinComparatorValue.apply(v2);
+            return comparator.compare(v1Begin, v2Begin);
+        };
+        Comparator<T> overlap = (v1, v2) -> {
+            final T1 v1End = getMaxComparatorValue.apply(v1);
+            final T1 v2Begin = getMinComparatorValue.apply(v2);
+            return comparator.compare(v1End, v2Begin);
+        };
+        Comparator<T> maxComparator = (v1, v2) -> {
+            final T1 v1End = getMaxComparatorValue.apply(v1);
+            final T1 v2Begin = getMaxComparatorValue.apply(v2);
+            return comparator.compare(v1End, v2Begin);
+        };
+        return getFirstMergeIntervalsDetail(intervals, sort, overlap, maxComparator);
+    }
 }
