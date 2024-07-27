@@ -120,7 +120,10 @@ public class IntervalMerger {
             // 如果下一个时间段的开始时间小于等于当前时间段的结束时间，说明它们重叠
             if (overlap.compare(res.getMinValue(), next) >= 0) {
                 res.getElementList().add(next);
-                res.setMaxValue(maxComparator.compare(res.getMaxValue(), next) > 0 ? res.getMaxValue() : next);
+                //如果下一个时段的最大值大于当前最大值，则更新当前最大值
+                if (maxComparator.compare(res.getMaxValue(), next) < 0) {
+                    res.setMaxValue(next);
+                }
             }
             else {
                 // 否则，将下一个时间段设为当前时间段，并添加到merged列表中
