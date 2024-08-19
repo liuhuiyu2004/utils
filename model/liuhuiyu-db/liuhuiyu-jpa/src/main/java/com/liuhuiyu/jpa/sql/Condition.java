@@ -158,5 +158,13 @@ public interface Condition<T> {
      * Created DateTime 2024-01-14 21:44
      */
     AbstractSqlCommandPackage<T> expression(String expression);
-
+    /**
+     * 子查询<p>
+     * author LiuHuiYu<p>
+     * Created DateTime 2024/8/19 15:37
+     * @param operator 操作符
+     * @param childSqlCommandPackage 子查询语句
+     * @return com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage<T>
+     */
+    AbstractSqlCommandPackage<T> child(String operator,AbstractSqlCommandPackage<T> childSqlCommandPackage);
 }
