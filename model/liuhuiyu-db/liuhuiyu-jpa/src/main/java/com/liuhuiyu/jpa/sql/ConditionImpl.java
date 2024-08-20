@@ -317,4 +317,18 @@ public class ConditionImpl<T> implements Condition<T> {
                 .append("))");
         return this.sqlCommandPackage;
     }
+
+    @Override
+    public AbstractSqlCommandPackage<T> child(String operator, String childSql, List<Object> parameterList) {
+        this.sqlCommandPackage.getParameterList().addAll(parameterList);
+        this.sqlCommandPackage.getSqlBuilder()
+                .append(condition)
+                .append("(").append(this.fieldName)
+                .append(" ")
+                .append(operator)
+                .append("(")
+                .append(childSql)
+                .append("))");
+        return this.sqlCommandPackage;
+    }
 }
