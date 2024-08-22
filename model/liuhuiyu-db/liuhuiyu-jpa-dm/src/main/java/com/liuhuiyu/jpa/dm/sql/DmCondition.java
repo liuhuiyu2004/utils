@@ -342,4 +342,40 @@ public class DmCondition<T> implements Condition<T> {
         }
         return this.sqlCommandPackage;
     }
+
+    /**
+     * 子查询<p>
+     * author LiuHuiYu<p>
+     * Created DateTime 2024/8/19 15:37
+     *
+     * @param childSqlCommandPackage 查询语句
+     * @return com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage<T>
+     */
+    @Override
+    public AbstractSqlCommandPackage<T> child(String operator, AbstractSqlCommandPackage<T> childSqlCommandPackage) {
+        this.sqlCommandPackage.getParameterList().addAll(childSqlCommandPackage.getParameterList());
+        this.sqlCommandPackage.getSqlBuilder()
+                .append(condition)
+                .append("(").append(this.fieldName)
+                .append(" ")
+                .append(operator)
+                .append("(")
+                .append(childSqlCommandPackage.getSqlBuilder().toString())
+                .append("))");
+        return this.sqlCommandPackage;
+    }
+
+    @Override
+    public AbstractSqlCommandPackage<T> child(String operator, String childSql, List<Object> parameterList) {
+        this.sqlCommandPackage.getParameterList().addAll(parameterList);
+        this.sqlCommandPackage.getSqlBuilder()
+                .append(condition)
+                .append("(").append(this.fieldName)
+                .append(" ")
+                .append(operator)
+                .append("(")
+                .append(childSql)
+                .append("))");
+        return this.sqlCommandPackage;
+    }
 }
