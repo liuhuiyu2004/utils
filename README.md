@@ -22,3 +22,6 @@ spring工具类 引入后自动将自己注入到程序中
 
 # web
 web编程工具
+
+# model
+整理模型 完善到 model模组中
