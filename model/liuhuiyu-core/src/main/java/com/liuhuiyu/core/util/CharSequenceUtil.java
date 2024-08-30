@@ -1,15 +1,5 @@
 package com.liuhuiyu.core.util;
 
-import com.sun.deploy.util.ArrayUtil;
-
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.text.MessageFormat;
-import java.text.Normalizer;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 /**
  * 字符序列工具类
  *

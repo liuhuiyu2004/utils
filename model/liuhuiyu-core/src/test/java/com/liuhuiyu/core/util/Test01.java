@@ -1,6 +1,5 @@
 package com.liuhuiyu.core.util;
 
-import com.liuhuiyu.core.lang.StringUtils;
 import com.liuhuiyu.test.AbstractTest;
 import org.junit.jupiter.api.Test;
 
