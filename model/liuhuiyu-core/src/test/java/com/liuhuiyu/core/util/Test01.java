@@ -43,7 +43,7 @@ public class Test01 extends AbstractTest {
     @Test
     public void test3() {
         String str = "f|";
-        final String[] split = Arrays.stream(str.split("[,;；、:|]")).filter(StringUtils::hasText).toArray(String[]::new);
+        final String[] split = Arrays.stream(str.split("[,;；、:|]")).filter(StringUtil::hasText).toArray(String[]::new);
         LOG.info("{}", split);
     }
 
