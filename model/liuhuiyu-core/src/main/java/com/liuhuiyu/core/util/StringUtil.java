@@ -1,5 +1,8 @@
 package com.liuhuiyu.core.util;
 
+import java.nio.charset.Charset;
+import java.util.Optional;
+
 /**
  * 字符串工具类
  *
@@ -86,5 +89,22 @@ public class StringUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 解码字节码
+     *
+     * @param data    字符串
+     * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+     * @return 解码后的字符串
+     */
+    public static Optional<String> str(byte[] data, Charset charset) {
+        if (data == null) {
+            return Optional.empty();
+        }
+        if (null == charset) {
+            return Optional.of(new String(data));
+        }
+        return Optional.of(new String(data, charset));
     }
 }
