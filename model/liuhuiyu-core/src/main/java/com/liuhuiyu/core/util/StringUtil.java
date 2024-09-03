@@ -10,7 +10,7 @@ import java.util.Optional;
  * @author LiuHuiYu * @version v1.0.0.0
  * Created DateTime 2024/8/28 8:49
  */
-public class StringUtil extends CharSequenceUtil{
+public class StringUtil extends CharSequenceUtil {
     /**
      * 字符串是否包含文字<p>
      * author LiuHuiYu<p>
@@ -90,6 +90,21 @@ public class StringUtil extends CharSequenceUtil{
             }
         }
         return false;
+    }
+
+    /**
+     * 将对象转为字符串<br>
+     *
+     * <pre>
+     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+     * 2、对象数组会调用Arrays.toString方法
+     * </pre>
+     *
+     * @param data 字节码
+     * @return 字符串
+     */
+    public static Optional<String> utf8Str(byte[] data) {
+        return str(data, CharsetUtil.CHARSET_UTF_8);
     }
 
     /**
