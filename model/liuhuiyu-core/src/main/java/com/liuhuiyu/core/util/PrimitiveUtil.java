@@ -123,6 +123,23 @@ public class PrimitiveUtil {
      * @param primitiveArray 原始类型数组
      * @return 封装类型数组
      */
+    public static byte[] convertPrimitiveArrayToBoxedArray(Byte[] primitiveArray) {
+        if (primitiveArray == null) {
+            return null;
+        }
+        byte[] res = new byte[primitiveArray.length];
+        for (int i = 0; i < primitiveArray.length; i++) {
+            res[i] = primitiveArray[i];
+        }
+        return res;
+    }
+
+    /**
+     * 将原始类型数组转换为其对应的封装类型数组
+     *
+     * @param primitiveArray 原始类型数组
+     * @return 封装类型数组
+     */
     public static Character[] convertPrimitiveArrayToBoxedArray(char[] primitiveArray) {
         if (primitiveArray == null) {
             return null;
