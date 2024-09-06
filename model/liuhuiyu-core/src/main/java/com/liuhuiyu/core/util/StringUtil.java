@@ -1,5 +1,8 @@
 package com.liuhuiyu.core.util;
 
+import com.liuhuiyu.core.text.StrFormatter;
+
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Optional;
@@ -22,7 +25,7 @@ public class StringUtil extends CharSequenceUtil {
      *   str = "a" -> true
      * </pre>
      * 检测空白字符串请使用 {@link #isEmpty(Object)}
-     * 检测不含字符的字符串请使用 {@link #isBlank(String)}
+     * 检测不含字符的字符串请使用 {@link #isBlank(CharSequence)}
      *
      * @param str 字符串
      * @return boolean
@@ -42,7 +45,7 @@ public class StringUtil extends CharSequenceUtil {
      *     str = "a" -> false
      * </pre>
      * 检测字符串包含文字请使用 {@link #hasText(String)}
-     * 检测不含字符的字符串请使用 {@link #isBlank(String)}
+     * 检测不含字符的字符串请使用 {@link #isBlank(CharSequence)}
      *
      * @param str 检测对象
      * @return boolean
@@ -67,7 +70,7 @@ public class StringUtil extends CharSequenceUtil {
      * @param str 检测对象
      * @return boolean
      */
-    public static boolean isBlank(String str) {
+    public static boolean isBlank(CharSequence str) {
         int strLen;
         if (str != null && (strLen = str.length()) != 0) {
             for (int i = 0; i < strLen; ++i) {
@@ -122,6 +125,57 @@ public class StringUtil extends CharSequenceUtil {
             return Optional.of(new String(data));
         }
         return Optional.of(new String(data, charset));
+    }
+
+    /**
+     * 将对象转为字符串<br>
+     *
+     * <pre>
+     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+     * 2、对象数组会调用Arrays.toString方法
+     * </pre>
+     *
+     * @param obj 对象
+     * @return 字符串
+     */
+    public static Optional<String> utf8Str(Object obj) {
+        return strObject(obj, CharsetUtil.CHARSET_UTF_8);
+    }
+
+    /**
+     * 将对象转为字符串
+     * <pre>
+     * 	 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+     * 	 2、对象数组会调用Arrays.toString方法
+     * </pre>
+     *
+     * @param obj     对象
+     * @param charset 字符集
+     * @return 字符串
+     */
+    public static Optional<String> strObject(Object obj, Charset charset) {
+        if (null == obj) {
+            return Optional.empty();
+        }
+        if (obj instanceof String) {
+            return Optional.of((String) obj);
+        }
+        else if (obj instanceof byte[]) {
+            return str((byte[]) obj, charset);
+        }
+        else if (obj instanceof Byte[]) {
+            Byte[] bytes = (Byte[]) obj;
+            return str(PrimitiveUtil.convertPrimitiveArrayToBoxedArray(bytes), charset);
+        }
+        else if (obj instanceof ByteBuffer) {
+            ByteBuffer buf = (ByteBuffer) obj;
+            return str(buf.array(), charset);
+        }
+//        else if (ArrayUtil.isArray(obj)) {
+//            return ArrayUtil.toString(obj);
+//        }
+
+        return Optional.ofNullable(obj.toString());
     }
 
     /**
@@ -191,5 +245,28 @@ public class StringUtil extends CharSequenceUtil {
         char[] result = new char[count];
         Arrays.fill(result, c);
         return new String(result);
+    }
+
+    /**
+     * 格式化文本, {} 表示占位符<br>
+     * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
+     * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
+     * 例：<br>
+     * 通常使用：format("this is {} for {}", "a", "b") =》 this is a for b<br>
+     * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is {} for a<br>
+     * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
+     *
+     * @param template 文本模板，被替换的部分用 {} 表示，如果模板为null，返回"null"
+     * @param params   参数值
+     * @return 格式化后的文本，如果模板为null，返回"null"
+     */
+    public static String format(CharSequence template, Object... params) {
+        if (null == template) {
+            return NULL;
+        }
+        if (ArrayUtil.isEmpty(params) || isBlank(template)) {
+            return template.toString();
+        }
+        return StrFormatter.format(template.toString(), params);
     }
 }
