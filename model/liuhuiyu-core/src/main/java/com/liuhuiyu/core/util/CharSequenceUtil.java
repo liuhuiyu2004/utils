@@ -25,6 +25,14 @@ public class CharSequenceUtil {
      * 字符串常量：空格符 {@code " "}
      */
     public static final String SPACE = " ";
+    /**
+     * 字符串常量：空 JSON {@code "{}"}
+     */
+    public static final String EMPTY_JSON = "{}";
+    /**
+     * 字符常量：反斜杠 {@code '\\'}
+     */
+    public static final char C_BACKSLASH = '\\';
 
     public static boolean hasText(CharSequence str) {
         return str != null && str.length() > 0 && containsText(str);
