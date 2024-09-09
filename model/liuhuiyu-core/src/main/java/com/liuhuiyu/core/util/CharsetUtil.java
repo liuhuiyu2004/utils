@@ -67,4 +67,14 @@ public class CharsetUtil {
         return Charset.defaultCharset();
     }
 
+    /**
+     * 转换为Charset对象
+     *
+     * @param charsetName 字符集，为空则返回默认字符集
+     * @return Charset
+     * @throws UnsupportedCharsetException 编码不支持
+     */
+    public static Charset charset(String charsetName) throws UnsupportedCharsetException {
+        return StringUtil.hasText(charsetName) ?  Charset.forName(charsetName): Charset.defaultCharset();
+    }
 }
