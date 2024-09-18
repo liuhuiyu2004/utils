@@ -1,6 +1,6 @@
 package com.liuhuiyu.jpa;
 
-import com.liuhuiyu.jpa.util.SqlResolution;
+import com.liuhuiyu.jpa.help.SqlResolution;
 import com.liuhuiyu.util.DataBaseUtil;
 
 import javax.persistence.EntityManager;

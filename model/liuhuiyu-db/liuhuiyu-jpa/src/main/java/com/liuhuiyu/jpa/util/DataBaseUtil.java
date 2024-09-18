@@ -1,6 +1,7 @@
 package com.liuhuiyu.jpa.util;
 
 import com.liuhuiyu.core.util.IgnoredException;
+import com.liuhuiyu.jpa.help.SqlResolution;
 import com.liuhuiyu.util.ObjectToFieldValue;
 
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package com.liuhuiyu.jpa.util;
+package com.liuhuiyu.jpa.help;
 
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;

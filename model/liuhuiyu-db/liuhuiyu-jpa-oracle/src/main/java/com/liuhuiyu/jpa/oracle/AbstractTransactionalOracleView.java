@@ -6,7 +6,7 @@ import com.liuhuiyu.dto.IPaging;
 import com.liuhuiyu.jpa.AbstractTransactionalView;
 import com.liuhuiyu.jpa.oracle.util.OracleDaoUtil;
 import com.liuhuiyu.jpa.sql.WhereFullByParameterList;
-import com.liuhuiyu.jpa.util.SqlResolution;
+import com.liuhuiyu.jpa.help.SqlResolution;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 

@@ -1,7 +1,7 @@
 package com.liuhuiyu.util;
 
 import com.liuhuiyu.core.util.IgnoredException;
-import com.liuhuiyu.jpa.util.SqlResolution;
+import com.liuhuiyu.jpa.help.SqlResolution;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -2,7 +2,6 @@ package com.liuhuiyu.jpa.util;
 
 import com.liuhuiyu.core.time.LocalDateUtil;
 import com.liuhuiyu.core.util.IfRun;
-import com.liuhuiyu.jpa.lang.DataBaseException;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
