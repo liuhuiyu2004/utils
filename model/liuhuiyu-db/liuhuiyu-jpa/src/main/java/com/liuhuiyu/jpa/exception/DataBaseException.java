@@ -1,4 +1,4 @@
-package com.liuhuiyu.util;
+package com.liuhuiyu.jpa.exception;
 
 /**
  * @author LiuHuiYu
