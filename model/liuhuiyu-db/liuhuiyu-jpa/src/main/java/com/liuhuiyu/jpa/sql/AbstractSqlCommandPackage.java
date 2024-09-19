@@ -9,28 +9,25 @@ import java.util.List;
  * @version v1.0.0.0
  * Created DateTime 2023-10-19 15:09
  */
-public abstract class AbstractSqlCommandPackage<T> {
+public abstract class AbstractSqlCommandPackage<T, U extends Condition<T, U>> {
     protected T findDto;
-    protected StringBuilder sqlBuilder;
-    protected List<Object> parameterList;
+    protected SelectSql selectSql;
 
     /**
      * SQL原生封装 构建函数
      *
-     * @param findDto       查询条件
-     * @param sqlBuilder    sqlBuilder
-     * @param parameterList 参数
-     * Created DateTime 2022-11-20 8:27
+     * @param findDto   查询条件
+     * @param selectSql sql封装（包含参数）
+     *                  Created DateTime 2022-11-20 8:27
      */
-    public AbstractSqlCommandPackage(T findDto, StringBuilder sqlBuilder, List<Object> parameterList) {
+    public AbstractSqlCommandPackage(T findDto, SelectSql selectSql) {
         this.findDto = findDto;
-        this.sqlBuilder = sqlBuilder;
-        this.parameterList = parameterList;
+        this.selectSql = selectSql;
     }
 
     /**
      * 执行命令封装
-     *
+     * <p>
      * Created DateTime 2023-05-06 11:42
      */
     public void runCommandPackage() {
@@ -42,7 +39,7 @@ public abstract class AbstractSqlCommandPackage<T> {
 
     /**
      * 命令封装
-     *
+     * <p>
      * Created DateTime 2022-11-19 21:32
      */
     protected abstract void commandPackage();
@@ -55,7 +52,7 @@ public abstract class AbstractSqlCommandPackage<T> {
      * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
      * Created DateTime 2023-03-29 9:25
      */
-    protected abstract Condition<T> conditionAnd(String minFieldName, String maxFieldName);
+    protected abstract U conditionAnd(String minFieldName, String maxFieldName);
 
     /**
      * 条件生成
@@ -64,20 +61,9 @@ public abstract class AbstractSqlCommandPackage<T> {
      * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
      * Created DateTime 2023-02-23 23:56
      */
-    protected abstract Condition<T> conditionAnd(String fieldName);
+    protected abstract U conditionAnd(String fieldName);
 
-    protected abstract Condition<T> conditionOr(String minFieldName, String maxFieldName);
-
-    /**
-     * 条件生成
-     *
-     * @param fieldName 字段名称
-     * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
-     * Created DateTime 2023-02-23 23:56
-     */
-    protected abstract Condition<T> conditionOr(String fieldName);
-
-    protected abstract Condition<T> condition(String minFieldName, String maxFieldName);
+    protected abstract U conditionOr(String minFieldName, String maxFieldName);
 
     /**
      * 条件生成
@@ -86,7 +72,18 @@ public abstract class AbstractSqlCommandPackage<T> {
      * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
      * Created DateTime 2023-02-23 23:56
      */
-    protected abstract Condition<T> condition(String fieldName);
+    protected abstract U conditionOr(String fieldName);
+
+    protected abstract U condition(String minFieldName, String maxFieldName);
+
+    /**
+     * 条件生成
+     *
+     * @param fieldName 字段名称
+     * @return com.liuhuiyu.jpa.oracle.dao.OracleBaseView.SqlCommandPackage.Condition<T>
+     * Created DateTime 2023-02-23 23:56
+     */
+    protected abstract U condition(String fieldName);
 
     /**
      * 条件深度
@@ -94,28 +91,30 @@ public abstract class AbstractSqlCommandPackage<T> {
      */
     protected int conditionalDepth = 0;
 
-    public AbstractSqlCommandPackage<T> conditionalBegin(String condition) {
+    public AbstractSqlCommandPackage<T, U> conditionalBegin(String condition) {
         this.conditionalDepth++;
-        this.sqlBuilder.append(condition).append("(");
+        this.selectSql.getSqlWhere().append(condition).append("(");
         return this;
     }
 
-    public AbstractSqlCommandPackage<T> conditionalEnd() {
+    public AbstractSqlCommandPackage<T, U> conditionalEnd() {
         if (this.conditionalDepth <= 0) {
             throw new RuntimeException("条件层级不能为负");
         }
         this.conditionalDepth--;
-        this.sqlBuilder.append(")");
+        this.selectSql.getSqlWhere().append(")");
         return this;
     }
 
-    public StringBuilder getSqlBuilder() {
-        return sqlBuilder;
+    public T getFindDto() {
+        return findDto;
     }
 
-    public List<Object> getParameterList() {
-        return parameterList;
+    public SelectSql getSelectSql() {
+        return selectSql;
     }
 
-
+    public int getConditionalDepth() {
+        return conditionalDepth;
+    }
 }
