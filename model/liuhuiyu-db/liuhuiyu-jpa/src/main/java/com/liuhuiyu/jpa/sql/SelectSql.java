@@ -1,5 +1,6 @@
 package com.liuhuiyu.jpa.sql;
 
+import com.liuhuiyu.core.util.DeepCopyUtil;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -11,31 +12,27 @@ import java.util.List;
  * @version v1.0.0.0
  * Created DateTime 2023-10-19 15:58
  */
-public class SelectSql implements ISqlWhere {
-    protected String sqlBase;
-    protected StringBuilder sqlWhere;
-    protected String sqlOrder;
-    protected StringBuilder sqlEndAppend = new StringBuilder(0);
-    protected List<Object> values = new ArrayList<>(0);
+public class SelectSql {
 
-    public SelectSql(String sql) {
-        this.sqlBase = sql;
-        this.sqlWhere = new StringBuilder(" Where(1=1)");
-        this.sqlOrder = "";
+    protected String sqlBase = "";
+    protected StringBuilder sqlWhere = new StringBuilder();
+    protected StringBuilder groupBy = new StringBuilder();
+    protected StringBuilder having = new StringBuilder();
+    protected StringBuilder orderBy = new StringBuilder();
+    protected List<Object> parameterList = new ArrayList<>(0);
+
+
+    public SelectSql(String sqlBase) {
+        this.sqlBase = sqlBase;
     }
 
-    public SelectSql(String sql, Object[] values) {
-        this.sqlBase = sql;
-        this.sqlWhere = new StringBuilder(" Where(1=1)");
-        this.sqlOrder = "";
-        this.values = new ArrayList<>(Arrays.asList(values));
-    }
-
-    public SelectSql(String sql, String sqlWhere, String sqlOrder, Object[] values) {
-        this.sqlBase = sql;
-        this.sqlWhere = new StringBuilder(StringUtils.hasText(sqlWhere) ? sqlWhere : " Where(1=1)");
-        this.sqlOrder = sqlOrder;
-        this.values = new ArrayList<>(Arrays.asList(values));
+    public SelectSql(String sqlBase, StringBuilder sqlWhere, StringBuilder groupBy, StringBuilder having, StringBuilder orderBy, List<Object> parameterList) {
+        this.sqlBase = sqlBase;
+        this.sqlWhere = sqlWhere;
+        this.groupBy = groupBy;
+        this.having = having;
+        this.orderBy = orderBy;
+        this.parameterList = parameterList;
     }
 
     public String getSqlBase() {
@@ -54,78 +51,47 @@ public class SelectSql implements ISqlWhere {
         this.sqlWhere = sqlWhere;
     }
 
-    public String getSqlOrder() {
-        return sqlOrder;
+    public StringBuilder getGroupBy() {
+        return groupBy;
     }
 
-    public void setSqlOrder(String sqlOrder) {
-        this.sqlOrder = sqlOrder;
+    public void setGroupBy(StringBuilder groupBy) {
+        this.groupBy = groupBy;
     }
 
-    public StringBuilder getSqlEndAppend() {
-        return sqlEndAppend;
+    public StringBuilder getHaving() {
+        return having;
     }
 
-    public void setSqlEndAppend(StringBuilder sqlEndAppend) {
-        this.sqlEndAppend = sqlEndAppend;
+    public void setHaving(StringBuilder having) {
+        this.having = having;
+    }
+
+    public StringBuilder getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(StringBuilder orderBy) {
+        this.orderBy = orderBy;
+    }
+
+    public List<Object> getParameterList() {
+        return parameterList;
+    }
+
+    public void setParameterList(List<Object> parameterList) {
+        this.parameterList = parameterList;
     }
 
     public String getSql() {
-        return this.sqlBase + " " + this.sqlWhere + " " + this.sqlOrder + " " + this.sqlEndAppend;
+        return this.sqlBase + " " +
+                this.sqlWhere + " " +
+                this.groupBy + " " +
+                this.having + " " +
+                orderBy;
     }
 
-    public List<Object> getValues() {
-        return values;
-    }
-
-    public void setValues(List<Object> values) {
-        this.values = values;
-    }
-
-    public static final class Builder {
-        private final String sqlBase;
-        private StringBuilder sqlWhere = new StringBuilder(" Where(1=1)");
-        private String sqlOrder = "";
-        private StringBuilder sqlEndAppend = new StringBuilder(0);
-        private List<Object> values = new ArrayList<>(0);
-
-
-        private Builder(String sqlBase) {
-            this.sqlBase = sqlBase;
-        }
-
-        public static Builder aSelectSql(String sqlBas) {
-            return new Builder(sqlBas);
-        }
-
-        public Builder withSqlWhere(StringBuilder sqlWhere) {
-            this.sqlWhere = sqlWhere;
-            return this;
-        }
-
-        public Builder withSqlOrder(String sqlOrder) {
-            this.sqlOrder = sqlOrder;
-            return this;
-        }
-
-        public Builder withSqlEndAppend(StringBuilder sqlEndAppend) {
-            this.sqlEndAppend = sqlEndAppend;
-            return this;
-        }
-
-        public Builder withValues(List<Object> values) {
-            this.values = values;
-            return this;
-        }
-
-        public SelectSql build() {
-            SelectSql selectSql = new SelectSql(null);
-            selectSql.setSqlBase(sqlBase);
-            selectSql.setSqlWhere(sqlWhere);
-            selectSql.setSqlOrder(sqlOrder);
-            selectSql.setSqlEndAppend(sqlEndAppend);
-            selectSql.setValues(values);
-            return selectSql;
-        }
+    public SelectSql deepClone() {
+        return DeepCopyUtil.deepCopy(this);
     }
 }
