@@ -22,27 +22,27 @@ import java.util.List;
  * @version v1.0.0.0
  * Created DateTime 2023-10-19 15:39
  */
-public class ConditionImpl<T> implements Condition<T> {
-    protected final AbstractSqlCommandPackage<T> sqlCommandPackage;
+public class ConditionImpl<T> implements Condition<T, ConditionImpl<T>> {
+    protected final AbstractSqlCommandPackage<T, ConditionImpl<T>> sqlCommandPackage;
     protected String fieldName;
     protected String minFieldName;
     protected String maxFieldName;
     protected String condition;
 
-    public ConditionImpl(AbstractSqlCommandPackage<T> sqlCommandPackage) {
+    public ConditionImpl(AbstractSqlCommandPackage<T, ConditionImpl<T>> sqlCommandPackage) {
         this.sqlCommandPackage = sqlCommandPackage;
     }
 
     private void checkField() {
-        if (!StringUtils.hasText(fieldName)) {
-            throw new RuntimeException("未设定字段名称");
-        }
+//        if (!StringUtils.hasText(fieldName)) {
+//            throw new RuntimeException("未设定字段名称");
+//        }
     }
 
     private void checkField2() {
-        if (!StringUtils.hasText(minFieldName) || !StringUtils.hasText(maxFieldName)) {
-            throw new RuntimeException("双字段名称设定不完整。");
-        }
+//        if (!StringUtils.hasText(minFieldName) || !StringUtils.hasText(maxFieldName)) {
+//            throw new RuntimeException("双字段名称设定不完整。");
+//        }
     }
 
     /**
@@ -52,7 +52,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2022-06-02 18:43
      */
     @Override
-    public AbstractSqlCommandPackage<T> likeValue(String value) {
+    public AbstractSqlCommandPackage<T, ConditionImpl<T>> likeValue(String value) {
         return likeValue(value, true, true, true);
     }
 
@@ -66,14 +66,14 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2022-06-02 18:43
      */
     @Override
-    public AbstractSqlCommandPackage<T> likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
+    public AbstractSqlCommandPackage<T, ConditionImpl<T>> likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
         this.checkField();
         if (value == null) {
             return this.sqlCommandPackage;
         }
         final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
-        this.sqlCommandPackage.getSqlBuilder().append(condition).append("(").append(this.fieldName).append(" LIKE ").append("?").append(")");
-        this.sqlCommandPackage.getParameterList().add(s);
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append("(").append(this.fieldName).append(" LIKE ").append("?").append(")");
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(s);
         return this.sqlCommandPackage;
     }
 
@@ -84,7 +84,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *             Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> inPackage(P[] data) {
         return inPackage(data, false, false);
     }
 
@@ -95,26 +95,26 @@ public class ConditionImpl<T> implements Condition<T> {
      *                   Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> inPackage(Collection<P> collection) {
         return inPackage(collection, false, false);
     }
 
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection, Boolean notIn, Boolean isNull) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> inPackage(Collection<P> collection, Boolean notIn, Boolean isNull) {
         this.checkField();
         if (collection != null && !collection.isEmpty()) {
-            this.sqlCommandPackage.getSqlBuilder().append(condition).append("((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
+            this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append("((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
             String separator = "";
             for (P datum : collection) {
-                this.sqlCommandPackage.getSqlBuilder().append(separator).append("?");
+                this.sqlCommandPackage.getSelectSql().getSqlWhere().append(separator).append("?");
                 separator = ",";
-                this.sqlCommandPackage.getParameterList().add(datum);
+                this.sqlCommandPackage.getSelectSql().getParameterList().add(datum);
             }
-            this.sqlCommandPackage.getSqlBuilder().append("))");
+            this.sqlCommandPackage.getSelectSql().getSqlWhere().append("))");
             if (isNull) {
-                this.sqlCommandPackage.getSqlBuilder().append("OR(").append(fieldName).append(" is null)");
+                this.sqlCommandPackage.getSelectSql().getSqlWhere().append("OR(").append(fieldName).append(" is null)");
             }
-            this.sqlCommandPackage.getSqlBuilder().append(")");
+            this.sqlCommandPackage.getSelectSql().getSqlWhere().append(")");
         }
         return this.sqlCommandPackage;
     }
@@ -128,23 +128,23 @@ public class ConditionImpl<T> implements Condition<T> {
      *               Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data, Boolean notIn, Boolean isNull) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> inPackage(P[] data, Boolean notIn, Boolean isNull) {
         this.checkField();
         final List<P> list = Arrays.asList(data);
         return inPackage(list, notIn, isNull);
     }
 
     @Override
-    public <P> AbstractSqlCommandPackage<T> between(P beginValue, P endValue) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> between(P beginValue, P endValue) {
         this.checkField();
         if (beginValue == null || endValue == null) {
             return this.sqlCommandPackage;
         }
-        this.sqlCommandPackage.getSqlBuilder().append(condition)
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition)
                 .append("(").append(this.fieldName)
                 .append(" between ? and ?)");
-        this.sqlCommandPackage.getParameterList().add(beginValue);
-        this.sqlCommandPackage.getParameterList().add(endValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(beginValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(endValue);
         return this.sqlCommandPackage;
     }
 
@@ -156,26 +156,26 @@ public class ConditionImpl<T> implements Condition<T> {
      *                 Created DateTime 2022-12-01 10:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inclusion(P minValue, P maxValue) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> inclusion(P minValue, P maxValue) {
         this.checkField2();
         if (minValue == null || maxValue == null) {
             return this.sqlCommandPackage;
         }
-        this.sqlCommandPackage.getSqlBuilder().append(condition).append(" (");
-        this.sqlCommandPackage.getSqlBuilder().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
-        this.sqlCommandPackage.getParameterList().add(minValue);
-        this.sqlCommandPackage.getParameterList().add(minValue);
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append(" (");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
 
-        this.sqlCommandPackage.getSqlBuilder().append("or");
-        this.sqlCommandPackage.getSqlBuilder().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
-        this.sqlCommandPackage.getParameterList().add(maxValue);
-        this.sqlCommandPackage.getParameterList().add(maxValue);
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("or");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
 
-        this.sqlCommandPackage.getSqlBuilder().append("or");
-        this.sqlCommandPackage.getSqlBuilder().append("((").append(minFieldName).append(" >= ?").append(") and (").append(maxFieldName).append(" <= ?").append("))");
-        this.sqlCommandPackage.getSqlBuilder().append(")");
-        this.sqlCommandPackage.getParameterList().add(minValue);
-        this.sqlCommandPackage.getParameterList().add(maxValue);
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("or");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" >= ?").append(") and (").append(maxFieldName).append(" <= ?").append("))");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(")");
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
         return this.sqlCommandPackage;
     }
 
@@ -186,7 +186,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2023-02-23 23:51
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> eq(P value) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> eq(P value) {
         return this.generate("=", value);
     }
 
@@ -197,7 +197,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> ne(P value) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> ne(P value) {
         return this.generate("<>", value);
     }
 
@@ -208,7 +208,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> gt(P value) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> gt(P value) {
         return this.generate(">", value);
     }
 
@@ -219,7 +219,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> lt(P value) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> lt(P value) {
         return this.generate("<", value);
     }
 
@@ -230,7 +230,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> ge(P value) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> ge(P value) {
         return this.generate(">=", value);
     }
 
@@ -241,7 +241,7 @@ public class ConditionImpl<T> implements Condition<T> {
      *              Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> le(P value) {
+    public <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> le(P value) {
         return this.generate("<=", value);
     }
 
@@ -250,9 +250,9 @@ public class ConditionImpl<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public AbstractSqlCommandPackage<T> isNull() {
+    public AbstractSqlCommandPackage<T, ConditionImpl<T>> isNull() {
         this.checkField();
-        this.sqlCommandPackage.getSqlBuilder()
+        this.sqlCommandPackage.getSelectSql().getSqlWhere()
                 .append(condition)
                 .append("(").append(this.fieldName)
                 .append(" is null )");
@@ -264,9 +264,9 @@ public class ConditionImpl<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public AbstractSqlCommandPackage<T> isNotNull() {
+    public AbstractSqlCommandPackage<T, ConditionImpl<T>> isNotNull() {
         this.checkField();
-        this.sqlCommandPackage.getSqlBuilder()
+        this.sqlCommandPackage.getSelectSql().getSqlWhere()
                 .append(condition)
                 .append("(").append(this.fieldName)
                 .append(" is not null )");
@@ -274,8 +274,8 @@ public class ConditionImpl<T> implements Condition<T> {
     }
 
     @Override
-    public AbstractSqlCommandPackage<T> expression(String expression) {
-        this.sqlCommandPackage.getSqlBuilder()
+    public AbstractSqlCommandPackage<T, ConditionImpl<T>> expression(String expression) {
+        this.sqlCommandPackage.getSelectSql().getSqlWhere()
                 .append(this.condition)
                 .append("(")
                 .append(expression)
@@ -283,52 +283,27 @@ public class ConditionImpl<T> implements Condition<T> {
         return this.sqlCommandPackage;
     }
 
-    private <P> AbstractSqlCommandPackage<T> generate(String operator, P value) {
+    private <P> AbstractSqlCommandPackage<T, ConditionImpl<T>> generate(String operator, P value) {
         this.checkField();
         if (value != null) {
-            this.sqlCommandPackage.getSqlBuilder()
+            this.sqlCommandPackage.getSelectSql().getSqlWhere()
                     .append(condition)
                     .append("(").append(this.fieldName)
                     .append(" ").append(operator)
                     .append(" ?").append(")");
-            this.sqlCommandPackage.getParameterList().add(value);
+            this.sqlCommandPackage.getSelectSql().getParameterList().add(value);
         }
         return this.sqlCommandPackage;
     }
 
-    /**
-     * 子查询<p>
-     * author LiuHuiYu<p>
-     * Created DateTime 2024/8/19 15:37
-     *
-     * @param childSqlCommandPackage 查询语句
-     * @return com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage<T>
-     */
     @Override
-    public AbstractSqlCommandPackage<T> child(String operator, AbstractSqlCommandPackage<T> childSqlCommandPackage) {
-        this.sqlCommandPackage.getParameterList().addAll(childSqlCommandPackage.getParameterList());
-        this.sqlCommandPackage.getSqlBuilder()
+    public AbstractSqlCommandPackage<T, ConditionImpl<T>> child(String operator, SelectSql value) {
+        this.sqlCommandPackage.getSelectSql().getSqlWhere()
                 .append(condition)
-                .append("(").append(this.fieldName)
-                .append(" ")
-                .append(operator)
-                .append("(")
-                .append(childSqlCommandPackage.getSqlBuilder().toString())
-                .append("))");
-        return this.sqlCommandPackage;
-    }
-
-    @Override
-    public AbstractSqlCommandPackage<T> child(String operator, String childSql, List<Object> parameterList) {
-        this.sqlCommandPackage.getParameterList().addAll(parameterList);
-        this.sqlCommandPackage.getSqlBuilder()
-                .append(condition)
-                .append("(").append(this.fieldName)
-                .append(" ")
-                .append(operator)
-                .append("(")
-                .append(childSql)
-                .append("))");
+                .append("(").append(this.fieldName).append(operator)
+                .append(value.getSql())
+                .append(")");
+        this.sqlCommandPackage.getSelectSql().getParameterList().addAll(value.getParameterList());
         return this.sqlCommandPackage;
     }
 }
