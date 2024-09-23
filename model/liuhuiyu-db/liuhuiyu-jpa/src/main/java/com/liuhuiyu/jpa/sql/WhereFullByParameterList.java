@@ -12,12 +12,11 @@ import java.util.List;
 @FunctionalInterface
 public interface WhereFullByParameterList<T> {
     /**
-     * 功能描述
-     *
-     * @param whereDto      条件
-     * @param sqlBuilder    sql语句
-     * @param parameterList 参数列表
+     * 功能描述 <p>
      * Created DateTime 2023-10-19 11:55
+     *
+     * @param whereDto  条件
+     * @param selectSql sql语句
      */
-    void full(T whereDto, StringBuilder sqlBuilder, List<Object> parameterList);
+    void full(T whereDto, SelectSql selectSql);
 }
