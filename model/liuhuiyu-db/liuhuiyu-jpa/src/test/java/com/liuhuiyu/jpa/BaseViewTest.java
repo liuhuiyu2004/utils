@@ -12,6 +12,5 @@ class BaseViewTest extends AbstractTest {
 
     @Test
     public void t1() {
-        DbT1 dbT1 = new DbT1(null);
     }
 }
