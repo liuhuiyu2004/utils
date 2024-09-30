@@ -11,7 +11,7 @@ import java.util.Locale;
  */
 public class DmDaoUtil {
     /**
-     * 达蒙分页查询
+     * Oracle分页查询
      *
      * @param sqlBuilder 原始sql
      * @param paging     分页信息
@@ -26,7 +26,12 @@ public class DmDaoUtil {
                 break;
             }
         }
-        sqlBuilder.insert(0, "select * from (");
-        sqlBuilder.append(") ").append(rowNumName).append(" limit ").append(paging.beginRowNo() - 1).append(",").append(paging.getPageSize());
+        sqlBuilder.insert(0, "SELECT * FROM (SELECT t_pagination.*, ROWNUM AS " + rowNumName + " FROM(");
+        sqlBuilder.append(") t_pagination WHERE ROWNUM <= ")
+                .append(paging.endRowNo())
+                .append(") table_alias WHERE table_alias.")
+                .append(rowNumName)
+                .append(" >= ")
+                .append(paging.beginRowNo());
     }
 }
