@@ -20,9 +20,9 @@ public class OracleDaoUtil {
      */
     public static void paginationOracleSql(StringBuilder sqlBuilder, Paging paging) {
         String rowNumName;
-        for(int i=0;;i++){
+        for (int i = 0; ; i++) {
             rowNumName = "rowno_" + i;
-            if(!sqlBuilder.toString().toLowerCase(Locale.ROOT).contains(rowNumName)){
+            if (!sqlBuilder.toString().toLowerCase(Locale.ROOT).contains(rowNumName)) {
                 break;
             }
         }
