@@ -1,31 +1,28 @@
 package com.liuhuiyu.jpa.oracle.sql;
 
 import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
-import com.liuhuiyu.jpa.sql.Condition;
-
-import java.util.List;
+import com.liuhuiyu.jpa.sql.SelectSql;
 
 /**
  * @author LiuHuiYu
  * @version v1.0.0.0
  * Created DateTime 2023-10-20 9:43
  */
-public abstract class AbstractSqlCommandPackageOracle<T> extends AbstractSqlCommandPackage<T> {
+public abstract class AbstractSqlCommandPackageOracle<T> extends AbstractSqlCommandPackage<T, OracleCondition<T>> {
     /**
      * SQL原生封装 构建函数
      *
-     * @param findDto       查询条件
-     * @param sqlBuilder    sqlBuilder
-     * @param parameterList 参数
+     * @param findDto   查询条件
+     * @param selectSql selectSql
      * @author LiuHuiYu
      * Created DateTime 2022-11-20 8:27
      */
-    public AbstractSqlCommandPackageOracle(T findDto, StringBuilder sqlBuilder, List<Object> parameterList) {
-        super(findDto, sqlBuilder, parameterList);
+    public AbstractSqlCommandPackageOracle(T findDto, SelectSql selectSql) {
+        super(findDto, selectSql);
     }
 
     @Override
-    protected Condition<T> conditionAnd(String minFieldName, String maxFieldName) {
+    protected OracleCondition<T> conditionAnd(String minFieldName, String maxFieldName) {
         OracleCondition<T> resData = new OracleCondition<>(this);
         resData.setCondition(" AND ");
         resData.setMinFieldName(minFieldName);
@@ -34,7 +31,7 @@ public abstract class AbstractSqlCommandPackageOracle<T> extends AbstractSqlComm
     }
 
     @Override
-    protected Condition<T> conditionAnd(String fieldName) {
+    protected OracleCondition<T> conditionAnd(String fieldName) {
         OracleCondition<T> resData = new OracleCondition<>(this);
         resData.setCondition(" AND ");
         resData.setFieldName(fieldName);
@@ -42,7 +39,7 @@ public abstract class AbstractSqlCommandPackageOracle<T> extends AbstractSqlComm
     }
 
     @Override
-    protected Condition<T> conditionOr(String minFieldName, String maxFieldName) {
+    protected OracleCondition<T> conditionOr(String minFieldName, String maxFieldName) {
         OracleCondition<T> resData = new OracleCondition<>(this);
         resData.setCondition(" OR ");
         resData.setMinFieldName(minFieldName);
@@ -51,7 +48,7 @@ public abstract class AbstractSqlCommandPackageOracle<T> extends AbstractSqlComm
     }
 
     @Override
-    protected Condition<T> conditionOr(String fieldName) {
+    protected OracleCondition<T> conditionOr(String fieldName) {
         OracleCondition<T> resData = new OracleCondition<>(this);
         resData.setCondition(" OR ");
         resData.setFieldName(fieldName);
@@ -59,7 +56,7 @@ public abstract class AbstractSqlCommandPackageOracle<T> extends AbstractSqlComm
     }
 
     @Override
-    protected Condition<T> condition(String minFieldName, String maxFieldName) {
+    protected OracleCondition<T> condition(String minFieldName, String maxFieldName) {
         OracleCondition<T> resData = new OracleCondition<>(this);
         resData.setCondition(" ");
         resData.setMinFieldName(minFieldName);
@@ -76,7 +73,7 @@ public abstract class AbstractSqlCommandPackageOracle<T> extends AbstractSqlComm
      * Created DateTime 2023-02-23 23:56
      */
     @Override
-    protected Condition<T> condition(String fieldName) {
+    protected OracleCondition<T> condition(String fieldName) {
         OracleCondition<T> resData = new OracleCondition<>(this);
         resData.setCondition(" ");
         resData.setFieldName(fieldName);
