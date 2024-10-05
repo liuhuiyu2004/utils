@@ -2,6 +2,7 @@ package com.liuhuiyu.jpa.oracle.sql;
 
 import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
 import com.liuhuiyu.jpa.sql.Condition;
+import com.liuhuiyu.jpa.sql.SelectSql;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -24,19 +25,19 @@ import java.util.List;
  * @version v1.0.0.0
  * Created DateTime 2023-10-19 15:39
  */
-public class OracleCondition<T> implements Condition<T> {
+public class OracleCondition<T> implements Condition<T, OracleCondition<T>> {
 
-    public OracleCondition(AbstractSqlCommandPackage<T> sqlCommandPackage) {
+    public OracleCondition(AbstractSqlCommandPackageOracle<T> sqlCommandPackage) {
         this.sqlCommandPackage = sqlCommandPackage;
     }
 
-    final AbstractSqlCommandPackage<T> sqlCommandPackage;
+    final AbstractSqlCommandPackageOracle<T> sqlCommandPackage;
     String fieldName;
     String minFieldName;
     String maxFieldName;
     String condition;
 
-    public AbstractSqlCommandPackage<T> getSqlCommandPackage() {
+    public AbstractSqlCommandPackageOracle<T> getSqlCommandPackage() {
         return sqlCommandPackage;
     }
 
@@ -92,7 +93,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2022-06-02 18:43
      */
     @Override
-    public AbstractSqlCommandPackage<T> likeValue(String value) {
+    public AbstractSqlCommandPackage<T, OracleCondition<T>> likeValue(String value) {
         return likeValue(value, true, true, true);
     }
 
@@ -107,12 +108,12 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2022-06-02 18:43
      */
     @Override
-    public AbstractSqlCommandPackage<T> likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
+    public AbstractSqlCommandPackage<T, OracleCondition<T>> likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
         this.checkField();
         if (trim ? StringUtils.hasText(value) : (value != null && !value.isEmpty())) {
             final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
-            this.sqlCommandPackage.getSqlBuilder().append(condition).append("(").append(this.fieldName).append(" LIKE ").append("?").append(")");
-            this.sqlCommandPackage.getParameterList().add(s);
+            this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append("(").append(this.fieldName).append(" LIKE ").append("?").append(")");
+            this.sqlCommandPackage.getSelectSql().getParameterList().add(s);
         }
         return this.sqlCommandPackage;
     }
@@ -125,7 +126,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> inPackage(P[] data) {
         return inPackage(data, false, false);
     }
 
@@ -136,26 +137,26 @@ public class OracleCondition<T> implements Condition<T> {
      *                   Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> inPackage(Collection<P> collection) {
         return inPackage(collection, false, false);
     }
 
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(Collection<P> collection, Boolean notIn, Boolean isNull) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> inPackage(Collection<P> collection, Boolean notIn, Boolean isNull) {
         this.checkField();
         if (collection != null && !collection.isEmpty()) {
-            this.sqlCommandPackage.getSqlBuilder().append(condition).append("((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
+            this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append("((").append(fieldName).append(notIn ? " NOT" : "").append(" IN(");
             String separator = "";
             for (P datum : collection) {
-                this.sqlCommandPackage.getSqlBuilder().append(separator).append("?");
+                this.sqlCommandPackage.getSelectSql().getSqlWhere().append(separator).append("?");
                 separator = ",";
-                this.sqlCommandPackage.getParameterList().add(datum);
+                this.sqlCommandPackage.getSelectSql().getParameterList().add(datum);
             }
-            this.sqlCommandPackage.getSqlBuilder().append("))");
+            this.sqlCommandPackage.getSelectSql().getSqlWhere().append("))");
             if (isNull) {
-                this.sqlCommandPackage.getSqlBuilder().append("OR(").append(fieldName).append(" is null)");
+                this.sqlCommandPackage.getSelectSql().getSqlWhere().append("OR(").append(fieldName).append(" is null)");
             }
-            this.sqlCommandPackage.getSqlBuilder().append(")");
+            this.sqlCommandPackage.getSelectSql().getSqlWhere().append(")");
         }
         return this.sqlCommandPackage;
     }
@@ -169,23 +170,23 @@ public class OracleCondition<T> implements Condition<T> {
      *               Created DateTime 2022-11-20 8:28
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inPackage(P[] data, Boolean notIn, Boolean isNull) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> inPackage(P[] data, Boolean notIn, Boolean isNull) {
         this.checkField();
         final List<P> list = Arrays.asList(data);
         return inPackage(list, notIn, isNull);
     }
 
     @Override
-    public <P> AbstractSqlCommandPackage<T> between(P beginValue, P endValue) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> between(P beginValue, P endValue) {
         this.checkField();
         if (beginValue == null || endValue == null) {
             return this.sqlCommandPackage;
         }
-        this.sqlCommandPackage.getSqlBuilder().append(condition)
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition)
                 .append("(").append(this.fieldName)
                 .append(" between ? and ?)");
-        this.sqlCommandPackage.getParameterList().add(beginValue);
-        this.sqlCommandPackage.getParameterList().add(endValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(beginValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(endValue);
         return this.sqlCommandPackage;
     }
 
@@ -198,26 +199,26 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2022-12-01 10:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> inclusion(P minValue, P maxValue) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> inclusion(P minValue, P maxValue) {
         this.checkField2();
         if (minValue == null || maxValue == null) {
             return this.sqlCommandPackage;
         }
-        this.sqlCommandPackage.getSqlBuilder().append(condition).append(" (");
-        this.sqlCommandPackage.getSqlBuilder().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
-        this.sqlCommandPackage.getParameterList().add(minValue);
-        this.sqlCommandPackage.getParameterList().add(minValue);
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append(" (");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
 
-        this.sqlCommandPackage.getSqlBuilder().append("or");
-        this.sqlCommandPackage.getSqlBuilder().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
-        this.sqlCommandPackage.getParameterList().add(maxValue);
-        this.sqlCommandPackage.getParameterList().add(maxValue);
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("or");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
 
-        this.sqlCommandPackage.getSqlBuilder().append("or");
-        this.sqlCommandPackage.getSqlBuilder().append("((").append(minFieldName).append(" >= ?").append(") and (").append(maxFieldName).append(" <= ?").append("))");
-        this.sqlCommandPackage.getSqlBuilder().append(")");
-        this.sqlCommandPackage.getParameterList().add(minValue);
-        this.sqlCommandPackage.getParameterList().add(maxValue);
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("or");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" >= ?").append(") and (").append(maxFieldName).append(" <= ?").append("))");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(")");
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
+        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
         return this.sqlCommandPackage;
     }
 
@@ -229,7 +230,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-02-23 23:51
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> eq(P value) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> eq(P value) {
         return this.generate("=", value);
     }
 
@@ -241,7 +242,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> ne(P value) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> ne(P value) {
         return this.generate("<>", value);
     }
 
@@ -253,7 +254,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> gt(P value) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> gt(P value) {
         return this.generate(">", value);
     }
 
@@ -265,7 +266,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> lt(P value) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> lt(P value) {
         return this.generate("<", value);
     }
 
@@ -277,7 +278,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> ge(P value) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> ge(P value) {
         return this.generate(">=", value);
     }
 
@@ -289,7 +290,7 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public <P> AbstractSqlCommandPackage<T> le(P value) {
+    public <P> AbstractSqlCommandPackage<T, OracleCondition<T>> le(P value) {
         return this.generate("<=", value);
     }
 
@@ -300,9 +301,9 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public AbstractSqlCommandPackage<T> isNull() {
+    public AbstractSqlCommandPackage<T, OracleCondition<T>> isNull() {
         this.checkField();
-        this.sqlCommandPackage.getSqlBuilder()
+        this.sqlCommandPackage.getSelectSql().getSqlWhere()
                 .append(condition)
                 .append("(").append(this.fieldName)
                 .append(" is null )");
@@ -316,9 +317,9 @@ public class OracleCondition<T> implements Condition<T> {
      * Created DateTime 2023-03-25 9:23
      */
     @Override
-    public AbstractSqlCommandPackage<T> isNotNull() {
+    public AbstractSqlCommandPackage<T, OracleCondition<T>> isNotNull() {
         this.checkField();
-        this.sqlCommandPackage.getSqlBuilder()
+        this.sqlCommandPackage.getSelectSql().getSqlWhere()
                 .append(condition)
                 .append("(").append(this.fieldName)
                 .append(" is not null )");
@@ -326,8 +327,8 @@ public class OracleCondition<T> implements Condition<T> {
     }
 
     @Override
-    public AbstractSqlCommandPackage<T> expression(String expression) {
-        this.sqlCommandPackage.getSqlBuilder()
+    public AbstractSqlCommandPackage<T, OracleCondition<T>> expression(String expression) {
+        this.sqlCommandPackage.getSelectSql().getSqlWhere()
                 .append(this.condition)
                 .append("(")
                 .append(expression)
@@ -335,52 +336,21 @@ public class OracleCondition<T> implements Condition<T> {
         return this.sqlCommandPackage;
     }
 
-    private <P> AbstractSqlCommandPackage<T> generate(String operator, P value) {
+    @Override
+    public AbstractSqlCommandPackage<T, OracleCondition<T>> child(String operator, SelectSql value) {
+        return null;
+    }
+
+    private <P> AbstractSqlCommandPackage<T, OracleCondition<T>> generate(String operator, P value) {
         this.checkField();
         if (value != null) {
-            this.sqlCommandPackage.getSqlBuilder()
+            this.sqlCommandPackage.getSelectSql().getSqlWhere()
                     .append(condition)
                     .append("(").append(this.fieldName)
                     .append(" ").append(operator)
                     .append(" ?").append(")");
-            this.sqlCommandPackage.getParameterList().add(value);
+            this.sqlCommandPackage.getSelectSql().getParameterList().add(value);
         }
-        return this.sqlCommandPackage;
-    }
-
-    /**
-     * 子查询<p>
-     * author LiuHuiYu<p>
-     * Created DateTime 2024/8/19 15:37
-     *
-     * @param childSqlCommandPackage 查询语句
-     * @return com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage<T>
-     */
-    @Override
-    public AbstractSqlCommandPackage<T> child(String operator, AbstractSqlCommandPackage<T> childSqlCommandPackage) {
-        this.sqlCommandPackage.getParameterList().addAll(childSqlCommandPackage.getParameterList());
-        this.sqlCommandPackage.getSqlBuilder()
-                .append(condition)
-                .append("(").append(this.fieldName)
-                .append(" ")
-                .append(operator)
-                .append("(")
-                .append(childSqlCommandPackage.getSqlBuilder().toString())
-                .append("))");
-        return this.sqlCommandPackage;
-    }
-
-    @Override
-    public AbstractSqlCommandPackage<T> child(String operator, String childSql, List<Object> parameterList) {
-        this.sqlCommandPackage.getParameterList().addAll(parameterList);
-        this.sqlCommandPackage.getSqlBuilder()
-                .append(condition)
-                .append("(").append(this.fieldName)
-                .append(" ")
-                .append(operator)
-                .append("(")
-                .append(childSql)
-                .append("))");
         return this.sqlCommandPackage;
     }
 }
