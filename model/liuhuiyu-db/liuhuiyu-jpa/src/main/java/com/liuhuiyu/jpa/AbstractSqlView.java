@@ -1,7 +1,7 @@
 package com.liuhuiyu.jpa;
 
+import com.liuhuiyu.core.help.sql.SelectSql;
 import com.liuhuiyu.jpa.help.SqlResolution;
-import com.liuhuiyu.jpa.sql.SelectSql;
 import com.liuhuiyu.jpa.util.DataBaseUtil;
 
 import javax.persistence.EntityManager;
@@ -63,23 +63,6 @@ public abstract class AbstractSqlView {
         final Stream<T> resultListT = this.getResultListT(clazz, sql);
         return resultListT.findFirst();
     }
-
-//    /**
-//     * 统计查询
-//     *
-//     * @param sql sql
-//     * @return java.lang.Long
-//     * Created DateTime 2022-02-15 16:54
-//     */
-//    @SuppressWarnings("all")
-//    protected Long selectCount(SelectSql sql) {
-//        final Query nativeQuery = entityManager.createNativeQuery(sql.getSql());
-//        for (int i = 0, length = sql.getParameterList().size(); i < length; i++) {
-//            nativeQuery.setParameter(i + 1, sql.getParameterList().get(i));
-//        }
-//        final Object singleResult = nativeQuery.getSingleResult();
-//        return Long.parseLong(singleResult.toString());
-//    }
 
     /**
      * 统计查询

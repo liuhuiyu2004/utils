@@ -1,6 +1,6 @@
 package com.liuhuiyu.jpa.sql;
 
-import java.util.List;
+import com.liuhuiyu.core.help.sql.SelectSql;
 
 /**
  * 原生SQL封装

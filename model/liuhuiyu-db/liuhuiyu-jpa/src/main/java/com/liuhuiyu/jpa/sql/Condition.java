@@ -1,5 +1,7 @@
 package com.liuhuiyu.jpa.sql;
 
+import com.liuhuiyu.core.help.sql.SelectSql;
+
 import java.util.Collection;
 import java.util.List;
 
