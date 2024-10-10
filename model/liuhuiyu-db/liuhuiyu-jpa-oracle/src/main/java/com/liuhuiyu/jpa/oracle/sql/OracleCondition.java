@@ -1,8 +1,8 @@
 package com.liuhuiyu.jpa.oracle.sql;
 
+import com.liuhuiyu.core.help.sql.SelectSql;
 import com.liuhuiyu.jpa.sql.AbstractSqlCommandPackage;
 import com.liuhuiyu.jpa.sql.Condition;
-import com.liuhuiyu.jpa.sql.SelectSql;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;

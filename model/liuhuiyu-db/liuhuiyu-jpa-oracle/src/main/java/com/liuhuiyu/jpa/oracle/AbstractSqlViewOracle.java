@@ -1,11 +1,11 @@
 package com.liuhuiyu.jpa.oracle;
 
+import com.liuhuiyu.core.help.sql.SelectSql;
 import com.liuhuiyu.core.util.Assert;
 import com.liuhuiyu.dto.IPaging;
 import com.liuhuiyu.jpa.AbstractSqlView;
 import com.liuhuiyu.jpa.help.SqlResolution;
 import com.liuhuiyu.jpa.oracle.util.OracleDaoUtil;
-import com.liuhuiyu.jpa.sql.SelectSql;
 import com.liuhuiyu.jpa.sql.WhereFullByParameterList;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
