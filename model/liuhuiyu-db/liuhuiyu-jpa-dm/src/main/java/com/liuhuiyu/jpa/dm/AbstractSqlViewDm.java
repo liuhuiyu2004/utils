@@ -2,6 +2,7 @@ package com.liuhuiyu.jpa.dm;
 
 import com.liuhuiyu.core.help.sql.SelectSql;
 import com.liuhuiyu.core.util.Assert;
+import com.liuhuiyu.dto.IComputedValueFilling;
 import com.liuhuiyu.dto.IPaging;
 import com.liuhuiyu.jpa.AbstractSqlView;
 import com.liuhuiyu.jpa.dm.util.DmDaoUtil;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * @author LiuHuiYu * @version v1.0.0.0
  * Created DateTime 2024/9/17 9:58
  */
-public class AbstractSqlViewDm extends AbstractSqlView {
+public class AbstractSqlViewDm<returnT extends IComputedValueFilling, findT>  extends AbstractSqlView {
     public static final String SPACE = " ";
 
     public AbstractSqlViewDm(EntityManager entityManager) {
