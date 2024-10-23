@@ -9,7 +9,7 @@ import com.liuhuiyu.jpa.comment.DbConstant;
  * @version v1.0.0.0
  * Created DateTime 2023-10-20 19:16
  */
-public interface DbOracleConstant extends DbConstant {
+public interface DbDmConstant extends DbConstant {
 
     /**
      * 长文本型
