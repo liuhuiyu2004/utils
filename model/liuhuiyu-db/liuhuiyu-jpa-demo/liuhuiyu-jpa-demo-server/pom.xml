@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cc.liuhuiyu</groupId>
+        <artifactId>liuhuiyu-jpa-demo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>liuhuiyu-jpa-demo-server</artifactId>
+    <packaging>jar</packaging>
+
+    <name>liuhuiyu-jpa-demo-server</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>2.5.3</spring-boot.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <!-- 去掉springboot默认配置 -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- region引入log4j2依赖 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.19.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- endregion -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--region数据源-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.3.18.Final</version>
+        </dependency>
+        <!--region 数据库支持-->
+        <!--region 达梦数据库-->
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>Dm8JdbcDriver18</artifactId>
+            <!--            <version>8.1.3.140</version>-->
+            <version>8.1.1.49</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmDialect-for-hibernate4.0</artifactId>
+            <!--            <artifactId>DmDialect-for-hibernate5.3</artifactId>-->
+            <!--            <version>8.1.3.140</version>-->
+            <version>8.1.2.141</version>
+        </dependency>
+        <!--endregion -->
+        <!--region oracle数据库-->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>12.2.0.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.easyproject</groupId>
+            <artifactId>orai18n</artifactId>
+            <version>12.1.0.2.0</version>
+        </dependency>
+        <!--endregion-->
+        <!--endregion-->
+        <!--endregion-->
+        <!--region 文档-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <!--endregion-->
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-web</artifactId>
+            <version>2023.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-spring-util</artifactId>
+            <version>2023.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-test</artifactId>
+            <version>2023.0.1</version>
+        </dependency>
+        <!--region 多数据库类型-->
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-jpa-oracle</artifactId>
+            <version>2023.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-jpa-dm</artifactId>
+            <version>2023.0.1</version>
+        </dependency>
+        <!--endregion-->
+        <!--region demo模型-->
+        <dependency>
+            <groupId>cc.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-jpa-demo-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--endregion-->
+    </dependencies>
+
+</project>
