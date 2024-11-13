@@ -66,6 +66,11 @@
                 <artifactId>liuhuiyu-json</artifactId>
                 <version>${liuhuiyu.revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.liuhuiyu</groupId>
+                <artifactId>liuhuiyu-dto</artifactId>
+                <version>${liuhuiyu.revision}</version>
+            </dependency>
             <!--endregion-->
         </dependencies>
     </dependencyManagement>
