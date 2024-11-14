@@ -11,8 +11,5 @@ public class WebAddressConstant {
     public static final String HOME_ADDRESS_ROOT = "";
     public static final String API_ADDRESS_ROOT = "/api";
 
-    public static final String COMMON_ADDRESS_ROOT = API_ADDRESS_ROOT + "/api";
-    public static final String ACCOUNT_ADDRESS_ROOT = COMMON_ADDRESS_ROOT + "/account";
-    public static final String AUTHORITY_TREE_ADDRESS_ROOT = COMMON_ADDRESS_ROOT + "/authority_tree";
-    public static final String RFID_ANALYZE_ADDRESS_ROOT = API_ADDRESS_ROOT + "/rfid_analyze";
+    public static final String DEMO_TEST_ADDRESS_ROOT = API_ADDRESS_ROOT + "/demo_test";
 }
