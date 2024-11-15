@@ -48,6 +48,10 @@
             <artifactId>liuhuiyu-json</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-dto</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>${org.jetbrains.annotations.version}</version>
