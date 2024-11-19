@@ -1,5 +1,13 @@
 package cc.liuhuiyu.db.demo.domain.demo.service;
 
+import cc.liuhuiyu.db.demo.domain.demo.dao.DemoTestDao;
+import cc.liuhuiyu.db.demo.domain.demo.entity.DemoTest;
+import cc.liuhuiyu.db.demo.domain.demo.repository.DemoTestRepository;
+import com.liuhuiyu.core.util.Assert;
+import com.liuhuiyu.db.demo.domain.demo.in.DemoTestChangeDto;
+import com.liuhuiyu.db.demo.domain.demo.in.DemoTestFindDto;
+import com.liuhuiyu.db.demo.domain.demo.out.DemoTestDto;
+import com.liuhuiyu.spring.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -92,7 +100,7 @@ public class DemoTestService {
      */
     public Optional<DemoTestDto> change(DemoTestChangeDto changeDto) {
         final Function<DemoTestChangeDto, Optional<DemoTest>> changeFunction = changeMap.get(changeDto.getOperating().getModelName());
-        LhyAssert.assertNotNull(changeFunction, "未设定更新模式。");
+        Assert.assertNotNull(changeFunction, "未设定更新模式。");
         Optional<DemoTest> optionalPoint = changeFunction.apply(changeDto);
         return optionalPoint.map(v -> this.findOne(DemoTestFindDto.findById(v.getId()))).orElse(Optional.of(changeDto));
     }
