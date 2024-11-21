@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo;
+package com.liuhuiyu.db.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
