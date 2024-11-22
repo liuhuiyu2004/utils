@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo.config;
+package com.liuhuiyu.db.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
