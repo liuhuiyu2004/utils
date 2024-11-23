@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo.constant;
+package com.liuhuiyu.db.demo.constant;
 
 /**
  * @author LiuHuiYu
