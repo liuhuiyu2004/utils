@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo.controller;
+package com.liuhuiyu.db.demo.controller;
 
 import com.liuhuiyu.dto.Result;
 import org.apache.logging.log4j.LogManager;
