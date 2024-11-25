@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo.controller;
+package com.liuhuiyu.db.demo.controller;
 
 import com.liuhuiyu.db.demo.constant.WebAddressConstant;
 import com.liuhuiyu.web.controller.AbsBaseController;
