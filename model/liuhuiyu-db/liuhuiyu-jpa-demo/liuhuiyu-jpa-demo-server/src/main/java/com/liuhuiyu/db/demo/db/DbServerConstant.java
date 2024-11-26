@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo.db;
+package com.liuhuiyu.db.demo.db;
 
 //import com.liuhuiyu.jpa.dm.constant.DbDmConstant;
 //import com.liuhuiyu.jpa.oracle.constant.DbOracleConstant;
