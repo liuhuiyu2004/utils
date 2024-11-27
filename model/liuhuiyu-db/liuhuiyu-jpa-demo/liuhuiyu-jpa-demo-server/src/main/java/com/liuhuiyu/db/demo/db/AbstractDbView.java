@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo.db;
+package com.liuhuiyu.db.demo.db;
 
 import com.liuhuiyu.dto.IComputedValueFilling;
 import com.liuhuiyu.jpa.dm.AbstractSqlViewDm;
