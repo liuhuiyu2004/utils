@@ -1,4 +1,4 @@
-package cc.liuhuiyu.db.demo.db;
+package com.liuhuiyu.db.demo.db;
 
 import com.liuhuiyu.core.help.sql.SelectSql;
 import com.liuhuiyu.jpa.oracle.sql.AbstractSqlCommandPackageOracle;
