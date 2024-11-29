@@ -1,6 +1,6 @@
-package cc.liuhuiyu.db.demo.domain.demo.entity;
+package com.liuhuiyu.db.demo.domain.demo.entity;
 
-import cc.liuhuiyu.db.demo.domain.BaseAccountOperate;
+import com.liuhuiyu.db.demo.domain.BaseAccountOperate;
 import com.liuhuiyu.jpa.comment.Comment;
 import org.hibernate.annotations.GenericGenerator;
 
