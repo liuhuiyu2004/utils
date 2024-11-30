@@ -1,6 +1,6 @@
-package cc.liuhuiyu.db.demo.domain.demo.repository;
+package com.liuhuiyu.db.demo.domain.demo.repository;
 
-import cc.liuhuiyu.db.demo.domain.demo.entity.DemoTest;
+import com.liuhuiyu.db.demo.domain.demo.entity.DemoTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
