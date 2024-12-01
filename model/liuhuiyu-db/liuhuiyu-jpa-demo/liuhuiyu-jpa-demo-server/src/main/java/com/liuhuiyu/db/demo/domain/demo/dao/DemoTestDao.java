@@ -1,21 +1,17 @@
-package cc.liuhuiyu.db.demo.domain.demo.dao;
+package com.liuhuiyu.db.demo.domain.demo.dao;
 
-import cc.liuhuiyu.db.demo.db.AbstractDbView;
-import cc.liuhuiyu.db.demo.db.AbstractSqlCommandPackageDb;
+import com.liuhuiyu.db.demo.db.AbstractDbView;
+import com.liuhuiyu.db.demo.db.AbstractSqlCommandPackageDb;
 import com.liuhuiyu.core.help.sql.SelectSql;
 import com.liuhuiyu.core.util.Assert;
 import com.liuhuiyu.db.demo.domain.demo.in.DemoTestFindDto;
 import com.liuhuiyu.db.demo.domain.demo.out.DemoTestDto;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 
