@@ -1,6 +1,6 @@
-package cc.liuhuiyu.db.demo.domain;
+package com.liuhuiyu.db.demo.domain;
 
-import cc.liuhuiyu.db.demo.db.DbServerConstant;
+import com.liuhuiyu.db.demo.db.DbServerConstant;
 import com.liuhuiyu.dto.IDataChange;
 import com.liuhuiyu.jpa.comment.Comment;
 
