@@ -1,8 +1,8 @@
-package cc.liuhuiyu.db.demo.domain.demo.service;
+package com.liuhuiyu.db.demo.domain.demo.service;
 
-import cc.liuhuiyu.db.demo.domain.demo.dao.DemoTestDao;
-import cc.liuhuiyu.db.demo.domain.demo.entity.DemoTest;
-import cc.liuhuiyu.db.demo.domain.demo.repository.DemoTestRepository;
+import com.liuhuiyu.db.demo.domain.demo.dao.DemoTestDao;
+import com.liuhuiyu.db.demo.domain.demo.entity.DemoTest;
+import com.liuhuiyu.db.demo.domain.demo.repository.DemoTestRepository;
 import com.liuhuiyu.core.util.Assert;
 import com.liuhuiyu.db.demo.domain.demo.in.DemoTestChangeDto;
 import com.liuhuiyu.db.demo.domain.demo.in.DemoTestFindDto;
