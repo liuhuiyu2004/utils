@@ -1,6 +1,6 @@
-package cc.liuhuiyu.db.demo.domain.demo.controller;
+package com.liuhuiyu.db.demo.domain.demo.controller;
 
-import cc.liuhuiyu.db.demo.domain.demo.service.DemoTestService;
+import com.liuhuiyu.db.demo.domain.demo.service.DemoTestService;
 import com.liuhuiyu.db.demo.constant.WebAddressConstant;
 import com.liuhuiyu.db.demo.domain.demo.in.DemoTestChangeDto;
 import com.liuhuiyu.db.demo.domain.demo.in.DemoTestFindDto;
