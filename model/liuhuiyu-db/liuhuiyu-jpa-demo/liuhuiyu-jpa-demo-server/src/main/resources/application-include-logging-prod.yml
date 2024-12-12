@@ -1,0 +1,8 @@
+logging:
+  config: classpath:log4j2-prod.xml
+  level:
+    root: info
+    com.liuhuiyu.db.demo.domain.demo.service.DemoTestService: debug
+    com.liuhuiyu.db.demo.domain.demo.dao.DemoTestDao: info
+  charset:
+    console: GBK
