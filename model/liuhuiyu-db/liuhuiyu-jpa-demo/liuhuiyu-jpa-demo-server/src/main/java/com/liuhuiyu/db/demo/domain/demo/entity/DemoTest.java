@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * Created DateTime 2024/12/16 9:26
  */
 @Entity
-@Table(name = "DemoTest")
+@Table(name = "DEMO_TEST")
 @GenericGenerator(name = "DemoTest-uuid", strategy = "uuid")
 @Comment("备注")
 public class DemoTest extends BaseAccountOperate {
