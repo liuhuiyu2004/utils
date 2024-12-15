@@ -1,7 +1,7 @@
 package com.liuhuiyu.db.demo.db;
 
 import com.liuhuiyu.dto.IComputedValueFilling;
-import com.liuhuiyu.jpa.dm.AbstractSqlViewDm;
+//import com.liuhuiyu.jpa.dm.AbstractSqlViewDm;
 import com.liuhuiyu.jpa.oracle.AbstractSqlViewOracle;
 
 import javax.persistence.EntityManager;
