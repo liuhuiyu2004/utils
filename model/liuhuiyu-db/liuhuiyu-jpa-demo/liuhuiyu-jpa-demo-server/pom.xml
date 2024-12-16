@@ -157,11 +157,11 @@
             <artifactId>liuhuiyu-jpa-oracle</artifactId>
             <version>2023.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.liuhuiyu</groupId>
-            <artifactId>liuhuiyu-jpa-dm</artifactId>
-            <version>2023.0.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.liuhuiyu</groupId>-->
+<!--            <artifactId>liuhuiyu-jpa-dm</artifactId>-->
+<!--            <version>2023.0.1</version>-->
+<!--        </dependency>-->
         <!--endregion-->
         <!--region demo模型-->
         <dependency>
