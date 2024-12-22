@@ -6,6 +6,9 @@ spring:
     include:
       - include-activiti
     group:
+      active-lhy:
+        - include-datasource-dev  #数据库
+        - include-logging-dev     #日志
       active-dev:
         - include-datasource-dev  #数据库
         - include-logging-dev     #日志
