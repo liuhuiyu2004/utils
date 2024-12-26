@@ -7,8 +7,9 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
+import com.liuhuiyu.dto.Result;
 import com.liuhuiyu.json.map.MapUtil;
-import com.liuhuiyu.spring.model.Result;
+import com.liuhuiyu.spring.util.ResultUtil;
 import feign.FeignException;
 import feign.Response;
 import feign.Util;
@@ -48,7 +49,7 @@ public class ResultFeignDecoder implements Decoder {
         String bodyStr = Util.toString(reader);
         //对结果进行转换
         final Map<String, Object> map = MapUtil.mapOfJsonString(bodyStr);
-        Result<Object> result = Result.getResult(map);
+        Result<Object> result = ResultUtil.getResult(map);
         //如果返回错误，且为内部错误，则直接抛出异常
         if (result.isSuccess()) {
             // 获取接口接收类型
