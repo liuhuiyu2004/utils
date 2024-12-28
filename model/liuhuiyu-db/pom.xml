@@ -16,5 +16,6 @@
         <module>liuhuiyu-jpa</module>
         <module>liuhuiyu-jpa-dm</module>
         <module>liuhuiyu-jpa-oracle</module>
+        <module>liuhuiyu-jpa-kingbase8</module>
     </modules>
 </project>
