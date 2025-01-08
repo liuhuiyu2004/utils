@@ -204,19 +204,7 @@ public class OracleCondition<T> implements Condition<T, OracleCondition<T>> {
         if (minValue == null || maxValue == null) {
             return this.sqlCommandPackage;
         }
-        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append(" (");
-        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
-        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
-        this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
-
-        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("or");
-        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" < ?").append(") and (").append(maxFieldName).append(" > ?").append("))");
-        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
-        this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
-
-        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("or");
-        this.sqlCommandPackage.getSelectSql().getSqlWhere().append("((").append(minFieldName).append(" >= ?").append(") and (").append(maxFieldName).append(" <= ?").append("))");
-        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(")");
+        this.sqlCommandPackage.getSelectSql().getSqlWhere().append(condition).append(" ((").append(maxFieldName).append(" > ?) and (").append(minFieldName).append(" < ?))");
         this.sqlCommandPackage.getSelectSql().getParameterList().add(minValue);
         this.sqlCommandPackage.getSelectSql().getParameterList().add(maxValue);
         return this.sqlCommandPackage;
