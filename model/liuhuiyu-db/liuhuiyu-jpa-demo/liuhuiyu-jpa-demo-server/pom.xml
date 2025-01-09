@@ -104,7 +104,7 @@
 <!--        </dependency>-->
         <!--endregion -->
         <!--region oracle数据库-->
-        <dependency>
+<!--        <dependency>
             <groupId>com.liuhuiyu</groupId>
             <artifactId>liuhuiyu-jpa-oracle</artifactId>
             <version>2023.0.1</version>
@@ -129,7 +129,35 @@
             <groupId>cn.easyproject</groupId>
             <artifactId>orai18n</artifactId>
             <version>12.1.0.2.0</version>
+        </dependency>-->
+        <!--endregion-->
+        <!--region 人大金仓-->
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-jpa-kingbase8</artifactId>
+            <version>2023.0.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.com.kingbase</groupId>
+                    <artifactId>kingbase8</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.com.kingbase</groupId>
+                    <artifactId>KesDialect-for-hibernate4</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>kingbase8</artifactId>
+            <version>9.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>KesDialect-for-hibernate4</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!--endregion-->
         <!--endregion-->
         <!--endregion-->
