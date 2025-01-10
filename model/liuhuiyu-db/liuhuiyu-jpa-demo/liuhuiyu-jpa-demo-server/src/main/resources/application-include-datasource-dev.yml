@@ -7,10 +7,15 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     # oracle数据库配置
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
-    username: tspquanquyu2021
-    password: zngk*168#Zy
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+#    username: tspquanquyu2021
+#    password: zngk*168#Zy
+    #人大金仓
+    driver-class-name: com.kingbase8.Driver
+    url: jdbc:kingbase8://127.0.0.1:54321/
+    username: kingbase
+    password: 123456
   jpa:
     #    hibernate:
     #      ddl-auto: validate
