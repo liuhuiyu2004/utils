@@ -2,7 +2,8 @@ package com.liuhuiyu.db.demo.db;
 
 import com.liuhuiyu.dto.IComputedValueFilling;
 //import com.liuhuiyu.jpa.dm.AbstractSqlViewDm;
-import com.liuhuiyu.jpa.oracle.AbstractSqlViewOracle;
+import com.liuhuiyu.jpa.kingbase8.AbstractSqlViewKingBase8;
+//import com.liuhuiyu.jpa.oracle.AbstractSqlViewOracle;
 
 import javax.persistence.EntityManager;
 
@@ -12,7 +13,8 @@ import javax.persistence.EntityManager;
  * Created DateTime 2024/11/29 11:45
  */
 //public abstract class AbstractDbView<returnT extends IComputedValueFilling, findT> extends AbstractSqlViewDm<returnT, findT> {
-public abstract class AbstractDbView<returnT extends IComputedValueFilling, findT> extends AbstractSqlViewOracle<returnT, findT> {
+//public abstract class AbstractDbView<returnT extends IComputedValueFilling, findT> extends AbstractSqlViewOracle<returnT, findT> {
+public abstract class AbstractDbView<returnT extends IComputedValueFilling, findT> extends AbstractSqlViewKingBase8<returnT, findT> {
     public AbstractDbView(EntityManager entityManager) {
         super(entityManager);
     }
