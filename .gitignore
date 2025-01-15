@@ -37,3 +37,4 @@ hs_err_pid*
 /model/liuhuiyu-db/liuhuiyu-jpa-oracle/target/
 /model/liuhuiyu-db/liuhuiyu-jpa-demo/liuhuiyu-jpa-demo-model/target/
 /model/liuhuiyu-db/liuhuiyu-jpa-demo/liuhuiyu-jpa-demo-server/target/
+/model/liuhuiyu-db/liuhuiyu-jpa-kingbase8/target/
