@@ -2,6 +2,7 @@ package com.liuhuiyu.core.time;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * @author LiuHuiYu
@@ -84,5 +85,27 @@ public class TimestampUtil {
         catch (Exception ex) {
             return "";
         }
+    }
+
+    /**
+     * 按时间获取时间戳<p>
+     * author LiuHuiYu<p>
+     * Created DateTime 2024/9/21 9:50
+     *
+     * @param timestamp   原始时间戳
+     * @param hour        小时
+     * @param minute      分钟
+     * @param second      秒
+     * @param millisecond 毫秒
+     * @return java.sql.Timestamp
+     */
+    public static Timestamp getTimestampByTime(Timestamp timestamp, int hour, int minute, int second, int millisecond) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, millisecond);
+        return new Timestamp(calendar.getTimeInMillis());
     }
 }
