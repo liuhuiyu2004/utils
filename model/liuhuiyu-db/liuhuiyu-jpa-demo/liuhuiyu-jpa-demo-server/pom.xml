@@ -15,7 +15,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot.version>2.5.3</spring-boot.version>
+<!--        <spring-boot.version>2.5.3</spring-boot.version>-->
+        <spring-boot.version>2.5.15</spring-boot.version>
         <log4j2.version>2.19.0</log4j2.version>
     </properties>
 
@@ -85,78 +86,84 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+<!--            <version>5.3.18.Final</version>-->
             <version>5.3.18.Final</version>
         </dependency>
         <!--region 数据库支持-->
         <!--region 达梦数据库-->
-<!--        <dependency>-->
-<!--            <groupId>com.dameng</groupId>-->
-<!--            <artifactId>Dm8JdbcDriver18</artifactId>-->
-<!--            &lt;!&ndash;            <version>8.1.3.140</version>&ndash;&gt;-->
-<!--            <version>8.1.1.49</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.dameng</groupId>-->
-<!--            <artifactId>DmDialect-for-hibernate4.0</artifactId>-->
-<!--            &lt;!&ndash;            <artifactId>DmDialect-for-hibernate5.3</artifactId>&ndash;&gt;-->
-<!--            &lt;!&ndash;            <version>8.1.3.140</version>&ndash;&gt;-->
-<!--            <version>8.1.2.141</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-jpa-dm</artifactId>
+            <version>2023.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>Dm8JdbcDriver18</artifactId>
+            <!--            <version>8.1.3.140</version>-->
+            <version>8.1.1.49</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmDialect-for-hibernate4.0</artifactId>
+            <!--            <artifactId>DmDialect-for-hibernate5.3</artifactId>-->
+            <!--            <version>8.1.3.140</version>-->
+            <version>8.1.2.141</version>
+        </dependency>
         <!--endregion -->
         <!--region oracle数据库-->
-<!--        <dependency>
-            <groupId>com.liuhuiyu</groupId>
-            <artifactId>liuhuiyu-jpa-oracle</artifactId>
-            <version>2023.0.1</version>
-            <exclusions>
-                <exclusion>
+        <!--        <dependency>
+                    <groupId>com.liuhuiyu</groupId>
+                    <artifactId>liuhuiyu-jpa-oracle</artifactId>
+                    <version>2023.0.1</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.oracle</groupId>
+                            <artifactId>ojdbc8</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>cn.easyproject</groupId>
+                            <artifactId>orai18n</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
                     <groupId>com.oracle</groupId>
                     <artifactId>ojdbc8</artifactId>
-                </exclusion>
-                <exclusion>
+                    <version>12.2.0.1</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
                     <groupId>cn.easyproject</groupId>
                     <artifactId>orai18n</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <version>12.2.0.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>cn.easyproject</groupId>
-            <artifactId>orai18n</artifactId>
-            <version>12.1.0.2.0</version>
-        </dependency>-->
+                    <version>12.1.0.2.0</version>
+                </dependency>-->
         <!--endregion-->
         <!--region 人大金仓-->
-        <dependency>
-            <groupId>com.liuhuiyu</groupId>
-            <artifactId>liuhuiyu-jpa-kingbase8</artifactId>
-            <version>2023.0.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>cn.com.kingbase</groupId>
-                    <artifactId>kingbase8</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>cn.com.kingbase</groupId>
-                    <artifactId>KesDialect-for-hibernate4</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>cn.com.kingbase</groupId>
-            <artifactId>kingbase8</artifactId>
-            <version>9.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.com.kingbase</groupId>
-            <artifactId>KesDialect-for-hibernate4</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.liuhuiyu</groupId>-->
+        <!--            <artifactId>liuhuiyu-jpa-kingbase8</artifactId>-->
+        <!--            <version>2023.0.1</version>-->
+        <!--            <exclusions>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>cn.com.kingbase</groupId>-->
+        <!--                    <artifactId>kingbase8</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>cn.com.kingbase</groupId>-->
+        <!--                    <artifactId>KesDialect-for-hibernate4</artifactId>-->
+        <!--                </exclusion>-->
+        <!--            </exclusions>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>cn.com.kingbase</groupId>-->
+        <!--            <artifactId>kingbase8</artifactId>-->
+        <!--            <version>9.0.0</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>cn.com.kingbase</groupId>-->
+        <!--            <artifactId>KesDialect-for-hibernate4</artifactId>-->
+        <!--            <version>1.0.0</version>-->
+        <!--        </dependency>-->
 
         <!--endregion-->
         <!--endregion-->
@@ -194,13 +201,6 @@
             <artifactId>liuhuiyu-test</artifactId>
             <version>2023.0.1</version>
         </dependency>
-        <!--region 多数据库类型-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.liuhuiyu</groupId>-->
-        <!--            <artifactId>liuhuiyu-jpa-dm</artifactId>-->
-        <!--            <version>2023.0.1</version>-->
-        <!--        </dependency>-->
-        <!--endregion-->
         <!--region demo模型-->
         <dependency>
             <groupId>cc.liuhuiyu</groupId>
