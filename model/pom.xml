@@ -9,7 +9,7 @@
     <groupId>com.liuhuiyu</groupId>
     <artifactId>liuhuiyu-tool-parent</artifactId>
     <version>2023.0.1</version>
-    <name>liuhuiyu-tool-parent</name>
+    <name>liuhuiyu-tool-parentV8</name>
     <description>liuhuiyu工具箱</description>
     <url>https://github.com/liuhuiyu2004/utils</url>
     <modules>
