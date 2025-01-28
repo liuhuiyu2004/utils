@@ -12,10 +12,16 @@ spring:
 #    username: tspquanquyu2021
 #    password: zngk*168#Zy
     #人大金仓
-    driver-class-name: com.kingbase8.Driver
-    url: jdbc:kingbase8://127.0.0.1:54321/
-    username: kingbase
-    password: 123456
+#    driver-class-name: com.kingbase8.Driver
+#    url: jdbc:kingbase8://127.0.0.1:54321/
+#    username: kingbase
+#    password: 123456
+    # dm数据库配置
+    driver-class-name: dm.jdbc.driver.DmDriver
+    url: jdbc:dm://127.0.0.1:5236/SYSDBA
+    username: SYSDBA
+    password: SYSDBA001
+
   jpa:
     #    hibernate:
     #      ddl-auto: validate
