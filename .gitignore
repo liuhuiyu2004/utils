@@ -38,3 +38,13 @@ hs_err_pid*
 /model/liuhuiyu-db/liuhuiyu-jpa-demo/liuhuiyu-jpa-demo-model/target/
 /model/liuhuiyu-db/liuhuiyu-jpa-demo/liuhuiyu-jpa-demo-server/target/
 /model/liuhuiyu-db/liuhuiyu-jpa-kingbase8/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-test-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-core-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-db-v1/liuhuiyu-jpa-dm-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-db-v1/liuhuiyu-jpa-kingbase8-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-db-v1/liuhuiyu-jpa-oracle-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-db-v1/liuhuiyu-jpa-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-dto-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-json-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-spring-test-v1/target/
+/liuhuiyu-tool-parent-v1/liuhuiyu-spring-util-v1/target/
