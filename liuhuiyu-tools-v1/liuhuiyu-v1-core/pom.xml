@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.liuhuiyu</groupId>
-        <artifactId>liuhuiyu-tool-parent-v1</artifactId>
+        <artifactId>liuhuiyu-tools-v1</artifactId>
         <version>2025v17.0.1</version>
     </parent>
 
-    <artifactId>liuhuiyu-core-v1</artifactId>
+    <artifactId>liuhuiyu-v1-core</artifactId>
     <version>2025v17.0.1</version>
     <packaging>jar</packaging>
 
@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>com.liuhuiyu</groupId>
-            <artifactId>liuhuiyu-test-v1</artifactId>
+            <artifactId>liuhuiyu-v1-test</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
