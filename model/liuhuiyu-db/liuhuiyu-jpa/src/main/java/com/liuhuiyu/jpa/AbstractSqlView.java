@@ -239,7 +239,7 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
      * 单条记录查询
      *
      * @param dto 查询条件
-     * @return java.util.Optional<cc.rehome.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
+     * @return java.util.Optional<com.liuhuiyu.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:36
      */
@@ -256,7 +256,7 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
      * 单条记录查询
      *
      * @param dto 查询条件
-     * @return java.util.Optional<cc.rehome.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
+     * @return java.util.Optional<com.liuhuiyu.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:36
      */
@@ -275,7 +275,7 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
      * 单条记录查询
      *
      * @param dto 查询条件
-     * @return java.util.Optional<cc.rehome.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
+     * @return java.util.Optional<com.liuhuiyu.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:36
      */
@@ -295,7 +295,7 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
      * 统计记录数量查询
      *
      * @param dto 查询条件
-     * @return java.util.Optional<cc.rehome.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
+     * @return java.util.Optional<com.liuhuiyu.contractor_third_party.domain.AuthorityTree.dto.out.AuthorityTreeDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:36
      */

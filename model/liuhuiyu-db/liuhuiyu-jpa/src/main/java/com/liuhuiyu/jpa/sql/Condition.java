@@ -157,7 +157,7 @@ public interface Condition<T, U extends Condition<T, U>> {
      * 表达式
      *
      * @param expression 表达式
-     * @return cc.rehome.db.jpa.sql.AbstractSqlCommandPackage<T, Condition < T>>
+     * @return com.liuhuiyu.db.jpa.sql.AbstractSqlCommandPackage<T, Condition < T>>
      * @author LiuHuiYu
      * Created DateTime 2024-01-14 21:44
      */

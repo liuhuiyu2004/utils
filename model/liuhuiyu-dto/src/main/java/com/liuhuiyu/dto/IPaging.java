@@ -22,10 +22,10 @@ package com.liuhuiyu.dto;
  */
 public interface IPaging {
     /**
-     * 获取分页信息
-     * @author LiuHuiYu
-     * Created DateTime 2022-01-20 15:29
-     * @return cc.rehome.zhanjiang.data_center_model.domain.Paging
+     * 获取分页信息<p>
+     * author LiuHuiYu<p>
+     * Created DateTime 2025/2/21 16:52
+     * @return com.liuhuiyu.dto.Paging
      */
     Paging getPaging();
     /**

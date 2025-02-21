@@ -48,7 +48,7 @@ public class DemoTestService {
      * 单条记录查询
      *
      * @param dto 查询条件
-     * @return java.util.Optional<cc.rehome.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
+     * @return java.util.Optional<com.liuhuiyu.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:36
      */
@@ -60,7 +60,7 @@ public class DemoTestService {
      * 列表查询
      *
      * @param dto 查询条件
-     * @return java.util.List<cc.rehome.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
+     * @return java.util.List<com.liuhuiyu.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:36
      */
@@ -72,7 +72,7 @@ public class DemoTestService {
      * 分页查询
      *
      * @param dto 查询条件
-     * @return org.springframework.data.domain.PageImpl<cc.rehome.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
+     * @return org.springframework.data.domain.PageImpl<com.liuhuiyu.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:36
      */
@@ -94,7 +94,7 @@ public class DemoTestService {
      * 更新数据
      *
      * @param changeDto 更新数据
-     * @return java.util.Optional<cc.rehome.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
+     * @return java.util.Optional<com.liuhuiyu.contractor_third_party.domain.DemoTest.dto.out.DemoTestDto>
      * @author LiuHuiYu
      * Created DateTime 2024-01-13 17:38
      */
