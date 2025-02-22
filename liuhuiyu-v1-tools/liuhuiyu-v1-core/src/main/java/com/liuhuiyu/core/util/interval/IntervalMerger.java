@@ -21,7 +21,7 @@ public class IntervalMerger {
      * @param getMinComparatorValue 获取T数据的最小值
      * @param getMaxComparatorValue 获取T数据的最大值
      * @param comparator            T数据区间类型比较规则
-     * @return java.util.List<com.liuhuiyu.core.util.interval.Interregional < T>>
+     * @return java.util.List&lt;com.liuhuiyu.core.util.interval.Interregional&lt;T>>
      */
     public static <T, T1> List<Interregional<T>> mergeIntervals(List<T> intervals, Function<T, T1> getMinComparatorValue, Function<T, T1> getMaxComparatorValue, Comparator<T1> comparator) {
         Comparator<T> sort = (v1, v2) -> {
@@ -51,7 +51,7 @@ public class IntervalMerger {
      * @param sort          排序规则（按照最小到最大排序）
      * @param overlap       两个元素是否重叠规则(第一个元素的最大值是否大于第二个元素的最小值)
      * @param maxComparator 最大值比较规则（第一个值的最大值大于第二个值的最大值）
-     * @return java.util.List<com.liuhuiyu.core.util.interval.Interregional < T>>
+     * @return java.util.List&lt;com.liuhuiyu.core.util.interval.Interregional&lt;T>>
      */
     public static <T> List<Interregional<T>> mergeIntervalsDetail(List<T> intervals, Comparator<T> sort, Comparator<T> overlap, Comparator<T> maxComparator) {
         List<Interregional<T>> resList = new ArrayList<>();

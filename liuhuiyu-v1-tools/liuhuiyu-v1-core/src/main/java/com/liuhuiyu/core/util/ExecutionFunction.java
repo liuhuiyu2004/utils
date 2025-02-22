@@ -25,7 +25,7 @@ public class ExecutionFunction<T, R> {
      * 获取当前执行值
      *
      * @return java.util.Optional<R>
-     * @author LiuHuiYu
+
      * Created DateTime 2022-09-05 10:32
      */
     private Optional<R> getR() {
@@ -44,8 +44,7 @@ public class ExecutionFunction<T, R> {
      * 没有成功就执行
      *
      * @param function 执行函数
-     * @return com.liuhuiyu.util.date.LocalDateUtil.ExecutionFunction<T, R>
-     * @author LiuHuiYu
+     * @return com.liuhuiyu.util.date.LocalDateUtil.ExecutionFunction&lt;T, R>
      * Created DateTime 2022-09-05 9:56
      */
     public ExecutionFunction<T, R> notSucceedExecution(Function<T, R> function) {
@@ -64,8 +63,7 @@ public class ExecutionFunction<T, R> {
      * 没有成功就执行
      *
      * @param supplier 执行函数
-     * @return com.liuhuiyu.util.date.LocalDateUtil.ExecutionFunction<T, R>
-     * @author LiuHuiYu
+     * @return com.liuhuiyu.util.date.LocalDateUtil.ExecutionFunction&lt;T, R>
      * Created DateTime 2022-09-05 9:56
      */
     public ExecutionFunction<T, R> notSucceedExecution(Supplier<R> supplier) {
@@ -84,7 +82,6 @@ public class ExecutionFunction<T, R> {
      * 已执行成功
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2022-09-05 10:31
      */
     private boolean hasExecutedSuccess() {
@@ -95,7 +92,6 @@ public class ExecutionFunction<T, R> {
      * 获取执行结果
      *
      * @return R
-     * @author LiuHuiYu
      * Created DateTime 2022-09-05 10:33
      */
     public R get() {
@@ -117,7 +113,6 @@ public class ExecutionFunction<T, R> {
      *
      * @param defValue 默认值
      * @return R
-     * @author LiuHuiYu
      * Created DateTime 2022-09-05 10:33
      */
     public R orElse(R defValue) {
@@ -139,7 +134,6 @@ public class ExecutionFunction<T, R> {
      *
      * @param other 指定函数
      * @return R
-     * @author LiuHuiYu
      * Created DateTime 2022-09-05 10:34
      */
     public R orElseGet(Supplier<? extends R> other) {
@@ -156,7 +150,6 @@ public class ExecutionFunction<T, R> {
      *
      * @param exceptionSupplier 抛出异常
      * @return R
-     * @author LiuHuiYu
      * Created DateTime 2022-09-05 10:34
      */
     public <X extends Throwable> R orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {

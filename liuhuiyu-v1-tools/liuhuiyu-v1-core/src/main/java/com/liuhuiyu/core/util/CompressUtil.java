@@ -202,7 +202,7 @@ public class CompressUtil {
      *
      * @param str 要压缩的字符串
      * @return java.lang.String
-     * @author LiuHuiYu
+
      * Created DateTime 2023-12-09 20:45
      */
     public static String compress(String str) {
@@ -224,7 +224,6 @@ public class CompressUtil {
      *
      * @param compressedStr 压缩的字符串
      * @return java.lang.String
-     * @author LiuHuiYu
      * Created DateTime 2023-12-09 20:47
      */
     public static String unCompress(String compressedStr) {

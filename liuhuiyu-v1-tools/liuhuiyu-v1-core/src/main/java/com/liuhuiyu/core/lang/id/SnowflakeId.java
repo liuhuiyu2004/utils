@@ -97,7 +97,7 @@ public class SnowflakeId {
      * @param sequenceBits           序列占用的位数(bit)
      * @param workerId               工作ID(0~2^workerIdBits-1)
      * @param datacenterId           数据中心ID(0~2^datacenterIdBits-1)
-     * @author LiuHuiYu
+
      * Created DateTime 2023-01-17 9:30
      */
     public SnowflakeId(Timestamp initializeTheTimestamp, long workerIdBits, long datacenterIdBits, long sequenceBits, long workerId, long datacenterId) {
@@ -114,7 +114,7 @@ public class SnowflakeId {
      * @param sequenceBits           序列占用的位数(bit)
      * @param workerId               工作ID(0~2^workerIdBits-1)
      * @param datacenterId           数据中心ID(0~2^datacenterIdBits-1)
-     * @author LiuHuiYu
+
      */
     public SnowflakeId(long initializeTheTimestamp, long workerIdBits, long datacenterIdBits, long sequenceBits, long workerId, long datacenterId) {
         final long maxWorkerId = ~(-1L << workerIdBits);

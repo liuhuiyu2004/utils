@@ -71,7 +71,6 @@ class ChangeNoticeManageTest extends AbstractTest {
     /**
      * 我是通知接受者
      *
-     * @author LiuHuiYu
      * Created DateTime 2023-02-16 18:56
      */
     static class B {
@@ -136,7 +135,6 @@ class ChangeNoticeManageTest extends AbstractTest {
     /**
      * 我是通知接受者
      *
-     * @author LiuHuiYu
      * Created DateTime 2023-02-16 18:56
      */
     static class Ka {
@@ -186,8 +184,7 @@ class ChangeNoticeManageTest extends AbstractTest {
 //    /**
 //     * 我是通知接受者
 //     *
-//     * @author LiuHuiYu
-//     * Created DateTime 2023-02-16 18:56
+////     * Created DateTime 2023-02-16 18:56
 //     */
 //    static class B2 {
 //        Bb bb;

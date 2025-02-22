@@ -129,7 +129,6 @@ public class Md5SaltUtil {
      * @param password   密码
      * @param saltLength 混淆盐长度
      * @return java.lang.String 加密后的密码
-     * @author LiuHuiYu
      * Created DateTime 2021-11-15 15:31
      */
     public static String getEncryptedPwd(String password, Integer saltLength)

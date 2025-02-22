@@ -22,7 +22,6 @@ public class StructureUtil {
      * @param nowId          当前Id
      * @param getChildIdList 当前id的子id列表获取
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-10-27 11:11
      */
     public static <D> boolean idIsTreeChildId(D findId, D nowId, Function<D, List<D>> getChildIdList) {
@@ -44,7 +43,6 @@ public class StructureUtil {
      * @param pathDelimiter 分隔符
      * @param getParentTree 根据id获取指定id的树结构基础信息
      * @return java.lang.String
-     * @author LiuHuiYu
      * Created DateTime 2023-11-03 12:18
      */
     public static <T> String getTreePath(T parentId, String pathDelimiter, Function<T, Optional<TreeStructure<T>>> getParentTree) {

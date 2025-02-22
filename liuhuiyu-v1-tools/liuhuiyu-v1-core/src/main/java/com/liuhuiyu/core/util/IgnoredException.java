@@ -18,7 +18,7 @@ public class IgnoredException {
      * 执行中出现异常，忽略不报错并且继续执行（多用于循环体中可忽略的循环执行）
      *
      * @param execution 要执行的 Runnable
-     * @author LiuHuiYu
+
      * Created DateTime 2023-02-22 21:37
      */
     public static void run(RunnableException execution) {
@@ -34,7 +34,6 @@ public class IgnoredException {
      *
      * @param execution         要执行的 Runnable
      * @param exceptionFunction 异常出现要执行的 Consumer
-     * @author LiuHuiYu
      * Created DateTime 2023-02-22 21:37
      */
     public static void run(RunnableException execution, Consumer<Exception> exceptionFunction) {
@@ -52,7 +51,6 @@ public class IgnoredException {
      * @param supplier 要执行的 Supplier
      * @param def      默认值
      * @return T
-     * @author LiuHuiYu
      * @deprecated 使用 getOrElse 方法替换此功能
      * Created DateTime 2023-02-22 21:38
      */
@@ -72,7 +70,6 @@ public class IgnoredException {
      * @param supplier          要执行的 Supplier
      * @param exceptionFunction 异常的时候执行
      * @return T
-     * @author LiuHuiYu
      * @deprecated 使用 getOrElseGet 方法替换此功能
      * Created DateTime 2023-02-22 21:38
      */
@@ -92,7 +89,6 @@ public class IgnoredException {
      * @param supplier 要执行的 Supplier
      * @param def      默认值
      * @return T
-     * @author LiuHuiYu
      * Created DateTime 2023-02-22 21:38
      */
     public static <T> T getOrElse(SupplierException<T> supplier, T def) {
@@ -110,7 +106,6 @@ public class IgnoredException {
      * @param supplier          要执行的 Supplier
      * @param exceptionFunction 异常的时候执行
      * @return T
-     * @author LiuHuiYu
      * Created DateTime 2023-02-22 21:38
      */
     public static <T> T getOrElseGet(SupplierException<T> supplier, Function<Exception, T> exceptionFunction) {

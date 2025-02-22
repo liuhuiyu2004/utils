@@ -163,7 +163,7 @@ public class IpConnectivityChecker {
      *
      * @param line 返回信息
      * @return int
-     * @author LiuHuiYu
+
      * Created DateTime 2023-01-10 16:53
      */
     private static int getCheckResult(String line) {

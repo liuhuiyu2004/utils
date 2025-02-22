@@ -57,7 +57,7 @@ public class Interregional<T> {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return com.liuhuiyu.core.util.interval.Interregional<java.time.LocalDateTime>
+     * @return com.liuhuiyu.core.util.interval.Interregional&lt;java.time.LocalDateTime>
      */
     public static Interregional<LocalDateTime> generateTimeRanges(LocalTime startTime, LocalTime endTime) {
         return generateTimeRanges(LocalDateTime.now(), startTime, endTime);
@@ -72,7 +72,7 @@ public class Interregional<T> {
      * @param currentDateTime 指定时间点
      * @param startTime       开始时间
      * @param endTime         结束时间
-     * @return com.liuhuiyu.core.util.interval.Interregional<java.time.LocalDateTime>
+     * @return com.liuhuiyu.core.util.interval.Interregional&lt;java.time.LocalDateTime>
      */
     public static Interregional<LocalDateTime> generateTimeRanges(LocalDateTime currentDateTime, LocalTime startTime, LocalTime endTime) {
         //判断时间是否跨天

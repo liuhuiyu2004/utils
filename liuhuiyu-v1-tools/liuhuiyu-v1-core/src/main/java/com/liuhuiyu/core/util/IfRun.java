@@ -34,7 +34,6 @@ public class IfRun<T, R> {
      * @param <T> 输出参数
      * @param <R> 输出参数
      * @return com.liuhuiyu.core.util.IfRun
-     * @author LiuHuiYu
      * Created DateTime 2023-01-27 10:31
      */
     public static <T, R> IfRun<T, R> create(T t) {
@@ -57,7 +56,6 @@ public class IfRun<T, R> {
      * @param b        判断是否执行
      * @param supplier 要执行的函数
      * @return com.liuhuiyu.util.list.IfRun
-     * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:17
      */
     public IfRun<T, R> elseIf(Boolean b, Supplier<R> supplier) {
@@ -81,7 +79,6 @@ public class IfRun<T, R> {
      * @param b 判断是否执行
      * @param r 赋予的值
      * @return com.liuhuiyu.core.util.IfRun
-     * @author LiuHuiYu
      * Created DateTime 2023-01-27 11:28
      * @deprecated 此方法会在代码编写过程中因编码错误引发故障。
      */
@@ -100,7 +97,6 @@ public class IfRun<T, R> {
      * 获取执行后的信息
      *
      * @return java.util.Optional
-     * @author LiuHuiYu
      * Created DateTime 2023-01-27 11:11
      */
     public Optional<R> getOptionalResults() {
@@ -113,7 +109,6 @@ public class IfRun<T, R> {
      * @param exceptionSupplier 将返回要抛出的异常的供应商
      * @param <X> 将返回要抛出的异常的供应商
      * @return R
-     * @author LiuHuiYu
      * Created DateTime 2022-06-06 16:51
      */
     public <X extends Throwable> R orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
@@ -130,7 +125,6 @@ public class IfRun<T, R> {
      *
      * @param r 指定值
      * @return R
-     * @author LiuHuiYu
      * Created DateTime 2023-01-24 13:56
      */
     public R orElse(R r) {
@@ -156,7 +150,6 @@ public class IfRun<T, R> {
      *
      * @param supplier 要执行的函数
      * @return com.liuhuiyu.util.list.IfRun
-     * @author LiuHuiYu
      * Created DateTime 2022-05-21 16:17
      */
     public R orElse(Supplier<R> supplier) {
@@ -180,7 +173,6 @@ public class IfRun<T, R> {
      *
      * @param b 执行条件
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-01-24 14:09
      */
     private boolean isAllowExecution(Boolean b) {
@@ -191,7 +183,6 @@ public class IfRun<T, R> {
      * 已经有执行的函数了
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-01-24 14:10
      */
     @SuppressWarnings("all")

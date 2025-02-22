@@ -11,7 +11,7 @@ import java.util.Map;
 public interface MapToT<T> {
     /**
      * Object 转换成 类型 T
-     * @param map Map<String,Object>
+     * @param map Map&lt;String,Object>
      * @return T
      */
     T mapToT(Map<String,Object> map);

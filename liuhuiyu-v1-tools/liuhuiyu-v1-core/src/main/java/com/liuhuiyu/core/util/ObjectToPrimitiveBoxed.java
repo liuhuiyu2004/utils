@@ -76,7 +76,7 @@ public class ObjectToPrimitiveBoxed {
      * author LiuHuiYu<p>
      * Created DateTime 2024/9/14 15:00
      *
-     * @param type Class<?>
+     * @param type Class&lt;?>
      * @return java.lang.String
      */
     public static String getTypeName(Class<?> type) {

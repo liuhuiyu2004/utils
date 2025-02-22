@@ -43,7 +43,6 @@ public class PasswordComplex {
      * @param password              密码
      * @param passwordMinLength     密码长度
      * @param passwordMinComplexity 密码复杂度
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 19:50
      */
     private PasswordComplex(String password, int passwordMinLength, int passwordMinComplexity) {
@@ -56,7 +55,6 @@ public class PasswordComplex {
      * 检查密码长度是否至少为 passwordMinLength 个字符。
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 9:52
      */
     public boolean validLength() {
@@ -67,7 +65,6 @@ public class PasswordComplex {
      * 检查密码是否至少包含一个小写字母
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 9:53
      */
     public boolean validContainsLowercaseLetter() {
@@ -78,7 +75,6 @@ public class PasswordComplex {
      * 检查密码是否至少包含一个大写字母
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 9:53
      */
     public boolean validContainsUppercaseLetter() {
@@ -89,7 +85,6 @@ public class PasswordComplex {
      * 检查密码是否至少包含一个数字
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 9:53
      */
     public boolean validContainsNumber() {
@@ -100,7 +95,6 @@ public class PasswordComplex {
      * 检查密码是否至少包含一个特殊字符
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 9:53
      */
     public boolean validContainsSpecialCharacter() {
@@ -111,7 +105,6 @@ public class PasswordComplex {
      * 获取复杂度指数(0-4)
      *
      * @return int
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 9:59
      */
     public int getComplexity() {
@@ -135,7 +128,6 @@ public class PasswordComplex {
      * 符合复杂度的密码
      *
      * @return boolean
-     * @author LiuHuiYu
      * Created DateTime 2023-11-27 9:58
      */
     public boolean validPassword() {
@@ -144,7 +136,6 @@ public class PasswordComplex {
 
 
     /**
-     * @author LiuHuiYu
      * @version v1.0.0.0
      * Created DateTime 2023-11-27 10:19
      */
