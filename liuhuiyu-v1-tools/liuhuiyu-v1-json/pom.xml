@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.liuhuiyu</groupId>
-        <artifactId>liuhuiyu-tool-parent-v1</artifactId>
+        <artifactId>liuhuiyu-v1-tools</artifactId>
         <version>2025v17.0.1</version>
     </parent>
 
-    <artifactId>liuhuiyu-json-v1</artifactId>
+    <artifactId>liuhuiyu-v1-json</artifactId>
     <packaging>jar</packaging>
 
     <name>liuhuiyu-json-v1</name>
