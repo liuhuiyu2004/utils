@@ -20,5 +20,5 @@ kingbase_v008r006c008b0020
 ```
 # 运行命令
 ```shell
-D:\ProjectManagement\SapMachineJdk21\bin\java.exe  -jar C:\works\ProjectTemplatesV21\MainProject\FrontService\target\FrontService-2025.V21.1.jar
+D:\ProjectManagement\SapMachineJdk17\bin\java.exe  -jar \target\FrontService-2025.V17.1.jar
 ```

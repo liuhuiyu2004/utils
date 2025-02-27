@@ -8,7 +8,7 @@
         <relativePath/>
     </parent>
     <groupId>com.liuhuiyu</groupId>
-    <artifactId>liuhuiyu-tools-v1</artifactId>
+    <artifactId>liuhuiyu-v1-tools</artifactId>
     <version>2025v17.0.1</version>
     <packaging>pom</packaging>
     <description>此版本支持:sdk8、sdk11、sdk17、spring boot 2.5.15</description>
@@ -120,9 +120,7 @@
                     <failOnError>false</failOnError> <!-- 不要在遇到错误时立即失败 -->
                     <quiet>true</quiet> <!-- 减少冗余输出 -->
                     <show>protected</show> <!-- 显示受保护及以上的成员 -->
-                    <links>
-                        <link>https://docs.oracle.com/javase/21/docs/api/</link> <!-- 链接到 JDK API 文档 -->
-                    </links>
+
                 </configuration>
                 <executions>
                     <execution>
