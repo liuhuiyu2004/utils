@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.liuhuiyu.jpa.oracle.comment.CommentIntegrator,\
+com.liuhuiyu.jpa.oracle.comment.HibernateConfig
