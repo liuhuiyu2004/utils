@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 public class ThreadPoolExample extends TestBase {
     @Test
-    public void test() {
+    public void test() throws InterruptedException {
         for (int v1 = 0; v1 < 10; v1++) {
             LOG.info("time{}", v1);
             for (int i1 = 0; i1 < 200_000; i1++) {
