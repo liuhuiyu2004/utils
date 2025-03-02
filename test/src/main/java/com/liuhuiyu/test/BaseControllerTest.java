@@ -2,6 +2,8 @@ package com.liuhuiyu.test;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -31,6 +33,7 @@ import java.util.function.Consumer;
 @AutoConfigureMockMvc//网站测试
 @Log4j2
 public class BaseControllerTest {
+    private static final Logger log= LogManager.getLogger(BaseControllerTest.class);
     @Autowired
     protected WebApplicationContext wac;
 
