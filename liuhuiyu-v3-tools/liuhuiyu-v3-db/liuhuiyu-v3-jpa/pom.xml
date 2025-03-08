@@ -34,7 +34,6 @@
             <groupId>com.liuhuiyu</groupId>
             <artifactId>liuhuiyu-v3-test</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <!--        <dependency>-->
         <!--            <groupId>javax.persistence</groupId>-->

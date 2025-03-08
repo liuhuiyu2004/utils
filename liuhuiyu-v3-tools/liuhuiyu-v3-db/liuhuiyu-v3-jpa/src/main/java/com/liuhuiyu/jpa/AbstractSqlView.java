@@ -42,9 +42,9 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
     /**
      * 返回数据流
      *
-     * @param clazz         目标类型
-     * @param sql           基本语句
-     * @param resolution    sql解析
+     * @param clazz      目标类型
+     * @param sql        基本语句
+     * @param resolution sql解析
      * @return java.util.stream.Stream<T>
      * Created DateTime 2023-12-31 14:32
      */
@@ -319,6 +319,10 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
     protected abstract String getCountSql();
 
     protected abstract String getOrderSql();
+
+    protected String getGroupBySql() {
+        return "";
+    }
 
     protected String getWhereSql() {
         return "WHERE(1=1)";
