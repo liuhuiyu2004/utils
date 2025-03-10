@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.liuhuiyu.spring_util.SpringUtil,\
-com.liuhuiyu.spring_util.run_timer.RunTimeAspect

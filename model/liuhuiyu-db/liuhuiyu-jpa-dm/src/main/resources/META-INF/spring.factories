@@ -1,5 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.liuhuiyu.jpa.dm.comment.CommentIntegrator,\
-com.liuhuiyu.jpa.dm.comment.HibernateConfig
-#com.liuhuiyu.jpa.dm.util.DmObjectToFieldValue
-#com.liuhuiyu.jpa.BaseView

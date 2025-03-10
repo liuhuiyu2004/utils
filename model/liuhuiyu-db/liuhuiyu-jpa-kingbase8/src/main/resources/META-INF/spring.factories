@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.liuhuiyu.jpa.kingbase8.comment.CommentIntegrator,\
-com.liuhuiyu.jpa.kingbase8.comment.HibernateConfig

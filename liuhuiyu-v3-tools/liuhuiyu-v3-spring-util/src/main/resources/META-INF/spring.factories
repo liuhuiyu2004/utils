@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.liuhuiyu.spring.util.SpringUtil,\
-com.liuhuiyu.spring.util.DynamicCronTask
