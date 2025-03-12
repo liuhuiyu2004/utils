@@ -7,9 +7,13 @@
     <groupId>com.liuhuiyu</groupId>
     <artifactId>liuhuiyu-v3-tools</artifactId>
     <version>2025v21.0.1</version>
+    <packaging>pom</packaging>
     <name>liuhuiyu-v3-tools</name>
     <description>liuhuiyu工具箱</description>
     <url>https://github.com/liuhuiyu2004/utils</url>
+    <modules>
+        <module>liuhuiyu-v3-test</module>
+    </modules>
 
     <properties>
         <java.version>21</java.version>
