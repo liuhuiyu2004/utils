@@ -13,6 +13,7 @@
     <url>https://github.com/liuhuiyu2004/utils</url>
     <modules>
         <module>liuhuiyu-v3-test</module>
+        <module>liuhuiyu-v3-core</module>
     </modules>
 
     <properties>
