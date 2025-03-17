@@ -1,11 +1,5 @@
-package com.liuhuiyu.json.util;
+package com.liuhuiyu.core.map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +7,7 @@ import java.util.Map;
 
 /**
  * Map json转换<p>
- * Created on 2025/3/16 21:35
+ * Created on 2025/3/17 21:35
  *
  * @author liuhuiyu
  * @version 1.0
@@ -200,64 +194,6 @@ public class MapUtil {
 
 
     //endregion
-    public static Map<String, Object> mapOfJsonString(String jsonString) {
-        try {
-            Map<String, Object> resultMap = GsonUtil.createGson().fromJson(jsonString, new TypeToken<Map<String, Object>>() {
-            }.getType());
-            return mapDoubleToInt(resultMap);
-        }
-        catch (JsonSyntaxException e) {
-            throw new RuntimeException("无法解析成Map格式数据");
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 将Map序列化成指定类<p>
-     * author liuhuiyu<p>
-     * Created DateTime 2025/3/17 21:32
-     *
-     * @param map      map
-     * @param classOfT T.class
-     * @param <T>      得到的类
-     * @return T 得到的类
-     */
-    public static <T> T fromMap(Map<String, Object> map, Class<T> classOfT) {
-        String json = GsonUtil.createGson().toJson(map);
-        return GsonUtil.createGson().fromJson(json, classOfT);
-    }
-
-    /**
-     * 将Map序列化成指定类 使用指定的类型适配器 <p>
-     * author liuhuiyu<p>
-     * Created DateTime 2025/3/17 21:28
-     *
-     * @param map         map
-     * @param classOfT    T.class
-     * @param typeAdapter typeAdapter
-     * @return T 得到的类
-     */
-    public static <T> T fromMap(Map<String, Object> map, Class<T> classOfT, GsonAdapter[] typeAdapter) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        for (GsonAdapter gsonAdapter : typeAdapter) {
-            gsonBuilder.registerTypeAdapter(gsonAdapter.type, gsonAdapter.typeAdapter);
-        }
-        Gson gson = gsonBuilder.create();
-        String json = gson.toJson(map);
-        return GsonUtil.createGson().fromJson(json, classOfT);
-    }
-
-    public static class GsonAdapter {
-        Type type;
-        Object typeAdapter;
-
-        public GsonAdapter(Type type, Object typeAdapter) {
-            this.type = type;
-            this.typeAdapter = typeAdapter;
-        }
-    }
 
     public static Map<String, Object> mapDoubleToInt(Map<?, ?> resultMap) {
         Map<String, Object> res = new HashMap<>(resultMap.size());
@@ -305,6 +241,4 @@ public class MapUtil {
         }
         return res;
     }
-
-
 }

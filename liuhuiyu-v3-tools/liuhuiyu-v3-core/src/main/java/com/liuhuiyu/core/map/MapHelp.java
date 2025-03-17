@@ -1,8 +1,4 @@
-package com.liuhuiyu.json.help;
-
-
-import com.liuhuiyu.json.util.GsonUtil;
-import com.liuhuiyu.json.util.MapUtil;
+package com.liuhuiyu.core.map;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -12,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Map json工具<p>
+ * Map工具<p>
  * Created on 2025/3/16 21:11
  *
  * @author liuhuiyu
@@ -22,11 +18,6 @@ import java.util.function.Supplier;
 public class MapHelp {
 
     boolean throwException = false;
-
-    public static MapHelp ofJsonString(String jsonString) {
-        Map<String, Object> map = MapUtil.mapOfJsonString(jsonString);
-        return new MapHelp(map);
-    }
 
     public boolean isThrowException() {
         return throwException;
@@ -195,7 +186,7 @@ public class MapHelp {
      * @param <R>                  R
      * @return R  集合
      * <p>
-     * Created DateTime 2021-08-06 9:50
+     * Created DateTime 2025/3/17 22:00
      */
     public <T, R extends Collection<T>> R getCollectionValue(String key, Function<Object, T> function, Supplier<R> initializeCollection) {
         Function<Object, ResInfo<T>> function2 = (obj) -> new ResInfo<>(true, function.apply(obj));
@@ -203,7 +194,8 @@ public class MapHelp {
     }
 
     /**
-     * Collection获取(List;Set)
+     * Collection获取(List;Set) <p>
+     * Created DateTime 2025/3/17 21:59
      *
      * @param key                  键值
      * @param function             转换
@@ -211,8 +203,6 @@ public class MapHelp {
      * @param <R>                  R
      * @param <T>                  T
      * @return R  集合对象
-     * <p>
-     * Created DateTime 2021-08-06 9:50
      */
     public <T, R extends Collection<T>> R getCollectionValueAllowJudgment(String key, Function<Object, ResInfo<T>> function, Supplier<R> initializeCollection) {
         R resList = initializeCollection.get();
@@ -271,8 +261,4 @@ public class MapHelp {
         }
     }
 
-    public static <T> T cloneObj(T a, Class<T> classOfT) {
-        String json = GsonUtil.createGson().toJson(a);
-        return GsonUtil.createGson().fromJson(json, classOfT);
-    }
 }
