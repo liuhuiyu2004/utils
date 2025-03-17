@@ -29,6 +29,11 @@
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-v3-test</artifactId>
+            <version>2025v21.0.1</version>
+        </dependency>
     </dependencies>
 
 </project>

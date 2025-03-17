@@ -215,14 +215,14 @@ public class MapUtil {
     }
 
     /**
-     * 将Map序列化成指定类
+     * 将Map序列化成指定类<p>
+     * author liuhuiyu<p>
+     * Created DateTime 2025/3/17 21:32
      *
      * @param map      map
      * @param classOfT T.class
      * @param <T>      得到的类
-     * @return T
-     * <p>
-     * Created DateTime 2022-01-22 16:42
+     * @return T 得到的类
      */
     public static <T> T fromMap(Map<String, Object> map, Class<T> classOfT) {
         String json = GsonUtil.createGson().toJson(map);
@@ -230,15 +230,14 @@ public class MapUtil {
     }
 
     /**
-     * 功能描述
+     * 将Map序列化成指定类 使用指定的类型适配器 <p>
+     * author liuhuiyu<p>
+     * Created DateTime 2025/3/17 21:28
      *
      * @param map         map
      * @param classOfT    T.class
      * @param typeAdapter typeAdapter
-     * @param <T>         得到的类
-     * @return T
-     * <p>
-     * Created DateTime 2023-04-20 16:34
+     * @return T 得到的类
      */
     public static <T> T fromMap(Map<String, Object> map, Class<T> classOfT, GsonAdapter[] typeAdapter) {
         GsonBuilder gsonBuilder = new GsonBuilder();
