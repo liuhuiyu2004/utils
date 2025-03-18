@@ -32,7 +32,14 @@ public class GsonUtil {
         return gsonBuilder.create();
     }
 
-
+    /**
+     * 将json字符串转换为Map<p>
+     * author liuhuiyu<p>
+     * Created DateTime 2025/3/18 21:02
+     *
+     * @param jsonString json字符串
+     * @return java.util.Map<java.lang.String, java.lang.Object>
+     */
     public static Map<String, Object> mapOfJsonString(String jsonString) {
         try {
             return GsonUtil.createGson().fromJson(jsonString, new TypeToken<Map<String, Object>>() {
@@ -91,6 +98,15 @@ public class GsonUtil {
         }
     }
 
+    /**
+     * 深度克隆对象<p>
+     * author liuhuiyu<p>
+     * Created DateTime 2025/3/18 21:03
+     *
+     * @param a        对象实例
+     * @param classOfT 对象类型
+     * @return T
+     */
     public static <T> T cloneObj(T a, Class<T> classOfT) {
         String json = GsonUtil.createGson().toJson(a);
         return GsonUtil.createGson().fromJson(json, classOfT);
