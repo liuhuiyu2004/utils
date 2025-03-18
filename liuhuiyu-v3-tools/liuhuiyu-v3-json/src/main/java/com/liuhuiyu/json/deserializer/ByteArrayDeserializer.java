@@ -1,4 +1,4 @@
-package com.liuhuiyu.json.util.deserializer;
+package com.liuhuiyu.json.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
