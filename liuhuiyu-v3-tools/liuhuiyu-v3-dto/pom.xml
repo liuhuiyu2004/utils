@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.liuhuiyu</groupId>
+        <artifactId>liuhuiyu-v3-tools</artifactId>
+        <version>2025v21.0.1</version>
+    </parent>
+
+    <artifactId>liuhuiyu-v3-dto</artifactId>
+    <packaging>jar</packaging>
+    <version>2025v21.0.1</version>
+
+    <name>liuhuiyu-v3-dto</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <springdata.commons>3.0.0</springdata.commons>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${springdata.commons}</version>
+            <scope>compile</scope>
+            <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-v3-test</artifactId>
+            <version>${liuhuiyu.revision}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

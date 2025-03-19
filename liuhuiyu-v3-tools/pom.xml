@@ -16,6 +16,7 @@
         <module>liuhuiyu-v3-core</module>
         <module>liuhuiyu-v3-db</module>
         <module>liuhuiyu-v3-json</module>
+        <module>liuhuiyu-v3-dto</module>
     </modules>
 
     <properties>
