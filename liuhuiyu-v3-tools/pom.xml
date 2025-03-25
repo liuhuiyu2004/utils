@@ -18,6 +18,7 @@
         <module>liuhuiyu-v3-json</module>
         <module>liuhuiyu-v3-dto</module>
         <module>liuhuiyu-v3-web</module>
+        <module>liuhuiyu-v3-cloud</module>
     </modules>
 
     <properties>
