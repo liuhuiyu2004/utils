@@ -19,6 +19,7 @@
         <module>liuhuiyu-v3-dto</module>
         <module>liuhuiyu-v3-web</module>
         <module>liuhuiyu-v3-cloud</module>
+        <module>liuhuiyu-v3-spring-util</module>
     </modules>
 
     <properties>
