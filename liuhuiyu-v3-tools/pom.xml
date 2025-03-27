@@ -20,6 +20,7 @@
         <module>liuhuiyu-v3-web</module>
         <module>liuhuiyu-v3-cloud</module>
         <module>liuhuiyu-v3-spring-util</module>
+        <module>liuhuiyu-v3-spring-test</module>
     </modules>
 
     <properties>
