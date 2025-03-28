@@ -57,6 +57,11 @@
         </dependency>
         <dependency>
             <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-v3-core</artifactId>
+            <version>${liuhuiyu.revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
             <artifactId>liuhuiyu-v3-json</artifactId>
             <version>${liuhuiyu.revision}</version>
         </dependency>
