@@ -23,8 +23,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.liuhuiyu</groupId>
             <artifactId>liuhuiyu-v3-dto</artifactId>
+            <version>2025v21.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-v3-core</artifactId>
             <version>2025v21.0.1</version>
         </dependency>
     </dependencies>
