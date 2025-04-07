@@ -14,13 +14,15 @@ public class SelectSql {
      */
     protected final String sqlBase;
     protected SqlWhere sqlWhere;
-    protected String groupBy = "";
+    protected SqlGroupBy groupBy;
     protected SqlHaving sqlHaving;
-    protected String orderBy = "";
+    protected SqlOrderBy orderBy;
 
     public SelectSql(String sqlBase) {
         this.sqlBase = sqlBase;
         this.sqlWhere = new SqlWhere();
         this.sqlHaving = new SqlHaving();
+        this.groupBy = new SqlGroupBy();
+        this.orderBy = new SqlOrderBy();
     }
 }
