@@ -1,7 +1,7 @@
 package com.liuhuiyu.jpa.sql;
 
 /**
- * 功能<p>
+ * Sql order功能<p>
  * Created on 2025/4/7 22:56
  *
  * @author liuhuiyu
