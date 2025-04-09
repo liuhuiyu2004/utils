@@ -19,10 +19,34 @@ public class SelectSql {
     protected SqlOrderBy orderBy;
 
     public SelectSql(String sqlBase) {
+        this(sqlBase, new SqlWhere(), new SqlGroupBy(), new SqlHaving(), new SqlOrderBy());
+    }
+
+    public SelectSql(String sqlBase, SqlWhere sqlWhere, SqlGroupBy groupBy, SqlHaving sqlHaving, SqlOrderBy orderBy) {
         this.sqlBase = sqlBase;
-        this.sqlWhere = new SqlWhere();
-        this.sqlHaving = new SqlHaving();
-        this.groupBy = new SqlGroupBy();
-        this.orderBy = new SqlOrderBy();
+        this.sqlWhere = sqlWhere;
+        this.groupBy = groupBy;
+        this.sqlHaving = sqlHaving;
+        this.orderBy = orderBy;
+    }
+
+    public String getSqlBase() {
+        return sqlBase;
+    }
+
+    public SqlWhere getSqlWhere() {
+        return sqlWhere;
+    }
+
+    public SqlGroupBy getGroupBy() {
+        return groupBy;
+    }
+
+    public SqlHaving getSqlHaving() {
+        return sqlHaving;
+    }
+
+    public SqlOrderBy getOrderBy() {
+        return orderBy;
     }
 }

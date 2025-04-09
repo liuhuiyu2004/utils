@@ -1,5 +1,7 @@
 package com.liuhuiyu.jpa.sql;
 
+import org.springframework.util.StringUtils;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -21,14 +23,41 @@ import java.util.Collection;
  * @version 1.0
  * @since 21
  */
-public interface Condition<T, U extends Condition<T, U>> {
+public class Condition {
+    protected final ConditionalFiltering conditionalFiltering;
+    private final String field1;
+    private final String field2;
+    private final String condition;
+
+    public Condition(ConditionalFiltering conditionalFiltering, String field1, String condition) {
+        this(conditionalFiltering, field1, null, condition);
+    }
+
+    public Condition(ConditionalFiltering conditionalFiltering, String field1, String field2, String condition) {
+        this.conditionalFiltering = conditionalFiltering;
+        this.field1 = field1;
+        this.field2 = field2;
+        this.condition = condition;
+    }
+
+    private void checkField() {
+        if (!StringUtils.hasText(field1)) {
+            throw new RuntimeException("未设定字段名称");
+        }
+    }
+
+    private void checkTwoField() {
+        if (!StringUtils.hasText(field1) || !StringUtils.hasText(field2)) {
+            throw new RuntimeException("双字段名称设定不完整。");
+        }
+    }
 
     /**
      * like值
      *
      * @param value 值
      */
-    default ConditionalFiltering likeValue(String value) {
+    public ConditionalFiltering likeValue(String value) {
         return likeValue(value, true, true, true);
     }
 
@@ -40,14 +69,23 @@ public interface Condition<T, U extends Condition<T, U>> {
      * @param head  头部模糊匹配
      * @param tail  尾部模糊匹配
      */
-    ConditionalFiltering likeValue(String value, Boolean trim, Boolean head, Boolean tail);
+    public ConditionalFiltering likeValue(String value, Boolean trim, Boolean head, Boolean tail) {
+        this.checkField();
+        if (value == null) {
+            return this.conditionalFiltering;
+        }
+        final String s = (head ? "%" : "") + (trim ? value.trim() : value) + (tail ? "%" : "");
+        this.conditionalFiltering.getConditional().append(this.condition).append("(").append(this.field1).append(" LIKE ").append("?").append(")");
+        this.conditionalFiltering.getParameterList().add(s);
+        return this.conditionalFiltering;
+    }
 
     /**
      * 封装 in 条件
      *
      * @param data 查询的数据
      */
-    default <E> ConditionalFiltering inPackage(E[] data) {
+    public <E> ConditionalFiltering inPackage(E[] data) {
         return inPackage(data, false, false);
     }
 
@@ -56,8 +94,35 @@ public interface Condition<T, U extends Condition<T, U>> {
      *
      * @param data 查询的数据
      */
-    default <E> ConditionalFiltering inPackage(Collection<E> data) {
+    public <E> ConditionalFiltering inPackage(Collection<E> data) {
         return inPackage(data, false, false);
+    }
+
+    /**
+     * 封装 in 条件
+     *
+     * @param collection 查询的数据
+     * @param notIn      使用 not in
+     * @param isNull     包含空 OR(fieldName is null)
+     */
+    public <E> ConditionalFiltering inPackage(Collection<E> collection, Boolean notIn, Boolean isNull) {
+        this.checkField();
+        if (collection == null || collection.isEmpty()) {
+            return this.conditionalFiltering;
+        }
+        this.conditionalFiltering.getConditional().append(condition).append("((").append(field1).append(notIn ? " NOT" : "").append(" IN(");
+        String separator = "";
+        for (E datum : collection) {
+            this.conditionalFiltering.getConditional().append(separator).append("?");
+            separator = ",";
+            this.conditionalFiltering.getParameterList().add(datum);
+        }
+        this.conditionalFiltering.getConditional().append("))");
+        if (isNull) {
+            this.conditionalFiltering.getConditional().append("OR(").append(field1).append(" is null)");
+        }
+        this.conditionalFiltering.getConditional().append(")");
+        return this.conditionalFiltering;
     }
 
     /**
@@ -67,16 +132,9 @@ public interface Condition<T, U extends Condition<T, U>> {
      * @param notIn  使用 not in
      * @param isNull 包含空 OR(fieldName is null)
      */
-    <E> ConditionalFiltering inPackage(Collection<E> data, Boolean notIn, Boolean isNull);
-
-    /**
-     * 封装 in 条件
-     *
-     * @param data   查询的数据
-     * @param notIn  使用 not in
-     * @param isNull 包含空 OR(fieldName is null)
-     */
-    <E> ConditionalFiltering inPackage(E[] data, Boolean notIn, Boolean isNull);
+    public <E> ConditionalFiltering inPackage(E[] data, Boolean notIn, Boolean isNull) {
+        return this.inPackage(Arrays.asList(data), notIn, isNull);
+    }
 
     /**
      * between闭区间
@@ -84,7 +142,20 @@ public interface Condition<T, U extends Condition<T, U>> {
      * @param beginValue 开始值
      * @param endValue   结束值
      */
-    <E> ConditionalFiltering between(E beginValue, E endValue);
+    public ConditionalFiltering between(Object beginValue, Object endValue) {
+        this.checkField();
+        if (beginValue == null || endValue == null) {
+            return this.conditionalFiltering;
+        }
+        this.conditionalFiltering.getConditional().append(condition)
+                .append("((").append(this.field1)
+                .append(">= ?)AND(")
+                .append(this.field2)
+                .append("<= ?))");
+        this.conditionalFiltering.getParameterList().add(beginValue);
+        this.conditionalFiltering.getParameterList().add(endValue);
+        return this.conditionalFiltering;
+    }
 
     /**
      * 封装 数据段互相包含（开区间 位置相同）条件
@@ -92,28 +163,61 @@ public interface Condition<T, U extends Condition<T, U>> {
      * @param minValue 最小值
      * @param maxValue 最大值
      */
-    <E> ConditionalFiltering inclusion(E minValue, E maxValue);
+    public ConditionalFiltering inclusion(Object minValue, Object maxValue) {
+        return this.inclusion(minValue, maxValue, true);
+    }
+
+    /**
+     * 封装 数据段互相包含（开区间 位置相同）条件
+     *
+     * @param minValue     最小值
+     * @param maxValue     最大值
+     * @param openInterval 开区间
+     */
+    public ConditionalFiltering inclusion(Object minValue, Object maxValue, boolean openInterval) {
+        this.checkTwoField();
+        if (minValue == null || maxValue == null) {
+            return this.conditionalFiltering;
+        }
+        this.conditionalFiltering.getConditional()
+                .append(condition)
+                .append("((").append(this.field2)
+                .append(openInterval ? " > " : " >= ")
+                .append(")")
+                .append(" and (").append(this.field1)
+                .append(openInterval ? " < " : " <= ")
+                .append("?))");
+        this.conditionalFiltering.getParameterList().add(minValue);
+        this.conditionalFiltering.getParameterList().add(maxValue);
+        return this.conditionalFiltering;
+    }
 
     /**
      * 等于
      *
      * @param value 值
      */
-    <P> ConditionalFiltering eq(P value);
+    public <P> ConditionalFiltering eq(P value) {
+        return this.appendCondition(" = ", value);
+    }
 
     /**
-     * &lt;> 比较
+     * != 比较
      *
      * @param value 值
      */
-    <P> ConditionalFiltering ne(P value);
+    public <P> ConditionalFiltering ne(P value) {
+        return this.appendCondition(" != ", value);
+    }
 
     /**
      * > 比较
      *
      * @param value 值
      */
-    <P> ConditionalFiltering gt(P value);
+    public <P> ConditionalFiltering gt(P value) {
+        return this.appendCondition(" > ", value);
+    }
 
     /**
      * &lt; 比较
@@ -121,46 +225,86 @@ public interface Condition<T, U extends Condition<T, U>> {
      * @param value 值
      * @param <P>   p
      */
-    <P> ConditionalFiltering lt(P value);
+    public <P> ConditionalFiltering lt(P value) {
+        return this.appendCondition(" < ", value);
+    }
 
     /**
      * >= 比较
      *
      * @param value 值
      */
-    <P> ConditionalFiltering ge(P value);
+    public <P> ConditionalFiltering ge(P value) {
+        return this.appendCondition(" >= ", value);
+    }
 
     /**
      * &lt;= 比较
      *
      * @param value 值
      */
-    <P> ConditionalFiltering le(P value);
+    public <P> ConditionalFiltering le(P value) {
+        return this.appendCondition(" <= ", value);
+    }
 
     /**
      * 为 null
      * <p>
      */
-    ConditionalFiltering isNull();
+    public ConditionalFiltering isNull() {
+        this.checkField();
+        this.conditionalFiltering.getConditional().append(condition).append("(").append(field1).append(" is null )");
+        return this.conditionalFiltering;
+    }
 
     /**
      * 为 null
      * <p>
      */
-    ConditionalFiltering isNotNull();
+    public ConditionalFiltering isNotNull() {
+        this.checkField();
+        this.conditionalFiltering.getConditional().append(condition).append("(").append(field1).append(" is not null )");
+        return this.conditionalFiltering;
+    }
 
     /**
      * 表达式<p>
+     *
      * @param expression 表达式 （函数等）
      * @return com.liuhuiyu.jpa.sql.ConditionalFiltering
      */
-    ConditionalFiltering expression(String expression);
+    public ConditionalFiltering expression(String expression) {
+        this.conditionalFiltering.getConditional().append(condition).append("(").append(expression).append(")");
+        return this.conditionalFiltering;
+    }
 
     /**
      * 子语句匹配
      *
-     * @param operator 操作符（常用in）
+     * @param operator       操作符（常用in）
      * @param childSelectSql 子语句
      */
-    ConditionalFiltering child(String operator, SelectSql childSelectSql);
+    public ConditionalFiltering child(String operator, ConditionalFiltering childSelectSql) {
+        this.checkField();
+        this.conditionalFiltering.getConditional()
+                .append(condition)
+                .append("(")
+                .append(field1)
+                .append(" ")
+                .append(operator)
+                .append(" (").append(childSelectSql.getConditional())
+                .append("))");
+        this.conditionalFiltering.getParameterList().addAll(childSelectSql.getParameterList());
+        return this.conditionalFiltering;
+    }
+
+    // 私有方法：添加条件
+    private ConditionalFiltering appendCondition(String operator, Object value) {
+        this.checkField();
+        this.conditionalFiltering.getConditional().append(this.condition)
+                .append("(").append(field1).append(" ").append(operator).append(" ?)");
+        this.conditionalFiltering.getParameterList().add(value);
+        return this.conditionalFiltering;
+    }
+    //endregion
 }
