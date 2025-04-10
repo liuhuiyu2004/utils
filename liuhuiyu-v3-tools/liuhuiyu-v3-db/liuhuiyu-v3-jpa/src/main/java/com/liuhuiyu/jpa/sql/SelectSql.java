@@ -13,20 +13,20 @@ public class SelectSql {
      * 主语句（包括关联left join等）
      */
     protected final String sqlBase;
-    protected SqlWhere sqlWhere;
+    protected ConditionalFiltering sqlWhere;
     protected SqlGroupBy groupBy;
-    protected SqlHaving sqlHaving;
+    protected ConditionalFiltering conditionalFiltering;
     protected SqlOrderBy orderBy;
 
     public SelectSql(String sqlBase) {
-        this(sqlBase, new SqlWhere(), new SqlGroupBy(), new SqlHaving(), new SqlOrderBy());
+        this(sqlBase, new ConditionalFiltering(), new SqlGroupBy(), new ConditionalFiltering(), new SqlOrderBy());
     }
 
-    public SelectSql(String sqlBase, SqlWhere sqlWhere, SqlGroupBy groupBy, SqlHaving sqlHaving, SqlOrderBy orderBy) {
+    public SelectSql(String sqlBase, ConditionalFiltering sqlWhere, SqlGroupBy groupBy, ConditionalFiltering conditionalFiltering, SqlOrderBy orderBy) {
         this.sqlBase = sqlBase;
         this.sqlWhere = sqlWhere;
         this.groupBy = groupBy;
-        this.sqlHaving = sqlHaving;
+        this.conditionalFiltering = conditionalFiltering;
         this.orderBy = orderBy;
     }
 
@@ -34,7 +34,7 @@ public class SelectSql {
         return sqlBase;
     }
 
-    public SqlWhere getSqlWhere() {
+    public ConditionalFiltering getSqlWhere() {
         return sqlWhere;
     }
 
@@ -42,8 +42,8 @@ public class SelectSql {
         return groupBy;
     }
 
-    public SqlHaving getSqlHaving() {
-        return sqlHaving;
+    public ConditionalFiltering getSqlHaving() {
+        return conditionalFiltering;
     }
 
     public SqlOrderBy getOrderBy() {
