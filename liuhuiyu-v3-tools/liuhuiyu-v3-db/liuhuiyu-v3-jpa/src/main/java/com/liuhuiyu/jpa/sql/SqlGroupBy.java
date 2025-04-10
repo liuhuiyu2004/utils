@@ -11,11 +11,21 @@ import java.util.List;
  * @version 1.0
  * @since 21
  */
-public class SqlGroupBy  {
+public class SqlGroupBy {
     StringBuffer conditional = new StringBuffer();
 
-    public StringBuffer getConditional() {
+    public StringBuffer getGroupBy() {
+        if (!this.conditional.isEmpty()) {
+            this.conditional.insert(0, " group by ");
+        }
         return this.conditional;
     }
 
+    public SqlGroupBy addGroup(String field) {
+        if (!this.conditional.isEmpty()) {
+            this.conditional.append(",");
+        }
+        this.conditional.append(field);
+        return this;
+    }
 }

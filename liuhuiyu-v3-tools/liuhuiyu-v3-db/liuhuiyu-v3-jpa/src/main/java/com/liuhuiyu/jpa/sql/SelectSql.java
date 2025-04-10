@@ -59,15 +59,11 @@ public class SelectSql {
         if (!this.sqlWhere.getConditional().isEmpty()) {
             sb.append(" where ").append(this.sqlWhere.getConditional());
         }
-        if (!this.groupBy.getConditional().isEmpty()) {
-            sb.append(" group by ").append(this.groupBy.getConditional());
-        }
+        sb.append(this.groupBy.getGroupBy());
         if (!this.having.getConditional().isEmpty()) {
             sb.append(" having ").append(this.having.getConditional());
         }
-        if (!this.orderBy.getConditional().isEmpty()) {
-            sb.append(" order by ").append(this.orderBy.getConditional());
-        }
+        sb.append(this.orderBy.getOrder());
         return sb.toString();
 
     }
