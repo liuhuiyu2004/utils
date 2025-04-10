@@ -54,17 +54,17 @@ public class SelectSql {
     }
 
     public String getSql() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(this.sqlBase);
+        StringBuilder sqlBuffer = new StringBuilder();
+        sqlBuffer.append(this.sqlBase);
         if (!this.sqlWhere.getConditional().isEmpty()) {
-            sb.append(" where ").append(this.sqlWhere.getConditional());
+            sqlBuffer.append(" where ").append(this.sqlWhere.getConditional());
         }
-        sb.append(this.groupBy.getGroupBy());
+        sqlBuffer.append(this.groupBy.getGroupBy());
         if (!this.having.getConditional().isEmpty()) {
-            sb.append(" having ").append(this.having.getConditional());
+            sqlBuffer.append(" having ").append(this.having.getConditional());
         }
-        sb.append(this.orderBy.getOrder());
-        return sb.toString();
+        sqlBuffer.append(this.orderBy.getOrder());
+        return sqlBuffer.toString();
 
     }
 
