@@ -1,7 +1,10 @@
 package com.liuhuiyu.jpa.sql;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 功能<p>
+ * sql语句组合<p>
  * Created on 2025/4/7 20:37
  *
  * @author liuhuiyu
@@ -15,18 +18,18 @@ public class SelectSql {
     protected final String sqlBase;
     protected ConditionalFiltering sqlWhere;
     protected SqlGroupBy groupBy;
-    protected ConditionalFiltering conditionalFiltering;
+    protected ConditionalFiltering having;
     protected SqlOrderBy orderBy;
 
     public SelectSql(String sqlBase) {
         this(sqlBase, new ConditionalFiltering(), new SqlGroupBy(), new ConditionalFiltering(), new SqlOrderBy());
     }
 
-    public SelectSql(String sqlBase, ConditionalFiltering sqlWhere, SqlGroupBy groupBy, ConditionalFiltering conditionalFiltering, SqlOrderBy orderBy) {
+    public SelectSql(String sqlBase, ConditionalFiltering sqlWhere, SqlGroupBy groupBy, ConditionalFiltering having, SqlOrderBy orderBy) {
         this.sqlBase = sqlBase;
         this.sqlWhere = sqlWhere;
         this.groupBy = groupBy;
-        this.conditionalFiltering = conditionalFiltering;
+        this.having = having;
         this.orderBy = orderBy;
     }
 
@@ -43,10 +46,40 @@ public class SelectSql {
     }
 
     public ConditionalFiltering getSqlHaving() {
-        return conditionalFiltering;
+        return having;
     }
 
     public SqlOrderBy getOrderBy() {
         return orderBy;
+    }
+
+    public String getSql() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(this.sqlBase);
+        if (!this.sqlWhere.getConditional().isEmpty()) {
+            sb.append(" where ").append(this.sqlWhere.getConditional());
+        }
+        if (!this.groupBy.getConditional().isEmpty()) {
+            sb.append(" group by ").append(this.groupBy.getConditional());
+        }
+        if (!this.having.getConditional().isEmpty()) {
+            sb.append(" having ").append(this.having.getConditional());
+        }
+        if (!this.orderBy.getConditional().isEmpty()) {
+            sb.append(" order by ").append(this.orderBy.getConditional());
+        }
+        return sb.toString();
+
+    }
+
+    public List<Object> getParameterList() {
+        List<Object> parameterList = new ArrayList<>();
+        if (!this.sqlWhere.getConditional().isEmpty()) {
+            parameterList.addAll(this.sqlWhere.getParameterList());
+        }
+        if (!this.having.getConditional().isEmpty()) {
+            parameterList.addAll(this.having.getParameterList());
+        }
+        return parameterList;
     }
 }
