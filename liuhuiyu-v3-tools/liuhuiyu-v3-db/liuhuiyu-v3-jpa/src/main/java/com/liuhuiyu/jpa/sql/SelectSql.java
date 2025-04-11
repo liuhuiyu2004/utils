@@ -15,7 +15,7 @@ public class SelectSql {
     /**
      * 主语句（包括关联left join等）
      */
-    protected final String sqlBase;
+    protected String sqlBase;
     protected ConditionalFiltering sqlWhere;
     protected SqlGroupBy groupBy;
     protected ConditionalFiltering having;
@@ -35,6 +35,10 @@ public class SelectSql {
 
     public String getSqlBase() {
         return sqlBase;
+    }
+
+    public void setSqlBase(String sqlBase) {
+        this.sqlBase = sqlBase;
     }
 
     public ConditionalFiltering getSqlWhere() {
@@ -77,5 +81,54 @@ public class SelectSql {
             parameterList.addAll(this.having.getParameterList());
         }
         return parameterList;
+    }
+
+    public static class Builder {
+        protected String sqlBase;
+        protected ConditionalFiltering sqlWhere;
+        protected SqlGroupBy groupBy;
+        protected ConditionalFiltering having;
+        protected SqlOrderBy orderBy;
+
+        public static Builder create(String sqlBase) {
+            Builder builder = new Builder();
+            builder.sqlBase = sqlBase;
+            builder.sqlWhere = new ConditionalFiltering();
+            builder.groupBy = new SqlGroupBy();
+            builder.having = new ConditionalFiltering();
+            builder.orderBy = new SqlOrderBy();
+            return builder;
+        }
+
+        public Builder setSqlWhere(ConditionalFiltering sqlWhere) {
+            this.sqlWhere = sqlWhere;
+            return this;
+        }
+
+        public Builder setGroupBy(SqlGroupBy groupBy) {
+            this.groupBy = groupBy;
+            return this;
+        }
+
+        public Builder setHaving(ConditionalFiltering having) {
+            this.having = having;
+            return this;
+        }
+
+        public Builder setOrderBy(SqlOrderBy orderBy) {
+            this.orderBy = orderBy;
+            return this;
+        }
+
+        public SelectSql build() {
+            return new SelectSql(this.sqlBase, this.sqlWhere, this.groupBy, this.having, this.orderBy);
+        }
+    }
+
+    public SelectSql deepClone() {
+        ConditionalFiltering sqlWhere=this.sqlWhere.deepClone();
+        ConditionalFiltering having;
+        SqlOrderBy orderBy;
+        return new SelectSql(this.sqlBase, this.sqlWhere.deepClone(), this.groupBy.deepClone(), this.having.deepClone(), this.orderBy.deepClone());
     }
 }

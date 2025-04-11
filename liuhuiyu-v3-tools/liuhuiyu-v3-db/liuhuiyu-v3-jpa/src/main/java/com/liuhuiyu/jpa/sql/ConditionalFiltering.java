@@ -48,4 +48,11 @@ public class ConditionalFiltering {
         }
         return this;
     }
+
+    public ConditionalFiltering deepClone() {
+        ConditionalFiltering conditionalFiltering = new ConditionalFiltering();
+        conditionalFiltering.conditional = new StringBuffer(this.conditional.toString());
+        conditionalFiltering.parameterList = new ArrayList<>(this.parameterList);
+        return conditionalFiltering;
+    }
 }

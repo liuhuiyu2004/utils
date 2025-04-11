@@ -14,11 +14,14 @@ import java.util.List;
 public class SqlGroupBy {
     StringBuffer conditional = new StringBuffer();
 
-    public StringBuffer getGroupBy() {
-        if (!this.conditional.isEmpty()) {
-            this.conditional.insert(0, " group by ");
+    public String getGroupBy() {
+        if (this.conditional.isEmpty()) {
+            return "";
         }
-        return this.conditional;
+        else {
+            this.conditional.insert(0, " group by ");
+            return " group by " + this.conditional;
+        }
     }
 
     public SqlGroupBy addGroup(String field) {
@@ -27,5 +30,11 @@ public class SqlGroupBy {
         }
         this.conditional.append(field);
         return this;
+    }
+
+    public SqlGroupBy deepClone() {
+        SqlGroupBy sqlGroupBy = new SqlGroupBy();
+        sqlGroupBy.conditional = new StringBuffer(this.conditional.toString());
+        return sqlGroupBy;
     }
 }

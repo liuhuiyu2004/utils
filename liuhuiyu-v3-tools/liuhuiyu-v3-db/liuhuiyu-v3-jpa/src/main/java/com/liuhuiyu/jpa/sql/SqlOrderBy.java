@@ -36,4 +36,10 @@ public class SqlOrderBy {
         this.conditional.append(" ").append(field).append(" desc");
         return this;
     }
+
+    public SqlOrderBy deepClone() {
+        SqlOrderBy sqlOrderBy = new SqlOrderBy();
+        sqlOrderBy.conditional = new StringBuffer(this.conditional.toString());
+        return sqlOrderBy;
+    }
 }
