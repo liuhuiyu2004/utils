@@ -2,20 +2,21 @@ package com.liuhuiyu.jpa.view;
 
 import com.liuhuiyu.core.util.Assert;
 import com.liuhuiyu.dto.IComputedValueFilling;
-import com.liuhuiyu.jpa.sql.ConditionalFiltering;
-import com.liuhuiyu.jpa.sql.SelectSql;
-import com.liuhuiyu.jpa.sql.SqlGroupBy;
-import com.liuhuiyu.jpa.sql.SqlOrderBy;
+import com.liuhuiyu.dto.IPaging;
+import com.liuhuiyu.jpa.sql.*;
+import com.liuhuiyu.jpa.util.DataBaseUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.hibernate.query.Page.page;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 功能<p>
@@ -189,14 +190,67 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
     }
 
     private List<returnT> getList(Class<returnT> clazz, findT findWhere, SelectSql selectSql, WhereFullByParameterList<findT> fullWhere) {
-        return null;
+        //填充sql
+        fullWhere.full(findWhere, selectSql);
+        String sqlCommand = selectSql.getSql();
+        SqlResolution sqlResolution = new SqlResolution(sqlCommand);
+        final Query nativeQuery = entityManager.createNativeQuery(sqlCommand);
+        for (int i = 0, length = selectSql.getParameterList().size(); i < length; i++) {
+            nativeQuery.setParameter(i + 1, selectSql.getParameterList().get(i));
+        }
+        List<returnT> resList = new ArrayList<>();
+        for (Object v : nativeQuery.getResultList()) {
+            resList.add(DataBaseUtil.objToT(v, clazz, sqlResolution));
+        }
+        return resList;
     }
 
     private PageImpl<returnT> getPage(Class<returnT> clazz, findT findWhere, SelectSql selectSql, String countSql, WhereFullByParameterList<findT> fullWhere) {
-        return null;
+        Assert.assertTrue(findWhere instanceof IPaging, "查询条件不包含分页信息。");
+        IPaging iPaging = (IPaging) findWhere;
+        SelectSql countSql1 = selectSql.deepClone();
+        countSql1.setSqlBase(countSql);
+        Long total = this.getCount(findWhere, countSql1, fullWhere);
+        final List<returnT> gatekeeperCarLogDtoList;
+        if (total == 0) {
+            gatekeeperCarLogDtoList = Collections.emptyList();
+        }
+        else if (iPaging.getPaging().isAllInOne()) {
+            gatekeeperCarLogDtoList = this.getList(clazz, findWhere, selectSql, fullWhere);
+        }
+        else if (iPaging.getPaging().getPageSize() == 0) {
+            gatekeeperCarLogDtoList = Collections.emptyList();
+        }
+        else {
+            //记录查询
+            gatekeeperCarLogDtoList = pageList(clazz, findWhere, selectSql, fullWhere);
+        }
+        return new PageImpl<>(gatekeeperCarLogDtoList, iPaging.getPaging().getPageRequest(), total);
     }
 
+    /**
+     * 获取分页列表数据
+     *
+     * @param clazz     获取数据后的转换
+     * @param t         获取条件
+     * @param sql       基础查询语句
+     * @param fullWhere 填充查询条件
+     * @param <R>       返回分页的数据类型
+     * @param <T>       分页查询的条件
+     * @return java.util.List<R>
+     * Created DateTime 2022-04-25 10:29
+     */
+    protected abstract <T, R> List<R> pageList(Class<R> clazz, T t, SelectSql sql, WhereFullByParameterList<T> fullWhere);
     private Optional<returnT> getFirstResult(Class<returnT> clazz, findT findWhere, SelectSql selectSql, WhereFullByParameterList<findT> fullWhere) {
-        return null;
+        //填充sql
+        fullWhere.full(findWhere, selectSql);
+        String sqlCommand = selectSql.getSql();
+        SqlResolution sqlResolution = new SqlResolution(sqlCommand);
+        final Query nativeQuery = entityManager.createNativeQuery(sqlCommand);
+        for (int i = 0, length = selectSql.getParameterList().size(); i < length; i++) {
+            nativeQuery.setParameter(i + 1, selectSql.getParameterList().get(i));
+        }
+        final Optional<?> first = nativeQuery.getResultStream().findFirst();
+        return first.map(v -> DataBaseUtil.objToT(v, clazz, sqlResolution));
     }
 }
