@@ -126,9 +126,6 @@ public class SelectSql {
     }
 
     public SelectSql deepClone() {
-        ConditionalFiltering sqlWhere=this.sqlWhere.deepClone();
-        ConditionalFiltering having;
-        SqlOrderBy orderBy;
         return new SelectSql(this.sqlBase, this.sqlWhere.deepClone(), this.groupBy.deepClone(), this.having.deepClone(), this.orderBy.deepClone());
     }
 }
