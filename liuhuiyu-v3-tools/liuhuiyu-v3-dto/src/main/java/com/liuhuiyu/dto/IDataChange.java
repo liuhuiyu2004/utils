@@ -8,7 +8,7 @@ package com.liuhuiyu.dto;
  * @version 1.0
  * @since 21
  */
-public interface IDataChange {
+public interface IDataChange extends IOperating {
     String NONE_MODEL = Operating.NONE_MODEL;
     String ADD_MODEL = Operating.ADD_MODEL;
     String UPDATE_MODEL = Operating.UPDATE_MODEL;

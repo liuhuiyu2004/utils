@@ -32,7 +32,7 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
      * author LiuHuiYu<p>
      * Created DateTime 2024/9/14 14:09
      */
-    EntityManager entityManager;
+    protected EntityManager entityManager;
 
     public AbstractSqlView(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -235,12 +235,10 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
      * @param t         获取条件
      * @param sql       基础查询语句
      * @param fullWhere 填充查询条件
-     * @param <R>       返回分页的数据类型
-     * @param <T>       分页查询的条件
      * @return java.util.List<R>
      * Created DateTime 2022-04-25 10:29
      */
-    protected abstract <T, R> List<R> pageList(Class<R> clazz, T t, SelectSql sql, WhereFullByParameterList<T> fullWhere);
+    protected abstract List<returnT> pageList(Class<returnT> clazz, findT t, SelectSql sql, WhereFullByParameterList<findT> fullWhere);
     private Optional<returnT> getFirstResult(Class<returnT> clazz, findT findWhere, SelectSql selectSql, WhereFullByParameterList<findT> fullWhere) {
         //填充sql
         fullWhere.full(findWhere, selectSql);

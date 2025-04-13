@@ -71,18 +71,26 @@ public interface DbConstant {
      */
     int COLUMN_3D_COORD_MAX_LENGTH = 50;
 
-
+    //region 数据类型
+    //字符
     String CHAR = "CHAR";
-    String VARCHAR = "VARCHAR";
+    //变长中文字符
+    String NVARCHAR = "NVARCHAR2";
+    //长文本
     String CLOB = "CLOB";
+    //二进制
     String BLOB = "BLOB";
+    //日期
     String DATE = "DATE";
+    //时间戳
     String TIMESTAMP = "TIMESTAMP";
+    //整形
     String NUMBER = "NUMBER";
-
-    String NVARCHAR2 = "NVARCHAR2";
-    String BOOLEAN = "CHAR(1)";
-
+    //小数
+    String DECIMAL = "DECIMAL";
+    //布尔
+    String BOOLEAN = "BIT";
+    //endregion
     String SYSDATE = "sysdate";
     String BOOLEAN_VALUE_FALSE = "'0'";
     String SYS_GUID = "sys_guid()";
