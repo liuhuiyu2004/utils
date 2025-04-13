@@ -16,6 +16,7 @@
     <url>http://maven.apache.org</url>
     <modules>
         <module>liuhuiyu-v3-jpa</module>
+        <module>liuhuiyu-v3-jpa-mysql</module>
     </modules>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
