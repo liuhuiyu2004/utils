@@ -21,6 +21,7 @@
         <module>liuhuiyu-v3-cloud</module>
         <module>liuhuiyu-v3-spring-util</module>
         <module>liuhuiyu-v3-spring-test</module>
+        <module>liuhuiyu-v3-tool-dependencies</module>
     </modules>
 
     <properties>
