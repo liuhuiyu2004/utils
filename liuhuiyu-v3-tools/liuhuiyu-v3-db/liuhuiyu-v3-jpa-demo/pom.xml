@@ -43,13 +43,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.liuhuiyu</groupId>-->
-<!--                <artifactId>liuhuiyu-v3-tool-dependencies</artifactId>-->
-<!--                <version>2025v21.0.1</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>com.liuhuiyu</groupId>
+                <artifactId>liuhuiyu-v3-tool-dependencies</artifactId>
+                <version>2025v21.0.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -120,12 +120,14 @@
         <dependency>
             <groupId>com.liuhuiyu</groupId>
             <artifactId>liuhuiyu-v3-core</artifactId>
-            <version>${project.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-v3-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.liuhuiyu</groupId>
             <artifactId>liuhuiyu-v3-test</artifactId>
-            <version>${project.ver}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
