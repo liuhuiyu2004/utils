@@ -2,6 +2,7 @@ package com.liuhuiyu.demo.controller;
 
 import com.liuhuiyu.demo.constant.WebAddressConstant;
 import com.liuhuiyu.web.controller.AbsBaseController;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,8 @@ public class HomeController  extends AbsBaseController {
     static final String ROOT = WebAddressConstant.HOME_ADDRESS_ROOT;
 
     //region 首页地址访问
-    @Parameter(hidden = true)
+//    @Parameter(hidden = true)
+    @Hidden
     @RequestMapping(value = {PATH_INDEX, PATH_DEFAULT})
     public String index() {
         return "redirect:" + WebAddressConstant.SWAGGER_UI_URL;
