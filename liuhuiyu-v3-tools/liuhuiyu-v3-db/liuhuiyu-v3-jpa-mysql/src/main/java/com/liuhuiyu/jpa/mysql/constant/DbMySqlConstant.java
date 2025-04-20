@@ -1,5 +1,7 @@
 package com.liuhuiyu.jpa.mysql.constant;
 
+import com.liuhuiyu.jpa.constant.DbConstant;
+
 /**
  * 功能<p>
  * Created on 2025/4/13 10:11

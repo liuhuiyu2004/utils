@@ -23,7 +23,6 @@ public class HomeController  extends AbsBaseController {
     static final String ROOT = WebAddressConstant.HOME_ADDRESS_ROOT;
 
     //region 首页地址访问
-//    @Parameter(hidden = true)
     @Hidden
     @RequestMapping(value = {PATH_INDEX, PATH_DEFAULT})
     public String index() {
