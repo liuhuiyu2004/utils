@@ -17,6 +17,7 @@
     <modules>
         <module>liuhuiyu-v3-jpa</module>
         <module>liuhuiyu-v3-jpa-mysql</module>
+        <module>liuhuiyu-v3-jpa-plus</module>
     </modules>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
