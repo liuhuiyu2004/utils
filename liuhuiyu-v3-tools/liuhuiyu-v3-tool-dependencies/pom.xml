@@ -32,6 +32,11 @@
             </dependency>
             <dependency>
                 <groupId>com.liuhuiyu</groupId>
+                <artifactId>liuhuiyu-v3-jpa-plus</artifactId>
+                <version>2025v21.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.liuhuiyu</groupId>
                 <artifactId>liuhuiyu-v3-jpa-dm</artifactId>
                 <version>2025v21.0.1</version>
             </dependency>
