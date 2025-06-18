@@ -9,4 +9,7 @@ package com.liuhuiyu.jpa_plus.conditions;
  * @since 21
  */
 public class SqlConditionWrapper {
+    public String getConditional(){
+        return "";
+    }
 }

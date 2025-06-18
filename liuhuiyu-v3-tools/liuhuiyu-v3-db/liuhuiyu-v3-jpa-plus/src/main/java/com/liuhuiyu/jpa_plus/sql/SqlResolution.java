@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 功能<p>
+ * SQL语句解析<p>
  * Created on 2025/4/26 20:49
  *
  * @author liuhuiyu
