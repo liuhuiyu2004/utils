@@ -10,7 +10,7 @@ import java.util.Optional;
  * @version 1.0
  * @since 21
  */
-public class SqlOrderByWarapper {
+public class SqlOrderByWrapper {
     StringBuilder sql = new StringBuilder();
 
     public Optional<String> getConditional() {

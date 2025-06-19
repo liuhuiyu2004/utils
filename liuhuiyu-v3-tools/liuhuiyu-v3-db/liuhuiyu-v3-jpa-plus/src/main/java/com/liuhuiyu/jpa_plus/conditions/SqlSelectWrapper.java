@@ -1,7 +1,5 @@
 package com.liuhuiyu.jpa_plus.conditions;
 
-import com.liuhuiyu.jpa_plus.sql.SqlResolution;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +14,16 @@ import java.util.List;
 public class SqlSelectWrapper {
     //sql基础语句
     private final String selectSql;
-    private final SqlOrderByWarapper orderBy;
+    private final SqlOrderByWrapper orderBy;
     private final SqlGroupByWrapper groupBy;
     private final SqlConditionWrapper where;
     private final SqlConditionWrapper having;
 
     public SqlSelectWrapper(String selectSql) {
-        this(selectSql, new SqlOrderByWarapper(), new SqlGroupByWrapper(), new SqlConditionWrapper(), new SqlConditionWrapper());
+        this(selectSql, new SqlOrderByWrapper(), new SqlGroupByWrapper(), new SqlConditionWrapper(), new SqlConditionWrapper());
     }
 
-    public SqlSelectWrapper(String selectSql, SqlOrderByWarapper orderBy, SqlGroupByWrapper groupBy, SqlConditionWrapper where, SqlConditionWrapper having) {
+    public SqlSelectWrapper(String selectSql, SqlOrderByWrapper orderBy, SqlGroupByWrapper groupBy, SqlConditionWrapper where, SqlConditionWrapper having) {
         this.selectSql = selectSql;
         this.orderBy = orderBy;
         this.groupBy = groupBy;
@@ -44,7 +42,7 @@ public class SqlSelectWrapper {
         return resList;
     }
 
-    public SqlOrderByWarapper getOrderBy() {
+    public SqlOrderByWrapper getOrderBy() {
         return orderBy;
     }
 
