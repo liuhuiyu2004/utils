@@ -2,6 +2,9 @@ package com.liuhuiyu.jpa_plus.conditions;
 
 import com.liuhuiyu.jpa_plus.sql.SqlResolution;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * select封装功能<p>
  * Created on 2025/5/11 20:43
@@ -34,6 +37,13 @@ public class SqlSelectWrapper {
         return selectSql;
     }
 
+    public List<Object> getParameterList() {
+        List<Object> resList = new ArrayList<>();
+        resList.addAll(this.where.parameterList);
+        resList.addAll(this.having.parameterList);
+        return resList;
+    }
+
     public SqlOrderByWarapper getOrderBy() {
         return orderBy;
     }
@@ -53,16 +63,16 @@ public class SqlSelectWrapper {
     public String getSql() {
         StringBuilder sql = new StringBuilder();
         sql.append(selectSql);
-        where.getConditional().ifPresent(conditional->{
+        where.getConditional().ifPresent(conditional -> {
             sql.append(" where ").append(conditional);
         });
-        groupBy.getConditional().ifPresent(conditional->{
+        groupBy.getConditional().ifPresent(conditional -> {
             sql.append(" group by ").append(conditional);
         });
-        having.getConditional().ifPresent(conditional->{
+        having.getConditional().ifPresent(conditional -> {
             sql.append(" having ").append(conditional);
         });
-        orderBy.getConditional().ifPresent(conditional->{
+        orderBy.getConditional().ifPresent(conditional -> {
             sql.append(" order by ").append(conditional);
         });
         return sql.toString();
