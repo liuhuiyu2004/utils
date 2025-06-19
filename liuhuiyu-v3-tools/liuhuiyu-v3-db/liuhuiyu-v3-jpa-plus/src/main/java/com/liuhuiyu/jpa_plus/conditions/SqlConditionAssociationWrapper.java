@@ -1,29 +1,22 @@
 package com.liuhuiyu.jpa_plus.conditions;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
- * sql分组封装<p>
- * Created on 2025/5/11 20:44
+ * 功能<p>
+ * Created on 2025/6/19 08:39
  *
  * @author liuhuiyu
  * @version 1.0
  * @since 21
  */
-public class SqlGroupByWrapper {
+public class SqlConditionAssociationWrapper {
     StringBuilder sql = new StringBuilder();
-
     public Optional<String> getConditional() {
         if (sql.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(sql.toString());
-    }
-
-    public void add(String fieldName) {
-        if (!sql.isEmpty()) {
-            sql.append(",");
-        }
-        sql.append(fieldName);
     }
 }

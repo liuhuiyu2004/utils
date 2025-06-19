@@ -53,15 +53,18 @@ public class SqlSelectWrapper {
     public String getSql() {
         StringBuilder sql = new StringBuilder();
         sql.append(selectSql);
-        if (!where.getConditional().isEmpty()) {
-            sql.append(" where ").append(where.getConditional());
-        }
-        if (!groupBy.getConditional().isEmpty()) {
-            sql.append(" group by ").append(groupBy.getConditional());
-        }
-        if (!having.getConditional().isEmpty()) {
-            sql.append(" having ").append(having.getConditional());
-        }
-        return sql.append(orderBy.getConditional()).toString();
+        where.getConditional().ifPresent(conditional->{
+            sql.append(" where ").append(conditional);
+        });
+        groupBy.getConditional().ifPresent(conditional->{
+            sql.append(" group by ").append(conditional);
+        });
+        having.getConditional().ifPresent(conditional->{
+            sql.append(" having ").append(conditional);
+        });
+        orderBy.getConditional().ifPresent(conditional->{
+            sql.append(" order by ").append(conditional);
+        });
+        return sql.toString();
     }
 }
