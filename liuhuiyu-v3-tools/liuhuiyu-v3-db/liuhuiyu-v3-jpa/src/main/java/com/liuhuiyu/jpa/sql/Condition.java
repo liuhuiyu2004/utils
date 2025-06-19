@@ -150,7 +150,7 @@ public class Condition {
         this.conditionalFiltering.getConditional().append(condition)
                 .append("((").append(this.field1)
                 .append(">= ?)AND(")
-                .append(this.field2)
+                .append(this.field1)
                 .append("<= ?))");
         this.conditionalFiltering.getParameterList().add(beginValue);
         this.conditionalFiltering.getParameterList().add(endValue);

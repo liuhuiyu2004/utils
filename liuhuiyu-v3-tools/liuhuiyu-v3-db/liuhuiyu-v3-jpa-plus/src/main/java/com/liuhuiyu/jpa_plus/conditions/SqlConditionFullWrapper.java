@@ -1,6 +1,5 @@
 package com.liuhuiyu.jpa_plus.conditions;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,7 +10,7 @@ import java.util.Optional;
  * @version 1.0
  * @since 21
  */
-public class SqlConditionAssociationWrapper {
+public class SqlConditionFullWrapper {
     StringBuilder sql = new StringBuilder();
     public Optional<String> getConditional() {
         if (sql.isEmpty()) {

@@ -19,7 +19,7 @@ class SqlSelectWrapperTest extends AbstractTest {
         sqlSelectWrapper.getOrderBy().addDesc("name");
         sqlSelectWrapper.getGroupBy().add("id");
         sqlSelectWrapper.getGroupBy().add("name");
-        sqlSelectWrapper.getWhere().and();
+        sqlSelectWrapper.getWhere().and().eq("name", "张三").and().eq("id",1);
         LOG.info(sqlSelectWrapper.getSql());
     }
 }
