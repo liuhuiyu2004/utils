@@ -14,7 +14,8 @@ import java.util.Optional;
  * @since 21
  */
 public class SqlConditionWrapper {
-
+    public static final String WHERE_SQL = " WHERE ";
+    public static final String HAVING_SQL = " HAVING ";
     final StringBuffer conditional = new StringBuffer();
     final List<Object> parameterList = new ArrayList<>();
 
@@ -290,7 +291,7 @@ public class SqlConditionWrapper {
          * author liuhuiyu<p>
          * Created DateTime 2025/6/19 09:40
          *
-         * @param field 字段名
+         * @param field  字段名
          * @param field2 字段名2
          * @return com.liuhuiyu.jpa_plus.conditions.SqlConditionWrapper
          */
@@ -301,7 +302,7 @@ public class SqlConditionWrapper {
         /**
          * != 比较
          *
-         * @param field 字段名
+         * @param field  字段名
          * @param field2 字段名2
          */
         public <P> SqlConditionWrapper neField(String field, String field2) {
@@ -311,7 +312,7 @@ public class SqlConditionWrapper {
         /**
          * > 比较
          *
-         * @param field 字段名
+         * @param field  字段名
          * @param field2 字段名2
          */
         public <P> SqlConditionWrapper gtField(String field, String field2) {
@@ -321,7 +322,7 @@ public class SqlConditionWrapper {
         /**
          * &lt; 比较
          *
-         * @param field 字段名
+         * @param field  字段名
          * @param field2 字段名2
          */
         public <P> SqlConditionWrapper ltField(String field, String field2) {
@@ -331,7 +332,7 @@ public class SqlConditionWrapper {
         /**
          * >= 比较
          *
-         * @param field 字段名
+         * @param field  字段名
          * @param field2 字段名2
          */
         public <P> SqlConditionWrapper geField(String field, String field2) {
@@ -341,7 +342,7 @@ public class SqlConditionWrapper {
         /**
          * &lt;= 比较
          *
-         * @param field 字段名
+         * @param field  字段名
          * @param field2 字段名2
          */
         public <P> SqlConditionWrapper leField(String field, String field2) {

@@ -62,16 +62,16 @@ public class SqlSelectWrapper {
         StringBuilder sql = new StringBuilder();
         sql.append(selectSql);
         where.getConditional().ifPresent(conditional -> {
-            sql.append(" where ").append(conditional);
+            sql.append(SqlConditionWrapper.WHERE_SQL).append(conditional);
         });
         groupBy.getConditional().ifPresent(conditional -> {
-            sql.append(" group by ").append(conditional);
+            sql.append(SqlGroupByWrapper.GROUP_BY_SQL).append(conditional);
         });
         having.getConditional().ifPresent(conditional -> {
-            sql.append(" having ").append(conditional);
+            sql.append(SqlConditionWrapper.HAVING_SQL).append(conditional);
         });
         orderBy.getConditional().ifPresent(conditional -> {
-            sql.append(" order by ").append(conditional);
+            sql.append(SqlOrderByWrapper.ORDER_BY_SQL).append(conditional);
         });
         return sql.toString();
     }

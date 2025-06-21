@@ -1,5 +1,6 @@
 package com.liuhuiyu.jpa_plus.conditions;
 
+import java.util.LinkedHashSet;
 import java.util.Optional;
 
 /**
@@ -11,26 +12,20 @@ import java.util.Optional;
  * @since 21
  */
 public class SqlOrderByWrapper {
-    StringBuilder sql = new StringBuilder();
-
+    public static final String ORDER_BY_SQL = " ORDER BY ";
+    LinkedHashSet<String> fieldNames = new LinkedHashSet<>();
     public Optional<String> getConditional() {
-        if (sql.isEmpty()) {
+        if (fieldNames.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(sql.toString());
+        return Optional.of(String.join(", " ,fieldNames));
     }
 
     public void addDesc(String fieldName) {
-        if (!sql.isEmpty()) {
-            sql.append(",");
-        }
-        sql.append(fieldName).append(" desc");
+        fieldNames.add(fieldName+" desc");
     }
 
     public void addAsc(String fieldName) {
-        if (!sql.isEmpty()) {
-            sql.append(",");
-        }
-        sql.append(fieldName).append(" asc");
+        fieldNames.add(fieldName+" asc");
     }
 }

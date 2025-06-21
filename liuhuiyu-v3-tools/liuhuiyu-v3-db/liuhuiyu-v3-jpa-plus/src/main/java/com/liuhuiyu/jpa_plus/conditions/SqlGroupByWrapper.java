@@ -1,5 +1,6 @@
 package com.liuhuiyu.jpa_plus.conditions;
 
+import java.util.LinkedHashSet;
 import java.util.Optional;
 
 /**
@@ -11,19 +12,18 @@ import java.util.Optional;
  * @since 21
  */
 public class SqlGroupByWrapper {
-    StringBuilder sql = new StringBuilder();
-
-    public Optional<String> getConditional() {
-        if (sql.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(sql.toString());
-    }
+    public static final String GROUP_BY_SQL = " GROUP BY ";
 
     public void add(String fieldName) {
-        if (!sql.isEmpty()) {
-            sql.append(",");
+        fieldNames.add(fieldName);
+    }
+
+    LinkedHashSet<String> fieldNames = new LinkedHashSet<>();
+
+    public Optional<String> getConditional() {
+        if (fieldNames.isEmpty()) {
+            return Optional.empty();
         }
-        sql.append(fieldName);
+        return Optional.of(String.join(", ", fieldNames));
     }
 }
