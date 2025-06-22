@@ -55,6 +55,13 @@ public class SqlConditionWrapper {
         return this;
     }
 
+    public SqlConditionWrapper deepClone() {
+        SqlConditionWrapper sqlConditionWrapper = new SqlConditionWrapper();
+        sqlConditionWrapper.conditional.append(this.conditional);
+        sqlConditionWrapper.parameterList.addAll(this.parameterList);
+        return  sqlConditionWrapper;
+    }
+
     public class SqlConditionFullWrapper {
         /**
          * 关联操作符号（or / and）<p>

@@ -26,4 +26,10 @@ public class SqlGroupByWrapper {
         }
         return Optional.of(String.join(", ", fieldNames));
     }
+
+    public SqlGroupByWrapper deepClone() {
+        SqlGroupByWrapper sqlGroupByWrapper = new SqlGroupByWrapper();
+        sqlGroupByWrapper.fieldNames.addAll(this.fieldNames);
+        return sqlGroupByWrapper;
+    }
 }

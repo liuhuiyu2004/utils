@@ -20,10 +20,10 @@ public class SqlSelectWrapper {
     private final SqlConditionWrapper having;
 
     public SqlSelectWrapper(String selectSql) {
-        this(selectSql, new SqlOrderByWrapper(), new SqlGroupByWrapper(), new SqlConditionWrapper(), new SqlConditionWrapper());
+        this(selectSql, new SqlConditionWrapper(), new SqlGroupByWrapper(), new SqlConditionWrapper(), new SqlOrderByWrapper());
     }
 
-    public SqlSelectWrapper(String selectSql, SqlOrderByWrapper orderBy, SqlGroupByWrapper groupBy, SqlConditionWrapper where, SqlConditionWrapper having) {
+    public SqlSelectWrapper(String selectSql, SqlConditionWrapper where, SqlGroupByWrapper groupBy, SqlConditionWrapper having, SqlOrderByWrapper orderBy) {
         this.selectSql = selectSql;
         this.orderBy = orderBy;
         this.groupBy = groupBy;
@@ -74,5 +74,44 @@ public class SqlSelectWrapper {
             sql.append(SqlOrderByWrapper.ORDER_BY_SQL).append(conditional);
         });
         return sql.toString();
+    }
+
+    public SqlSelectWrapper deepClone() {
+            return new SqlSelectWrapper(this.selectSql, this.where.deepClone(), this.groupBy.deepClone(), this.having.deepClone(), this.orderBy.deepClone());
+    }
+
+    public static class Builder {
+        private String selectSql;
+        private SqlOrderByWrapper orderBy;
+        private SqlGroupByWrapper groupBy;
+        private SqlConditionWrapper where;
+        private SqlConditionWrapper having;
+
+        private Builder(String selectSql) {
+            this.selectSql = selectSql;
+        }
+
+        public static Builder create(String selectSql) {
+            return new Builder(selectSql);
+        }
+        public Builder setOrderBy(SqlOrderByWrapper orderBy) {
+            this.orderBy = orderBy;
+            return this;
+        }
+        public Builder setGroupBy(SqlGroupByWrapper groupBy) {
+            this.groupBy = groupBy;
+            return this;
+        }
+        public Builder setWhere(SqlConditionWrapper where) {
+            this.where = where;
+            return this;
+        }
+        public Builder setHaving(SqlConditionWrapper having) {
+            this.having = having;
+            return this;
+        }
+        public SqlSelectWrapper build() {
+            return new SqlSelectWrapper(selectSql, where, groupBy, having, orderBy);
+        }
     }
 }

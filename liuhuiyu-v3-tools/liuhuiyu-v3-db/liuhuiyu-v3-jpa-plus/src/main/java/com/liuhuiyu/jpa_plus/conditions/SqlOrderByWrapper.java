@@ -14,18 +14,25 @@ import java.util.Optional;
 public class SqlOrderByWrapper {
     public static final String ORDER_BY_SQL = " ORDER BY ";
     LinkedHashSet<String> fieldNames = new LinkedHashSet<>();
+
     public Optional<String> getConditional() {
         if (fieldNames.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(String.join(", " ,fieldNames));
+        return Optional.of(String.join(", ", fieldNames));
     }
 
     public void addDesc(String fieldName) {
-        fieldNames.add(fieldName+" desc");
+        fieldNames.add(fieldName + " desc");
     }
 
     public void addAsc(String fieldName) {
-        fieldNames.add(fieldName+" asc");
+        fieldNames.add(fieldName + " asc");
+    }
+
+    public SqlOrderByWrapper deepClone() {
+        SqlOrderByWrapper sqlOrderByWrapper = new SqlOrderByWrapper();
+        sqlOrderByWrapper.fieldNames.addAll(this.fieldNames);
+        return sqlOrderByWrapper;
     }
 }
