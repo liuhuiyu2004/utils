@@ -1,0 +1,8 @@
+logging:
+  config: classpath:log4j2-prod.xml
+  level:
+    root: info
+    cc.rehome.zhanjiang.data_center.domain.visits.service.activiti: debug
+    cc.rehome.zhanjiang.data_center.crontab.impl.AccountAuthorityCacheUpdateTaskService: debug
+  charset:
+    console: GBK

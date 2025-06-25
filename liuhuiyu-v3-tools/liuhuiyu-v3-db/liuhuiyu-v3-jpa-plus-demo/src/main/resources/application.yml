@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: zhanjiang-data-center-server    #nacos 服务名称
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:active-dev}
+    include:
+      - include-activiti
+    group:
+      active-lhy:
+        - include-datasource-lhy  #数据库
+        - include-logging-dev     #日志
+      active-dev:
+        - include-datasource-dev  #数据库
+        - include-logging-dev     #日志
+      active-prod: #湛江中越能源生产环境
+        - include-datasource-prod  #数据库
+        - include-logging-prod      #日志

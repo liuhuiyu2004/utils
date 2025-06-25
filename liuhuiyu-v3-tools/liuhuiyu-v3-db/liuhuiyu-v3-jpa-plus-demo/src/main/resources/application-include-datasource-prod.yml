@@ -1,0 +1,25 @@
+spring:
+  # ================================================
+  #             tomcat多域名-数据库重名支持
+  # ================================================
+  jmx:
+    enabled: false
+  # ================================================
+  #             datasource数据库设定
+  # ================================================
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/your_database?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: mysql_root_password
+  jpa:
+    #    hibernate:
+    #      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        ddl-auto: update
+        hbm2ddl:
+          auto: update

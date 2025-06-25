@@ -1,0 +1,5 @@
+${AnsiColor.MAGENTA}project name: ${AnsiColor.RED}demo
+ v2025062500${AnsiColor.BLUE}
+LHY
+${AnsiColor.WHITE}github: ${AnsiColor.BRIGHT_WHITE}https://github.com/liuhuiyu2004
+${AnsiColor.BRIGHT_CYAN}Ha ${AnsiColor.YELLOW}Ha ${AnsiColor.BLACK}Ha ${AnsiColor.BRIGHT_BLACK}Ha
