@@ -16,10 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 功能<p>
@@ -238,13 +235,65 @@ public abstract class AbstractSqlView<returnT extends IComputedValueFilling, fin
      * 获取分页列表数据
      *
      * @param clazz     获取数据后的转换
-     * @param t         获取条件
-     * @param sql       基础查询语句
+     * @param findWhere 获取条件
+     * @param selectSql 基础查询语句
      * @param fullWhere 填充查询条件
      * @return java.util.List<R>
      * Created DateTime 2022-04-25 10:29
      */
-    protected abstract List<returnT> pageList(Class<returnT> clazz, findT t, SqlSelectWrapper sql, WhereFullByParameterList<findT> fullWhere);
+    @SuppressWarnings("all")
+    protected List<returnT> pageList(Class<returnT> clazz, findT findWhere, SqlSelectWrapper selectSql, WhereFullByParameterList<findT> fullWhere) {
+        //填充sql
+        fullWhere.full(findWhere, selectSql);
+        IPaging iPaging = (IPaging) findWhere;
+        String sqlCommand = getPageSql(iPaging, selectSql.getSql());
+        SqlResolution sqlResolution = new SqlResolution(sqlCommand);
+        final Query nativeQuery = entityManager.createNativeQuery(sqlCommand);
+        for (int i = 0, length = selectSql.getParameterList().size(); i < length; i++) {
+            nativeQuery.setParameter(i + 1, selectSql.getParameterList().get(i));
+        }
+        List<returnT> resList = new ArrayList<>();
+        for (Object v : nativeQuery.getResultList()) {
+            resList.add(DataBaseUtil.objToT(v, clazz, sqlResolution));
+        }
+        return resList;
+    }
+
+    /**
+     * 功能描述<p>
+     * author liuhuiyu<p>
+     * Created DateTime 2025/6/22 13:15
+     *
+     * @param iPaging 分页
+     * @param sql     sql语句
+     * @return java.lang.String
+     */
+    protected String getPageSql(IPaging iPaging, String sql) {
+        return getMySqlPageSql(iPaging, sql);
+    }
+
+    protected String getMySqlPageSql(IPaging iPaging, String sql) {
+        return sql + " limit " + iPaging.getPaging().beginRowNo() + ", " + iPaging.getPaging().getPageSize();
+    }
+    @SuppressWarnings("unused")
+    protected String getOraclePageSql(IPaging paging, String sql) {
+        StringBuilder sqlBuilder = new StringBuilder(sql);
+        String rowNumName;
+        for (int i = 0; ; i++) {
+            rowNumName = "rowno_" + i;
+            if (!sql.toLowerCase(Locale.ROOT).contains(rowNumName)) {
+                break;
+            }
+        }
+        sqlBuilder.insert(0, "SELECT * FROM (SELECT t_pagination.*, ROWNUM AS " + rowNumName + " FROM(");
+        sqlBuilder.append(") t_pagination WHERE ROWNUM <= ")
+                .append(paging.getPaging().endRowNo())
+                .append(") table_alias WHERE table_alias.")
+                .append(rowNumName)
+                .append(" >= ")
+                .append(paging.getPaging().beginRowNo());
+        return sqlBuilder.toString();
+    }
 
     //    @SuppressWarnings("SQL")
     @SuppressWarnings("all")
