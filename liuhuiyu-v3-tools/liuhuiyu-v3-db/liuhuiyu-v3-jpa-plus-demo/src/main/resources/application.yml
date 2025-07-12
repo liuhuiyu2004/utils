@@ -2,7 +2,7 @@ spring:
   application:
     name: zhanjiang-data-center-server    #nacos 服务名称
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:active-dev}
+    active: ${SPRING_PROFILES_ACTIVE:active-lhy}
     include:
       - include-activiti
     group:
