@@ -1,6 +1,7 @@
 package com.liuhuiyu.demo.db;
 
 import com.liuhuiyu.jpa_plus.constant.DbConstant;
+import com.liuhuiyu.jpa_plus.constant.DbConstantByMySql;
 
 /**
  * 数据类型常量映射<p>
@@ -11,5 +12,5 @@ import com.liuhuiyu.jpa_plus.constant.DbConstant;
  * @since 21
  */
 public interface DbServerConstant
-        extends DbConstant {
+        extends DbConstantByMySql {
 }
