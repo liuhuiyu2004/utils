@@ -10,18 +10,7 @@ import com.google.gson.Gson;
  * @version 1.0
  * @since 21
  */
-public interface FromPrototype {
-
-    /**
-     * 将当前信息转换为指定类型的信息（相同属性数据深层复制）<p>
-     * author liuhuiyu<p>
-     * Created DateTime 2025/3/19 21:05
-     *
-     * @param classOfT 转换后类
-     * @param <T>      转换后的类型
-     * @return T
-     */
-    <T> T fromPrototype(Class<T> classOfT);
+public interface FromPrototype extends ISerializationJson {
 
     /**
      * 将当前信息转换为指定类型的信息（相同属性数据深层复制）<p>
@@ -61,5 +50,18 @@ public interface FromPrototype {
             throw new RuntimeException("要转换的数据不能为null");
         }
         return new Gson().fromJson(new Gson().toJson(obj), classOfT);
+    }
+
+    /**
+     * 将当前信息转换为指定类型的信息（相同属性数据深层复制）<p>
+     * author liuhuiyu<p>
+     * Created DateTime 2025/3/19 21:05
+     *
+     * @param classOfT 转换后类
+     * @param <T>      转换后的类型
+     * @return T
+     */
+    default <T> T fromPrototype(Class<T> classOfT) {
+        return FromPrototype.fromPrototype(classOfT, this);
     }
 }
