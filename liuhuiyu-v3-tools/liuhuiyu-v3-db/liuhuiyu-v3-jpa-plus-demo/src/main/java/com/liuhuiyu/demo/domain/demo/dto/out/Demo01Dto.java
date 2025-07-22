@@ -1,45 +1,36 @@
-package com.liuhuiyu.demo.domain.demo.entity;
+package com.liuhuiyu.demo.domain.demo.dto.out;
 
-import com.liuhuiyu.demo.domain.BaseAccountOperate;
-import com.liuhuiyu.jpa_plus.comment.Comment;
-import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
+import com.liuhuiyu.dto.FromPrototype;
+import com.liuhuiyu.dto.IComputedValueFilling;
+import com.liuhuiyu.dto.ISerializationJson;
 
 import java.math.BigDecimal;
 
 /**
  * 功能<p>
- * Created on 2025/7/17 11:06
+ * Created on 2025/7/20 10:21
  *
  * @author liuhuiyu
  * @version 1.0
  * @since 21
  */
-@Entity
-@Table(name = "DEMO_TEST1")
-@Comment("备注")
-public class Demo01 extends BaseAccountOperate {
-    @Id
-    @GeneratedValue(generator = "custom-uuid")
-    @GenericGenerator(name = "custom-uuid", strategy = "com.liuhuiyu.jpa_plus.util.CustomUUIDGenerator")
-    @Column(columnDefinition = CHAR + "(" + COLUMN_ID_MAX_LENGTH + ") default " + SYS_GUID)
-    @Comment("id")
+public class Demo01Dto implements IComputedValueFilling, FromPrototype {
+    public static String getBaseSql() {
+        return """
+               """;
+    }
+
+    public static String getCountSql() {
+        return """
+               """;
+    }
+
     private String id;
-    @Column(columnDefinition = NVARCHAR + "(" + COLUMN_CNAME_MAX_LENGTH + ")")
-    @Comment("名称")
     private String cname;
-    @Column(columnDefinition = CLOB)
-    @Lob
-    @Comment("长文本备注")
     private String remark;
-    @Column(columnDefinition = BLOB)
-    @Lob
-    @Comment("字节码附件")
     private byte[] annex;
-//
-    @Comment("金额值")
     private BigDecimal moneyValue;
-//
+
     public String getId() {
         return id;
     }
@@ -79,4 +70,10 @@ public class Demo01 extends BaseAccountOperate {
     public void setMoneyValue(BigDecimal moneyValue) {
         this.moneyValue = moneyValue;
     }
+    //region
+
+    @Override
+    public void computedValueFilling() {
+    }
+    //endregion
 }

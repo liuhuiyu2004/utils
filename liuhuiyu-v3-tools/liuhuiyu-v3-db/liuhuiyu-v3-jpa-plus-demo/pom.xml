@@ -133,5 +133,9 @@
             <artifactId>liuhuiyu-v3-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.liuhuiyu</groupId>
+            <artifactId>liuhuiyu-v3-spring-util</artifactId>
+        </dependency>
     </dependencies>
 </project>
