@@ -17,6 +17,25 @@ import java.math.BigDecimal;
 public class Demo01Dto implements IComputedValueFilling, FromPrototype {
     public static String getBaseSql() {
         return """
+               select t.id id,
+                      t.create_time createTime,
+                      t.creator_id creatorId,
+                      t.creator_name creatorName,
+                      t.creator_type_id creatorTypeId,
+                      t.delete_mark deleteMark,
+                      t.delete_time deleteTime,
+                      t.deleter_id deleterId,
+                      t.deleter_name deleterName,
+                      t.deleter_type_id deleterTypeId,
+                      t.update_time updateTime,
+                      t.updater_id updaterId,
+                      t.updater_name updaterName,
+                      t.updater_type_id updaterTypeId,
+                      t.annex annex,
+                      t.cname cname,
+                      t.money_value moneyValue,
+                      t.remark remark
+               from demo_test1 t;
                """;
     }
 

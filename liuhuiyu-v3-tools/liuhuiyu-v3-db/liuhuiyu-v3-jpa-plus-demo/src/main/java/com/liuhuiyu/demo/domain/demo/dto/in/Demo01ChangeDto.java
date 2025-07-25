@@ -14,6 +14,9 @@ import com.liuhuiyu.dto.Operating;
  * @since 21
  */
 public class Demo01ChangeDto extends Demo01Dto implements IOperating, ISerializationJson {
+    public static final String ADD_MODEL = "ADD_MODEL";
+    public static final String UPDATE_MODEL = "UPDATE_MODEL";
+    public static final String DELETE_MODEL = "DELETE_MODEL";
     private Operating operating = new Operating();
 
     /**

@@ -6,6 +6,7 @@ import com.liuhuiyu.demo.domain.demo.dto.out.Demo01Dto;
 import com.liuhuiyu.jpa_plus.conditions.SqlConditionWrapper;
 import com.liuhuiyu.jpa_plus.conditions.SqlSelectWrapper;
 import jakarta.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 /**
  * 功能<p>
@@ -15,6 +16,7 @@ import jakarta.persistence.EntityManager;
  * @version 1.0
  * @since 21
  */
+@Repository
 public class Demo01Dao extends AbstractDbView<Demo01Dto, Demo01FindDto> {
     public Demo01Dao(EntityManager entityManager) {
         super(entityManager);

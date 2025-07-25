@@ -15,8 +15,17 @@ import com.liuhuiyu.dto.Paging;
  */
 public class Demo01FindDto implements IFind, ISerializationJson {
 
+    private static final String FIND_BY_ID_MODEL = "findById";
     Operating operating = new Operating();
     private Paging paging = new Paging();
+
+    public static Demo01FindDto findById(String id) {
+        Demo01FindDto resData = new Demo01FindDto();
+        resData.getOperating().setModelName(Demo01FindDto.FIND_BY_ID_MODEL);
+        resData.setId(id);
+        return resData;
+    }
+    private String id;
 
     @Override
     public Paging getPaging() {
@@ -38,4 +47,11 @@ public class Demo01FindDto implements IFind, ISerializationJson {
         this.operating = operating;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
